@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp_arcade", "cpp_arcade.vcxproj", "{214C9846-080F-4916-9A28-8FB713400826}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "toto", "..\toto\toto.vcxproj", "{716272A0-C213-48F4-B57D-4772EB7AB23C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{214C9846-080F-4916-9A28-8FB713400826}.Release|x64.Build.0 = Release|x64
 		{214C9846-080F-4916-9A28-8FB713400826}.Release|x86.ActiveCfg = Release|Win32
 		{214C9846-080F-4916-9A28-8FB713400826}.Release|x86.Build.0 = Release|Win32
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Debug|x64.ActiveCfg = Debug|x64
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Debug|x64.Build.0 = Debug|x64
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Debug|x86.ActiveCfg = Debug|Win32
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Debug|x86.Build.0 = Debug|Win32
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Release|x64.ActiveCfg = Release|x64
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Release|x64.Build.0 = Release|x64
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Release|x86.ActiveCfg = Release|Win32
+		{716272A0-C213-48F4-B57D-4772EB7AB23C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

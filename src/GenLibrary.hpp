@@ -1,7 +1,9 @@
 #ifndef LIBRARY_HPP_
 #define LIBRARY_HPP_
 
-#if defined(_WIN32)
+#if defined(__linux__) || ( __APPLE__)
+#include <dlfcn.h>
+#elif defined(_WIN32)
 #include <Windows.h>
 #endif
 
@@ -16,21 +18,21 @@ typedef HINSTANCE gen_lib_t;
 #error "Unsupported dynamic library format"
 #endif
 
-class Library
+class GenLibrary
 {
 public:
-	explicit Library(std::string const &filename);
-	Library(Library const &);
-	~Library();
-	Library &operator=(Library const &);
+	explicit GenLibrary(std::string const &filename);
+	GenLibrary(GenLibrary const &);
+	~GenLibrary();
+	GenLibrary &operator=(GenLibrary const &);
 
 	template<typename T>
 	std::function<T> getFunction(std::string const &sym) const
 	{
 #if defined(__linux__) || ( __APPLE__)
-		std::function<T> func = dlsym(m_libPtr, sym.c_str());
+		std::function<T> func = reinterpret_cast<T*>(dlsym(m_libPtr, sym.c_str()));
 #elif defined(_WIN32)
-		std::function<T> func = GetProcAddress(m_libPtr, sym.c_str());
+		std::function<T> func = reinterpret_cast<T*>(GetProcAddress(m_libPtr, sym.c_str()));
 #endif
 		return (func);
 	}
