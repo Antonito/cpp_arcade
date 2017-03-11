@@ -146,12 +146,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ASocket.cpp" />
     <ClCompile Include="src\GenLibrary.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TCPSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ASocket.hpp" />
     <ClInclude Include="src\GenLibrary.hpp" />
+    <ClInclude Include="src\GenNetwork.hpp" />
     <ClInclude Include="src\INetwork.hpp" />
+    <ClInclude Include="src\ISocket.hpp" />
+    <ClInclude Include="src\TCPSocket.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
