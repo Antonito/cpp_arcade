@@ -5,7 +5,8 @@
 
 #include <cassert>
 #include "ASocket.hpp"
-#include <iostream>
+#include "SockError.hpp"
+
 namespace Network
 {
 #if defined(_WIN32)
@@ -19,9 +20,7 @@ namespace Network
 		// Do we need to load the network DLL ?
 		if (!m_nbSockets && !initWSA())
 		{
-			// Unable to load the dll
-			// TODO: Exception
-			;
+			throw Network::SockError("Cannot load network DLL");
 		}
 		++m_nbSockets;
 #endif
@@ -147,53 +146,48 @@ namespace Network
 			{
 				int ret = 0;
 
-				if (initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol) == true)
-				{
+				initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 #if defined(__linux__) || defined(__APPLE__)
-					ret = connect(m_socket, ptr->ai_addr, ptr->ai_addrlen);
+				ret = connect(m_socket, ptr->ai_addr, ptr->ai_addrlen);
 #elif defined(_WIN32)
-					ret = connect(m_socket, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
+				ret = connect(m_socket, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
 #endif
-					if (ret != -1)
-					{
-
-						connected = true;
-						break;
-					}
-					else
-					{
-						std::cout << "Err: " << WSAGetLastError() << std::endl;
-						std::cout << "ret: " << ret << std::endl;
-					}
-					closeConnection();
+				if (ret != -1)
+				{
+					connected = true;
+					break;
 				}
+				else
+				{
+#if defined(_WIN32) // TODO: Remove
+					std::cout << "Err: " << WSAGetLastError() << std::endl;
+#endif
+					std::cout << "ret: " << ret << std::endl;
+				}
+				closeConnection();
 			}
 		}
 		freeaddrinfo(res);
 		return (connected);
 	}
 
-	bool		ASocket::initSocket(int domain, int type, int protocol)
+	void		ASocket::initSocket(int domain, int type, int protocol)
 	{
 		char const	enable = 1;
 
 		m_socket = ::socket(domain, type, protocol);
 		if (m_socket == -1)
 		{
-			// TODO: Exception
-			return (false);
+			throw Network::SockError("Cannot create socket");
 		}
 		if (setSocketType() == false)
 		{
-			// TODO: Exception
-			return (false);
+			throw Network::SockError("Cannot set socket type");
 		}
 		if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
 		{
-			// TODO: Exception
-			return (false);
+			throw Network::SockError("Cannot set socket options");
 		}
-		return (true);
 	}
 
 	bool		ASocket::setSocketType() const

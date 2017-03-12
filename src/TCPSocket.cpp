@@ -1,6 +1,7 @@
 #include <cerrno>
 #include <cassert>
 #include "TCPSocket.hpp"
+#include "SockError.hpp"
 
 namespace Network
 {
@@ -19,7 +20,7 @@ namespace Network
 
 	bool		TCPSocket::openConnection()
 	{
-		bool		ret;
+		bool	ret;
 
 		assert(!isStarted());
 		if (getMode() == ASocket::SERVER)
@@ -27,7 +28,8 @@ namespace Network
 			initSocket(AF_INET, SOCK_STREAM, 0);
 			m_addr.sin_port = htons(m_port);
 			m_addr.sin_family = AF_INET;
-			ret = hostConnection();
+			hostConnection();
+			ret = true;
 		}
 		else
 		{
@@ -159,18 +161,17 @@ namespace Network
 		return (recNonBlocking(buffer, rlen, buffLen));
 	}
 
-	bool				TCPSocket::hostConnection()
+	void				TCPSocket::hostConnection()
 	{
 		assert(m_socket != -1);
 		m_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 		if (bind(m_socket, reinterpret_cast<sockaddr_t *>(&m_addr), sizeof(m_addr)) == -1)
 		{
-			// TODO: Exception
+			throw Network::SockError("Cannot bind to socket");
 		}
 		if (listen(m_socket, m_maxClients) == -1)
 		{
-			// TODO: Exception
+			throw Network::SockError("Cannot listen on socket");
 		}
-		return (true);
 	}
 }

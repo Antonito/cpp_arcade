@@ -16,7 +16,7 @@ namespace Network
 		virtual bool		openConnection();
 
 	protected:
-		virtual bool				hostConnection();
+		virtual void		hostConnection();
 
 	private:
 		bool			sendBlocking(void const *data, size_t len) const;

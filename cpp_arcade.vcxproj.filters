@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{dd241250-55af-43fa-8531-f3bca1876441}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Exceptions">
+      <UniqueIdentifier>{20cb4bc4-d675-47ac-983c-58e6a70b17aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exceptions">
+      <UniqueIdentifier>{5ef7359f-dc9d-4272-9c47-6852a99ef458}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -32,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="src\ASocket.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\exceptions\SockError.cpp">
+      <Filter>Source Files\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\exceptions\AException.cpp">
+      <Filter>Source Files\Exceptions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +64,12 @@
     </ClInclude>
     <ClInclude Include="src\ISocket.hpp">
       <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\exceptions\SockError.hpp">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\exceptions\AException.hpp">
+      <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

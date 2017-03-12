@@ -1,10 +1,11 @@
 #ifndef ASOCKET_HPP_
 #define ASOCKET_HPP_
 
+#include <iostream> // TODO: Remove
 #include <string>
 #include "ISocket.hpp"
 
-// TODO: Add IPv4 / IPV6 selection, SSL / TLS
+// TODO: Add IPv4 / IPV6 selection, SSL / TLS, catch exceptions
 namespace Network
 {
 	class ASocket : public ISocket
@@ -30,7 +31,7 @@ namespace Network
 		ASocket &operator=(ASocket const &);
 
 		virtual bool	connectToHost();
-		bool			initSocket(int domain, int type, int protocol);
+		void			initSocket(int domain, int type, int protocol);
 		bool			setSocketType() const;
 
 		sock_t			m_socket;

@@ -16,7 +16,7 @@ namespace Network
 
 	protected:
 		virtual bool		connectToHost() = 0;
-		virtual bool		hostConnection() = 0;
+		virtual void		hostConnection() = 0;
 	};
 }
 
