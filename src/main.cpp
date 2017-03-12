@@ -11,10 +11,9 @@ int		main()
 	std::cout << func("Is it working ? Ret: ") << std::endl;
 #endif
 #if 1
-	Network::TCPSocket	connection(12345, "127.0.0.1", true, Network::ASocket::NONBLOCKING);
-	
+	Network::TCPSocket	connection(12345, "127.0.0.1", true, Network::ASocket::BLOCKING);
 #else
-	Network::TCPSocket	connection(12345, 32, Network::ASocket::NONBLOCKING);
+	Network::TCPSocket	connection(12345, 32, Network::ASocket::BLOCKING);
 #endif
 
 	std::cout << "Connected: " << connection.openConnection() << std::endl;

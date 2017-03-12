@@ -140,13 +140,14 @@ namespace Network
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_protocol = IPPROTO_TCP;
-		if (getaddrinfo(m_host.c_str(), NULL, &hints, &res) == 0)
+		if (getaddrinfo(m_host.c_str(), std::to_string(m_port).c_str(), &hints, &res) == 0)
 		{
 			for (addrinfo_t *ptr = res; ptr; ptr = ptr->ai_next)
 			{
 				int ret = 0;
 
 				initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+				// TODO: Handle non blocking socket
 #if defined(__linux__) || defined(__APPLE__)
 				ret = connect(m_socket, ptr->ai_addr, ptr->ai_addrlen);
 #elif defined(_WIN32)
