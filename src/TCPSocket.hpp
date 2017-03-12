@@ -8,16 +8,22 @@ namespace Network
 	class TCPSocket : public ASocket
 	{
 	public:
-		TCPSocket(uint16_t port, std::string const &host);
-		TCPSocket(uint16_t port, uint32_t maxClients);
+		TCPSocket(uint16_t port, std::string const &host, SocketType type);
+		TCPSocket(uint16_t port, uint32_t maxClients, SocketType type);
 		virtual ~TCPSocket();
-		virtual bool		send(void const *data, size_t len);
-		virtual bool		rec(void **buffer, size_t rlen, ssize_t *buff_len);
+		virtual bool		send(void const *data, size_t len) const;
+		virtual bool		rec(void **buffer, size_t rlen, ssize_t *buffLen) const;
 		virtual bool		openConnection();
 
 	protected:
 		virtual bool				connectToHost();
 		virtual bool				hostConnection();
+
+	private:
+		bool			sendBlocking(void const *data, size_t len) const;
+		bool			sendNonBlocking(void const *data, size_t len) const;
+		bool			recBlocking(void **buffer, size_t rlen, ssize_t *buffLen) const;
+		bool			recNonBlocking(void **buffer, size_t rlen, ssize_t *buffLen) const;
 	};
 }
 

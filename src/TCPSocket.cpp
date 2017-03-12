@@ -3,19 +3,16 @@
 
 namespace Network
 {
-	TCPSocket::TCPSocket(uint16_t port, std::string const &host) : ASocket(port, host)
+	TCPSocket::TCPSocket(uint16_t port, std::string const &host, SocketType type) : ASocket(port, host, type)
 	{
-
 	}
 
-	TCPSocket::TCPSocket(uint16_t port, uint32_t maxClients) : ASocket(port, maxClients)
+	TCPSocket::TCPSocket(uint16_t port, uint32_t maxClients, SocketType type) : ASocket(port, maxClients, type)
 	{
-
 	}
 
 	TCPSocket::~TCPSocket()
 	{
-
 	}
 
 	bool		TCPSocket::openConnection()
@@ -26,6 +23,10 @@ namespace Network
 		assert(!isStarted());
 		m_socket = ::socket(AF_INET, SOCK_STREAM, 0);
 		if (m_socket == -1)
+		{
+			// TODO: Exception
+		}
+		if (setSocketType() == false)
 		{
 			// TODO: Exception
 		}
@@ -46,9 +47,9 @@ namespace Network
 		return (ret && isStarted());
 	}
 
-	bool		TCPSocket::send(void const *data, size_t len)
+	bool		TCPSocket::sendBlocking(void const *data, size_t len) const
 	{
-		assert(isStarted());
+		assert(getType() == ASocket::BLOCKING);
 #if defined(__linux__) || defined(__APPLE__)
 		if (::send(m_socket, static_cast<char const *>(data), len, 0) < 0)
 #elif defined(_WIN32)
@@ -61,22 +62,110 @@ namespace Network
 		return (true);
 	}
 
-	bool		TCPSocket::rec(void **buffer, size_t rlen, ssize_t *buff_len)
+	bool		TCPSocket::sendNonBlocking(void const *data, size_t len) const
+	{
+		uint8_t	const	*msg = static_cast<uint8_t const *>(data);
+		size_t			off = 0;
+		ssize_t			ret;
+		bool			success = true;
+
+		assert(getType() == ASocket::NONBLOCKING);
+		for (;;)
+		{
+#if defined(__linux__) || defined(__APPLE__)
+			ret = ::send(m_socket, reinterpret_cast<char const *>(msg + off), len - off, 0);
+#elif defined(_WIN32)
+			ret = ::send(m_socket, reinterpret_cast<char const *>(msg + off), static_cast<int>(len - off), 0);
+#endif
+			if (ret == -1 || ret == len - off)
+			{
+				if (ret == -1 && errno != EWOULDBLOCK && errno != EAGAIN)
+				{
+					success = false;
+				}
+				break;
+			}
+			off += ret;
+		}
+		return (success);
+	}
+
+	bool		TCPSocket::send(void const *data, size_t len) const
 	{
 		assert(isStarted());
+		if (getType() == ASocket::BLOCKING)
+		{
+			return (sendBlocking(data, len));
+		}
+		return (sendNonBlocking(data, len));
+	}
+
+	bool		TCPSocket::recBlocking(void **buffer, size_t rlen, ssize_t *buffLen) const
+	{
+		assert(getType() == ASocket::BLOCKING);
 		*buffer = new uint8_t[rlen]; // TODO: Smart ptr ?
 #if defined(__linux__) || defined(__APPLE__)
 		*buff_len = ::recv(m_socket, static_cast<char *>(*buffer), rlen, 0);
 #elif defined(_WIN32)
-		*buff_len = ::recv(m_socket, static_cast<char *>(*buffer), static_cast<int>(rlen), 0);
+		*buffLen = ::recv(m_socket, static_cast<char *>(*buffer), static_cast<int>(rlen), 0);
 #endif
-		if (*buff_len < 0)
+		if (*buffLen < 0)
 		{
 			// TODO: Handle errno
-			*buff_len = 0;
+			*buffLen = 0;
 			return (false);
 		}
 		return (true);
+	}
+
+	bool		TCPSocket::recNonBlocking(void **buffer, size_t rlen, ssize_t *buffLen) const
+	{
+		ssize_t	ret;
+		uint8_t *buf;
+		bool	success = true;
+
+		assert(getType() == ASocket::NONBLOCKING);
+		*buffer = new uint8_t[rlen];
+		buf = static_cast<uint8_t *>(*buffer);
+		*buffLen = 0;
+		for (;;)
+		{
+#if defined(__linux__) || defined(__APPLE__)
+			ret = ::recv(m_socket, reinterpret_cast<char *>(buf + *buffLen), rlen - *buffLen, 0);
+#elif defined(_WIN32)
+			ret = ::recv(m_socket, reinterpret_cast<char *>(buf + *buffLen), static_cast<int>(rlen - *buffLen), 0);
+#endif
+			if (ret == -1)
+			{
+				if (errno != EWOULDBLOCK && errno != EAGAIN)
+				{
+					success = false;
+				}
+				break;
+			}
+			else if (ret == 0)
+			{
+				*buffLen = 0;
+				break;
+			}
+			if (static_cast<size_t>(*buffLen + ret) >= rlen)
+			{
+				success = !(static_cast<size_t>(*buffLen + ret) > rlen);
+				break;
+			}
+			*buffLen += ret;
+		}
+		return (success);
+	}
+
+	bool		TCPSocket::rec(void **buffer, size_t rlen, ssize_t *buffLen) const
+	{
+		assert(isStarted());
+		if (getType() == ASocket::BLOCKING)
+		{
+			return (recBlocking(buffer, rlen, buffLen));
+		}
+		return (recNonBlocking(buffer, rlen, buffLen));
 	}
 
 	bool				TCPSocket::connectToHost()

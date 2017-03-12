@@ -4,13 +4,14 @@
 #include <string>
 #include "ISocket.hpp"
 
-// TODO: Add IPv4 / IPV6 selection, blocking / non-blocking selection, SSL / TLS
+// TODO: Add IPv4 / IPV6 selection, SSL / TLS
 namespace Network
 {
 	class ASocket : public ISocket
 	{
 	public:
 		enum SocketMode {SERVER, CLIENT};
+		enum SocketType {BLOCKING, NONBLOCKING};
 		virtual			~ASocket();
 		virtual bool	closeConnection();
 
@@ -19,14 +20,16 @@ namespace Network
 		uint16_t		getPort() const;
 		uint32_t		getMaxClients() const;
 		uint32_t		getCurClients() const;
-		enum SocketMode	getMode() const;
+		SocketMode		getMode() const;
+		SocketType		getType() const;
 
 	protected:
-		ASocket();
-		ASocket(uint16_t port, std::string const &host);
-		ASocket(uint16_t port, uint32_t maxClients);
+		ASocket(uint16_t port, std::string const &host, SocketType type = ASocket::BLOCKING);
+		ASocket(uint16_t port, uint32_t maxClients, SocketType type = ASocket::BLOCKING);
 		ASocket(ASocket const &other);
 		ASocket &operator=(ASocket const &);
+
+		bool			setSocketType() const;
 
 		sock_t			m_socket;
 		uint16_t		m_port;
@@ -34,6 +37,10 @@ namespace Network
 		uint32_t		m_maxClients;
 		uint32_t		m_curClients;
 		sockaddr_in_t	m_addr;
+		SocketType		m_type;
+
+	private:
+		ASocket(SocketType type);
 
 #if defined(_WIN32)
 	private:
