@@ -6,12 +6,16 @@
 
 #if defined(__linux__) || defined(__APPLE__)
 
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
 #define closesocket(s)		close(s)
 
 typedef int					sock_t;
 typedef struct sockaddr_in	sockaddr_in_t;
 typedef struct sockaddr		sockaddr_t;
-typedef struct in_addr		in_addr_t;
+typedef struct in_addr		_in_addr_t;
 
 #elif defined(_WIN32)
 
@@ -29,7 +33,7 @@ typedef struct in_addr		in_addr_t;
 typedef SOCKET				sock_t;
 typedef SOCKADDR_IN			sockaddr_in_t;
 typedef SOCKADDR			sockaddr_t;
-typedef IN_ADDR				in_addr_t;
+typedef IN_ADDR				_in_addr_t;
 typedef SSIZE_T				ssize_t;
 #else
 

@@ -13,6 +13,10 @@ int		main()
 	Network::TCPSocket	connection(12345, 5, Network::ASocket::NONBLOCKING);
 
 	connection.openConnection();
+#if defined(_WIN32)
 	system("pause");
+#else
+	::read(0, (char [1]){}, 1);
+#endif
 	return (0);
 }

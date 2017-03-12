@@ -1,4 +1,8 @@
+#include <cerrno>
 #include <cassert>
+#if defined(__linux__) || defined(__APPLE__)
+#include <netdb.h>
+#endif
 #include "TCPSocket.hpp"
 
 namespace Network
@@ -105,7 +109,7 @@ namespace Network
 		assert(getType() == ASocket::BLOCKING);
 		*buffer = new uint8_t[rlen]; // TODO: Smart ptr ?
 #if defined(__linux__) || defined(__APPLE__)
-		*buff_len = ::recv(m_socket, static_cast<char *>(*buffer), rlen, 0);
+		*buffLen = ::recv(m_socket, static_cast<char *>(*buffer), rlen, 0);
 #elif defined(_WIN32)
 		*buffLen = ::recv(m_socket, static_cast<char *>(*buffer), static_cast<int>(rlen), 0);
 #endif
@@ -180,7 +184,7 @@ namespace Network
 			// TODO: Exception, log ?
 			return (false);
 		}
-		m_addr.sin_addr = *reinterpret_cast<in_addr_t *>(hostinfo->h_addr);
+		m_addr.sin_addr = *reinterpret_cast<_in_addr_t *>(hostinfo->h_addr);
 		if (connect(m_socket, reinterpret_cast<sockaddr_t *>(&m_addr), sizeof(m_addr)) == -1)
 		{
 			// TODO: Exception
