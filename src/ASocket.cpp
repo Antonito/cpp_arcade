@@ -131,6 +131,7 @@ namespace Network
 		addrinfo_t		hints = { 0 };
 		addrinfo_t		*res = nullptr;
 		bool			connected = false;
+		SocketType		typeBackup;
 
 		assert(m_socket == -1);
 		if (m_ip)
@@ -146,8 +147,17 @@ namespace Network
 			{
 				int ret = 0;
 
-				initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-				// TODO: Handle non blocking socket
+				typeBackup = getType();
+				m_type = ASocket::BLOCKING;
+				try
+				{
+					initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+				}
+				catch (std::exception &e)
+				{
+					// TODO: Logger ? 
+					break;
+				}
 #if defined(__linux__) || defined(__APPLE__)
 				ret = connect(m_socket, ptr->ai_addr, ptr->ai_addrlen);
 #elif defined(_WIN32)
@@ -155,15 +165,16 @@ namespace Network
 #endif
 				if (ret != -1)
 				{
+					if (typeBackup == ASocket::NONBLOCKING)
+					{
+						m_type = ASocket::NONBLOCKING;
+						if (setSocketType() == false)
+						{
+							throw Network::SockError("Cannot set socket type");
+						}
+					}
 					connected = true;
 					break;
-				}
-				else
-				{
-#if defined(_WIN32) // TODO: Remove
-					std::cout << "Err: " << WSAGetLastError() << std::endl;
-#endif
-					std::cout << "ret: " << ret << std::endl;
 				}
 				closeConnection();
 			}

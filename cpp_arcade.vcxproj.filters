@@ -50,9 +50,6 @@
     <ClInclude Include="src\GenLibrary.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\INetwork.hpp">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="src\TCPSocket.hpp">
       <Filter>Header Files\Network</Filter>
     </ClInclude>

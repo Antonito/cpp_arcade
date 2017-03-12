@@ -25,11 +25,19 @@ namespace Network
 		assert(!isStarted());
 		if (getMode() == ASocket::SERVER)
 		{
-			initSocket(AF_INET, SOCK_STREAM, 0);
-			m_addr.sin_port = htons(m_port);
-			m_addr.sin_family = AF_INET;
-			hostConnection();
 			ret = true;
+			try
+			{
+				initSocket(AF_INET, SOCK_STREAM, 0);
+				m_addr.sin_port = htons(m_port);
+				m_addr.sin_family = AF_INET;
+				hostConnection();
+			}
+			catch (std::exception &e)
+			{
+				// TODO: Logger ?
+				ret = false;
+			}
 		}
 		else
 		{

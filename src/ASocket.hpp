@@ -1,7 +1,6 @@
 #ifndef ASOCKET_HPP_
 #define ASOCKET_HPP_
 
-#include <iostream> // TODO: Remove
 #include <string>
 #include "ISocket.hpp"
 
