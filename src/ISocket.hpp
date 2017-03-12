@@ -9,11 +9,14 @@ namespace Network
 	{
 	public:
 		virtual ~ISocket() {};
-		virtual bool		isStarted() const = 0;
-		virtual sock_t		getSocket() const = 0;
-		virtual uint16_t	getPort() const = 0;
-		virtual uint32_t	getMaxClients() const = 0;
-		virtual uint32_t	getCurClients() const = 0;
+		virtual bool		send(void const *data, size_t len) = 0;
+		virtual bool		rec(void **buffer, size_t rlen, ssize_t *buff_len) = 0;
+		virtual bool		openConnection() = 0;
+		virtual bool		closeConnection() = 0;
+
+	protected:
+		virtual bool		connectToHost() = 0;
+		virtual bool		hostConnection() = 0;
 	};
 }
 
