@@ -16,6 +16,7 @@ typedef int					sock_t;
 typedef struct sockaddr_in	sockaddr_in_t;
 typedef struct sockaddr		sockaddr_t;
 typedef struct in_addr		_in_addr_t;
+typedef struct addrinfo		addrinfo_t;
 
 #elif defined(_WIN32)
 
@@ -24,10 +25,9 @@ typedef struct in_addr		_in_addr_t;
 #define _WINSOCKAPI_
 #endif
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS // TODO: Remove
-
 #include <windows.h>
 #include <winsock2.h>
+#include <Ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
 typedef SOCKET				sock_t;
@@ -35,6 +35,8 @@ typedef SOCKADDR_IN			sockaddr_in_t;
 typedef SOCKADDR			sockaddr_t;
 typedef IN_ADDR				_in_addr_t;
 typedef SSIZE_T				ssize_t;
+typedef struct addrinfo		addrinfo_t;
+
 #else
 
 #error "Network is not supported for this plateform"

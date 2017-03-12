@@ -1,14 +1,12 @@
 #include <cerrno>
 #include <cassert>
-#if defined(__linux__) || defined(__APPLE__)
-#include <netdb.h>
-#endif
 #include "TCPSocket.hpp"
 
 namespace Network
 {
-	TCPSocket::TCPSocket(uint16_t port, std::string const &host, SocketType type) : ASocket(port, host, type)
+	TCPSocket::TCPSocket(uint16_t port, std::string const &host, bool ip, SocketType type) : ASocket(port, host, type)
 	{
+		m_ip = ip;
 	}
 
 	TCPSocket::TCPSocket(uint16_t port, uint32_t maxClients, SocketType type) : ASocket(port, maxClients, type)
@@ -21,27 +19,14 @@ namespace Network
 
 	bool		TCPSocket::openConnection()
 	{
-		char const	enable = 1;
 		bool		ret;
 
 		assert(!isStarted());
-		m_socket = ::socket(AF_INET, SOCK_STREAM, 0);
-		if (m_socket == -1)
-		{
-			// TODO: Exception
-		}
-		if (setSocketType() == false)
-		{
-			// TODO: Exception
-		}
-		if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
-		{
-			// TODO: Exception
-		}
-		m_addr.sin_port = htons(m_port);
-		m_addr.sin_family = AF_INET;
 		if (getMode() == ASocket::SERVER)
 		{
+			initSocket(AF_INET, SOCK_STREAM, 0);
+			m_addr.sin_port = htons(m_port);
+			m_addr.sin_family = AF_INET;
 			ret = hostConnection();
 		}
 		else
@@ -53,12 +38,14 @@ namespace Network
 
 	bool		TCPSocket::sendBlocking(void const *data, size_t len) const
 	{
+		ssize_t	ret;
 		assert(getType() == ASocket::BLOCKING);
 #if defined(__linux__) || defined(__APPLE__)
-		if (::send(m_socket, static_cast<char const *>(data), len, 0) < 0)
+		ret = ::send(m_socket, static_cast<char const *>(data), len, 0);
 #elif defined(_WIN32)
-		if (::send(m_socket, static_cast<char const *>(data), static_cast<int>(len), 0) < 0)
+		ret = ::send(m_socket, static_cast<char const *>(data), static_cast<int>(len), 0);
 #endif
+		if (ret < 0)
 		{
 			// TODO: Handle errno
 			return (false);
@@ -170,26 +157,6 @@ namespace Network
 			return (recBlocking(buffer, rlen, buffLen));
 		}
 		return (recNonBlocking(buffer, rlen, buffLen));
-	}
-
-	bool				TCPSocket::connectToHost()
-	{
-		struct hostent	*hostinfo;
-
-		assert(m_socket != -1);
-		// TODO: gethostbyname is deprecated, use something else
-		hostinfo = gethostbyname(m_host.c_str());
-		if (!hostinfo)
-		{
-			// TODO: Exception, log ?
-			return (false);
-		}
-		m_addr.sin_addr = *reinterpret_cast<_in_addr_t *>(hostinfo->h_addr);
-		if (connect(m_socket, reinterpret_cast<sockaddr_t *>(&m_addr), sizeof(m_addr)) == -1)
-		{
-			// TODO: Exception
-		}
-		return (true);
 	}
 
 	bool				TCPSocket::hostConnection()

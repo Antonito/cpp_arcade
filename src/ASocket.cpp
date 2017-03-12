@@ -1,10 +1,11 @@
 #if defined(__linux__) || defined(__APPLE__)
 #include <fcntl.h>
+#include <netdb.h>
 #endif
 
 #include <cassert>
 #include "ASocket.hpp"
-
+#include <iostream>
 namespace Network
 {
 #if defined(_WIN32)
@@ -12,7 +13,7 @@ namespace Network
 	bool Network::ASocket::m_WSAInited = false;
 #endif
 
-	ASocket::ASocket(SocketType type) : m_socket(-1), m_port(0), m_host(""), m_maxClients(0), m_curClients(0), m_addr{}, m_type(type)
+	ASocket::ASocket(SocketType type) : m_socket(-1), m_port(0), m_host(""), m_ip(false), m_maxClients(0), m_curClients(0), m_addr{}, m_type(type)
 	{
 #if defined(_WIN32)
 		// Do we need to load the network DLL ?
@@ -51,6 +52,7 @@ namespace Network
 
 	ASocket::~ASocket()
 	{
+		closeConnection();
 #if defined(_WIN32)
 		assert(m_nbSockets);
 		--m_nbSockets;
@@ -64,8 +66,7 @@ namespace Network
 
 	bool	ASocket::closeConnection()
 	{
-		assert(m_socket != -1);
-		if (!closesocket(m_socket))
+		if (m_socket > 0 && !closesocket(m_socket))
 		{
 			m_socket = -1;
 		}
@@ -124,6 +125,75 @@ namespace Network
 	ASocket::SocketType	ASocket::getType() const
 	{
 		return (m_type);
+	}
+
+	bool				ASocket::connectToHost()
+	{
+		addrinfo_t		hints = { 0 };
+		addrinfo_t		*res = nullptr;
+		bool			connected = false;
+
+		assert(m_socket == -1);
+		if (m_ip)
+		{
+			hints.ai_flags = AI_NUMERICHOST;
+		}
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
+		if (getaddrinfo(m_host.c_str(), NULL, &hints, &res) == 0)
+		{
+			for (addrinfo_t *ptr = res; ptr; ptr = ptr->ai_next)
+			{
+				int ret = 0;
+
+				if (initSocket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol) == true)
+				{
+#if defined(__linux__) || defined(__APPLE__)
+					ret = connect(m_socket, ptr->ai_addr, ptr->ai_addrlen);
+#elif defined(_WIN32)
+					ret = connect(m_socket, ptr->ai_addr, static_cast<int>(ptr->ai_addrlen));
+#endif
+					if (ret != -1)
+					{
+
+						connected = true;
+						break;
+					}
+					else
+					{
+						std::cout << "Err: " << WSAGetLastError() << std::endl;
+						std::cout << "ret: " << ret << std::endl;
+					}
+					closeConnection();
+				}
+			}
+		}
+		freeaddrinfo(res);
+		return (connected);
+	}
+
+	bool		ASocket::initSocket(int domain, int type, int protocol)
+	{
+		char const	enable = 1;
+
+		m_socket = ::socket(domain, type, protocol);
+		if (m_socket == -1)
+		{
+			// TODO: Exception
+			return (false);
+		}
+		if (setSocketType() == false)
+		{
+			// TODO: Exception
+			return (false);
+		}
+		if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
+		{
+			// TODO: Exception
+			return (false);
+		}
+		return (true);
 	}
 
 	bool		ASocket::setSocketType() const

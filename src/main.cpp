@@ -10,9 +10,9 @@ int		main()
 	std::function<int(char const *)> func = lib.getFunction<int(char const *)>("my_print");
 	std::cout << func("Is it working ? Ret: ") << std::endl;
 #endif
-	Network::TCPSocket	connection(12345, 5, Network::ASocket::NONBLOCKING);
+	Network::TCPSocket	connection(12345, "127.0.0.1", true, Network::ASocket::NONBLOCKING);
 
-	connection.openConnection();
+	std::cout << "Connected: " << connection.openConnection() << std::endl;
 #if defined(_WIN32)
 	system("pause");
 #else

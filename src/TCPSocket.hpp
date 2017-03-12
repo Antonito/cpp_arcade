@@ -8,7 +8,7 @@ namespace Network
 	class TCPSocket : public ASocket
 	{
 	public:
-		TCPSocket(uint16_t port, std::string const &host, SocketType type);
+		TCPSocket(uint16_t port, std::string const &host, bool ip, SocketType type);
 		TCPSocket(uint16_t port, uint32_t maxClients, SocketType type);
 		virtual ~TCPSocket();
 		virtual bool		send(void const *data, size_t len) const;
@@ -16,7 +16,6 @@ namespace Network
 		virtual bool		openConnection();
 
 	protected:
-		virtual bool				connectToHost();
 		virtual bool				hostConnection();
 
 	private:
