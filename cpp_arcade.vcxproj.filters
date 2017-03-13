@@ -19,11 +19,11 @@
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{dd241250-55af-43fa-8531-f3bca1876441}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Exceptions">
-      <UniqueIdentifier>{20cb4bc4-d675-47ac-983c-58e6a70b17aa}</UniqueIdentifier>
+    <Filter Include="Header Files\Exception">
+      <UniqueIdentifier>{4fc47a49-c4cd-4a30-b54d-f142740cd02d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Exceptions">
-      <UniqueIdentifier>{5ef7359f-dc9d-4272-9c47-6852a99ef458}</UniqueIdentifier>
+    <Filter Include="Source Files\Exception">
+      <UniqueIdentifier>{2c9dc7d8-0c24-4dcf-9d3b-f4965ec7b69b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,16 +39,19 @@
     <ClCompile Include="src\ASocket.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="src\exceptions\SockError.cpp">
-      <Filter>Source Files\Exceptions</Filter>
-    </ClCompile>
     <ClCompile Include="src\exceptions\AException.cpp">
-      <Filter>Source Files\Exceptions</Filter>
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="src\exceptions\SockError.cpp">
+      <Filter>Source Files\Exception</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GenLibrary.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\INetwork.hpp">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="src\TCPSocket.hpp">
       <Filter>Header Files\Network</Filter>
@@ -62,11 +65,47 @@
     <ClInclude Include="src\ISocket.hpp">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="src\exceptions\SockError.hpp">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="src\Color.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IGame.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IGfxLib.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IGUI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ILayer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IMenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IStat.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ITile.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Protocol.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\exceptions\AException.hpp">
-      <Filter>Header Files\Exceptions</Filter>
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="src\exceptions\SockError.hpp">
+      <Filter>Header Files\Exception</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
