@@ -10,8 +10,6 @@ namespace Nope
 {
 	namespace Log
 	{
-		using namespace std::chrono;
-
 		LogSink::LogSink(std::function<void(LogMessage const &, LogLevel)> func)
 			: m_func(func)
 		{
@@ -32,7 +30,7 @@ namespace Nope
 			os << "Type\t\tTime\tMessage" << std::endl;
 
 			return LogSink([&os](LogMessage const &msg, LogLevel level) {
-				milliseconds time = milliseconds(msg.time);
+				std::chrono::milliseconds time(msg.time);
 
 				os << level << (time.count() / 1000) << "." << std::setfill('0')
 					<< std::setw(3) << (time.count() % 1000) << "\t" << msg.getMessage()
@@ -46,7 +44,7 @@ namespace Nope
 				std::make_shared<std::ofstream>(filename.c_str());
 
 			return LogSink([file](LogMessage const &msg, LogLevel level) {
-				milliseconds time = milliseconds(msg.time);
+				std::chrono::milliseconds time(msg.time);
 
 				*file << level << (time.count() / 1000) << "." << std::setfill('0')
 					<< std::setw(3) << (time.count() % 1000) << "\t"

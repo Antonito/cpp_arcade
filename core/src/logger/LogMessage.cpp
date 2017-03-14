@@ -2,15 +2,13 @@
 #include "Logger.hpp"
 #include "LogMessage.hpp"
 
-using namespace std::chrono;
-
 namespace Nope
 {
 	namespace Log
 	{
 		LogMessage::LogMessage(Logger *src)
-			: time(time_point_cast<milliseconds>(high_resolution_clock::now()) -
-				Logger::startTime),
+			: time(std::chrono::time_point_cast<std::chrono::milliseconds>
+			(std::chrono::high_resolution_clock::now()) - Logger::startTime),
 			m_src(src)
 		{
 		}

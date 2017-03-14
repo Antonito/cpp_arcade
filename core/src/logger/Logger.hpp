@@ -12,8 +12,6 @@ namespace Nope
 {
 	namespace Log
 	{
-		using namespace std::chrono;
-
 		enum class LogLevel : int
 		{
 			LOG_TRACE,
@@ -51,7 +49,7 @@ namespace Nope
 			static void start();
 
 			static LogLevel logLevel;
-			static const time_point<high_resolution_clock, milliseconds> startTime;
+			static const std::chrono::time_point<std::chrono::high_resolution_clock, std::chrono::milliseconds> startTime;
 
 		private:
 			std::vector<LogSink> m_sinks;

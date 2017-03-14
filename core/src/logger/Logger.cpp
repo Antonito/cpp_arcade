@@ -5,10 +5,9 @@ namespace Nope
 {
 	namespace Log
 	{
-		using namespace std::chrono;
 		// Do not touch
-		time_point<high_resolution_clock, milliseconds> const Logger::startTime =
-			time_point_cast<milliseconds>(high_resolution_clock::now());
+		std::chrono::time_point<std::chrono::high_resolution_clock, std::chrono::milliseconds> const Logger::startTime =
+			std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now());
 
 		LogLevel Logger::logLevel = LogLevel::LOG_INFO;
 

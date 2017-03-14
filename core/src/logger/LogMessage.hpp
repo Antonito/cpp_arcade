@@ -5,8 +5,6 @@
 #include <string>
 #include <sstream>
 
-using namespace std::chrono;
-
 namespace Nope
 {
 	namespace Log
@@ -29,7 +27,7 @@ namespace Nope
 			LogMessage &operator=(LogMessage &&) = default;
 
 			std::string getMessage() const;
-			duration<long, std::milli> const &getTime() const;
+			std::chrono::duration<long, std::milli> const &getTime() const;
 #ifdef DEBUG
 			struct Meta
 			{
@@ -48,7 +46,7 @@ namespace Nope
 
 			LogMessage &operator<<(std::ostream &(*fn)(std::ostream &os));
 
-			const milliseconds time;
+			const std::chrono::milliseconds time;
 
 		private:
 			std::stringstream m_buf;
