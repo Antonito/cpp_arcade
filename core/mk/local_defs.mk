@@ -3,7 +3,8 @@ NAME=			arcade
 
 INC_DIR=		-I./src/exceptions/		\
 			-I./src/network/		\
-			-I./src/
+			-I./src/			\
+			-I./../common/
 
 DEBUG=			no
 

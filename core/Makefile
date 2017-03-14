@@ -11,7 +11,8 @@ NET_DIR=	$(SRC_DIR)network/
 EXCEPT_DIR=	$(SRC_DIR)exceptions/
 
 SRC_FILES=	main.cpp		\
-		GenLibrary.cpp
+		GenLibrary.cpp		\
+		Core.cpp
 
 NET_FILES=	ASocket.cpp		\
 		TCPSocket.cpp

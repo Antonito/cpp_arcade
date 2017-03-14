@@ -3,13 +3,16 @@
 
 #include "AException.hpp"
 
-namespace Network
+namespace arcade
 {
-	class SockError : public AException
+	namespace Network
 	{
-	public:
-		SockError(std::string const &msg = "");
-	};
+		class SockError : public AException
+		{
+		public:
+			SockError(std::string const &msg = "");
+		};
+	}
 }
 
 #endif // !SOCKERROR_HPP_

@@ -1,11 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp_arcade", "cpp_arcade.vcxproj", "{214C9846-080F-4916-9A28-8FB713400826}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "cpp_arcade.vcxproj", "{214C9846-080F-4916-9A28-8FB713400826}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxitems", "{4B985EF5-A2BC-4635-9E15-FEF8C6C58650}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxitems", "{D12D7E3F-DBA1-497E-9929-D3E8C97EDFA4}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Common\Common.vcxitems*{214c9846-080f-4916-9a28-8fb713400826}*SharedItemsImports = 4
+		Common\Common.vcxitems*{4b985ef5-a2bc-4635-9e15-fef8c6c58650}*SharedItemsImports = 9
+		game\game.vcxitems*{d12d7e3f-dba1-497e-9929-d3e8c97edfa4}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86

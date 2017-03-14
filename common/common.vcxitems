@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{4b985ef5-a2bc-4635-9e15-fef8c6c58650}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Color.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Event.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameState.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGfxLib.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGUI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ILayer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ILevel.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMap.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMenu.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMenuItem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IStat.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ITile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)NetworkPacket.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Protocol.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)NetworkPacket.cpp" />
+  </ItemGroup>
+</Project>

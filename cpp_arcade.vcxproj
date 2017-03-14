@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="core\src\Core.cpp" />
     <ClCompile Include="core\src\exceptions\AException.cpp" />
     <ClCompile Include="core\src\exceptions\SockError.cpp" />
     <ClCompile Include="core\src\GenLibrary.cpp" />
@@ -27,18 +28,7 @@
     <ClCompile Include="core\src\network\TCPSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common\Color.hpp" />
-    <ClInclude Include="common\Event.hpp" />
-    <ClInclude Include="common\GameState.hpp" />
-    <ClInclude Include="common\IGame.hpp" />
-    <ClInclude Include="common\IGfxLib.hpp" />
-    <ClInclude Include="common\IGUI.hpp" />
-    <ClInclude Include="common\ILayer.hpp" />
-    <ClInclude Include="common\IMap.hpp" />
-    <ClInclude Include="common\IMenu.hpp" />
-    <ClInclude Include="common\IStat.hpp" />
-    <ClInclude Include="common\ITile.hpp" />
-    <ClInclude Include="common\Protocol.hpp" />
+    <ClInclude Include="core\src\Core.hpp" />
     <ClInclude Include="core\src\exceptions\AException.hpp" />
     <ClInclude Include="core\src\exceptions\SockError.hpp" />
     <ClInclude Include="core\src\GenLibrary.hpp" />
@@ -52,6 +42,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>cpp_arcade</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <ProjectName>Core</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,6 +75,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="Common\Common.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -100,19 +92,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

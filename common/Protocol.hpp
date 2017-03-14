@@ -36,13 +36,15 @@ namespace		arcade
       POWERUP		= 6,		// POWERUP
       OTHER		= 7		// ANYTHING THAT WILL BE IGNORED BY THE KOALINETTE
     };
+
+#if defined(__linux__)
   /// The format is width, height, and width * height * sizeof(TileType) quantity of TileType
   struct		GetMap
   {
     CommandType		type;
     uint16_t		width;
     uint16_t		height;
-    TileType		tile[0];
+    TileType		tile[];
   } __attribute__((packed));
   /// The format is length, length * Position quantity of TileType
   struct		Position
@@ -54,8 +56,9 @@ namespace		arcade
   {
     CommandType		type;
     uint16_t		lenght;
-    Position		position[0];
+    Position		position[];
   } __attribute__((packed));
+#endif
 }
 
 #endif	//		__ARCADE_PROTOCOL_HPP__
