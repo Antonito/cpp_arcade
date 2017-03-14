@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			arcade
+NAME=			../arcade
 
 INC_DIR=		-I./src/exceptions/		\
 			-I./src/network/		\
