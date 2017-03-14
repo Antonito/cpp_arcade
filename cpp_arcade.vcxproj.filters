@@ -13,102 +13,105 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Network">
-      <UniqueIdentifier>{dd241250-55af-43fa-8531-f3bca1876441}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Exception">
-      <UniqueIdentifier>{4fc47a49-c4cd-4a30-b54d-f142740cd02d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Exception">
-      <UniqueIdentifier>{2c9dc7d8-0c24-4dcf-9d3b-f4965ec7b69b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{b808fd0a-427b-4e52-9cd4-07277b8f5ec7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Core\Network">
       <UniqueIdentifier>{e82cc0d4-159e-48c0-b4c5-dc571591f914}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{c09d200e-7159-4343-8ff2-7edca29c54b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Network">
+      <UniqueIdentifier>{dd241250-55af-43fa-8531-f3bca1876441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{8ae216e8-b99c-4884-a83c-26bd4fc517c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Exception">
+      <UniqueIdentifier>{4fc47a49-c4cd-4a30-b54d-f142740cd02d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Exception">
+      <UniqueIdentifier>{2c9dc7d8-0c24-4dcf-9d3b-f4965ec7b69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core\src\TCPSocket.cpp">
-      <Filter>Source Files\Core\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="core\src\ASocket.cpp">
-      <Filter>Source Files\Core\Network</Filter>
-    </ClCompile>
     <ClCompile Include="core\src\exceptions\AException.cpp">
       <Filter>Source Files\Core\Exception</Filter>
     </ClCompile>
     <ClCompile Include="core\src\exceptions\SockError.cpp">
       <Filter>Source Files\Core\Exception</Filter>
     </ClCompile>
-    <ClCompile Include="core\core\src\GenLibrary.cpp">
-      <Filter>Source Files\Core\Core</Filter>
+    <ClCompile Include="core\src\network\ASocket.cpp">
+      <Filter>Source Files\Core\Network</Filter>
     </ClCompile>
-    <ClCompile Include="core\core\src\main.cpp">
-      <Filter>Source Files\Core\Core</Filter>
+    <ClCompile Include="core\src\network\TCPSocket.cpp">
+      <Filter>Source Files\Core\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\main.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\GenLibrary.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\src\GenLibrary.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\INetwork.hpp">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\TCPSocket.hpp">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\GenNetwork.hpp">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\ASocket.hpp">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\ISocket.hpp">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\Color.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\Event.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\GameState.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IGame.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IGfxLib.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IGUI.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\ILayer.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IMap.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IMenu.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\IStat.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\ITile.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\src\Protocol.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="core\src\exceptions\AException.hpp">
       <Filter>Header Files\Core\Exception</Filter>
     </ClInclude>
     <ClInclude Include="core\src\exceptions\SockError.hpp">
       <Filter>Header Files\Core\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\network\ASocket.hpp">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\network\GenNetwork.hpp">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\network\ISocket.hpp">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\network\TCPSocket.hpp">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\GenLibrary.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Color.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Event.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\GameState.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IGame.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IGfxLib.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IGUI.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ILayer.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IMap.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IMenu.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\IStat.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ITile.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Protocol.hpp">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

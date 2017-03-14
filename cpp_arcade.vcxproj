@@ -18,11 +18,40 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\src\exceptions\AException.cpp" />
+    <ClCompile Include="core\src\exceptions\SockError.cpp" />
+    <ClCompile Include="core\src\GenLibrary.cpp" />
+    <ClCompile Include="core\src\main.cpp" />
+    <ClCompile Include="core\src\network\ASocket.cpp" />
+    <ClCompile Include="core\src\network\TCPSocket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\Color.hpp" />
+    <ClInclude Include="common\Event.hpp" />
+    <ClInclude Include="common\GameState.hpp" />
+    <ClInclude Include="common\IGame.hpp" />
+    <ClInclude Include="common\IGfxLib.hpp" />
+    <ClInclude Include="common\IGUI.hpp" />
+    <ClInclude Include="common\ILayer.hpp" />
+    <ClInclude Include="common\IMap.hpp" />
+    <ClInclude Include="common\IMenu.hpp" />
+    <ClInclude Include="common\IStat.hpp" />
+    <ClInclude Include="common\ITile.hpp" />
+    <ClInclude Include="common\Protocol.hpp" />
+    <ClInclude Include="core\src\exceptions\AException.hpp" />
+    <ClInclude Include="core\src\exceptions\SockError.hpp" />
+    <ClInclude Include="core\src\GenLibrary.hpp" />
+    <ClInclude Include="core\src\network\ASocket.hpp" />
+    <ClInclude Include="core\src\network\GenNetwork.hpp" />
+    <ClInclude Include="core\src\network\ISocket.hpp" />
+    <ClInclude Include="core\src\network\TCPSocket.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{214C9846-080F-4916-9A28-8FB713400826}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>cpp_arcade</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,15 +100,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,36 +178,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="core\src\GenLibrary.cpp" />
-    <ClCompile Include="core\src\main.cpp" />
-    <ClCompile Include="src\ASocket.cpp" />
-    <ClCompile Include="src\exceptions\AException.cpp" />
-    <ClCompile Include="src\exceptions\SockError.cpp" />
-    <ClCompile Include="src\TCPSocket.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\ASocket.hpp" />
-    <ClInclude Include="src\Color.hpp" />
-    <ClInclude Include="src\Event.hpp" />
-    <ClInclude Include="src\exceptions\AException.hpp" />
-    <ClInclude Include="src\exceptions\SockError.hpp" />
-    <ClInclude Include="src\GameState.hpp" />
-    <ClInclude Include="src\GenLibrary.hpp" />
-    <ClInclude Include="src\GenNetwork.hpp" />
-    <ClInclude Include="src\IGame.hpp" />
-    <ClInclude Include="src\IGfxLib.hpp" />
-    <ClInclude Include="src\IGUI.hpp" />
-    <ClInclude Include="src\ILayer.hpp" />
-    <ClInclude Include="src\IMap.hpp" />
-    <ClInclude Include="src\IMenu.hpp" />
-    <ClInclude Include="src\INetwork.hpp" />
-    <ClInclude Include="src\ISocket.hpp" />
-    <ClInclude Include="src\IStat.hpp" />
-    <ClInclude Include="src\ITile.hpp" />
-    <ClInclude Include="src\Protocol.hpp" />
-    <ClInclude Include="src\TCPSocket.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
