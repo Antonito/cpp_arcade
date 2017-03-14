@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{e82cc0d4-159e-48c0-b4c5-dc571591f914}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Logger">
+      <UniqueIdentifier>{8ff34786-f30f-4ac0-a639-d160c3685c37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Logger">
+      <UniqueIdentifier>{3d8446f2-27f5-419f-87a7-8bcf620cb1df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\src\exceptions\AException.cpp">
@@ -47,6 +53,15 @@
     </ClCompile>
     <ClCompile Include="core\src\Core.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\logger\Logger.cpp">
+      <Filter>Source Files\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\logger\LogMessage.cpp">
+      <Filter>Source Files\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="core\src\logger\LogSink.cpp">
+      <Filter>Source Files\Logger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="core\src\Core.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\logger\Logger.hpp">
+      <Filter>Header Files\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\logger\LogMessage.hpp">
+      <Filter>Header Files\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="core\src\logger\LogSink.hpp">
+      <Filter>Header Files\Logger</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

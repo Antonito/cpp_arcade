@@ -23,6 +23,9 @@
     <ClCompile Include="core\src\exceptions\AException.cpp" />
     <ClCompile Include="core\src\exceptions\SockError.cpp" />
     <ClCompile Include="core\src\GenLibrary.cpp" />
+    <ClCompile Include="core\src\logger\Logger.cpp" />
+    <ClCompile Include="core\src\logger\LogMessage.cpp" />
+    <ClCompile Include="core\src\logger\LogSink.cpp" />
     <ClCompile Include="core\src\main.cpp" />
     <ClCompile Include="core\src\network\ASocket.cpp" />
     <ClCompile Include="core\src\network\TCPSocket.cpp" />
@@ -32,6 +35,9 @@
     <ClInclude Include="core\src\exceptions\AException.hpp" />
     <ClInclude Include="core\src\exceptions\SockError.hpp" />
     <ClInclude Include="core\src\GenLibrary.hpp" />
+    <ClInclude Include="core\src\logger\Logger.hpp" />
+    <ClInclude Include="core\src\logger\LogMessage.hpp" />
+    <ClInclude Include="core\src\logger\LogSink.hpp" />
     <ClInclude Include="core\src\network\ASocket.hpp" />
     <ClInclude Include="core\src\network\GenNetwork.hpp" />
     <ClInclude Include="core\src\network\ISocket.hpp" />
