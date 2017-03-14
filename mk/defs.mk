@@ -1,9 +1,11 @@
 # Commands definitions
 RM=		rm -f
+RM_DIR=		rm -rf
 ECHO=		echo -ne
 RANLIB=		ar rcs
 CP=		cp
 CHDIR=		cd
+MKDIR=		mkdir
 
 ROOT_DIR:=	$(realpath $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/../)
 INSTALL_DIR=	bin/
