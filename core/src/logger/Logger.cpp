@@ -10,15 +10,15 @@ namespace Nope
 		time_point<high_resolution_clock, milliseconds> const Logger::startTime =
 			time_point_cast<milliseconds>(high_resolution_clock::now());
 
-		LogLevel Logger::logLevel = LogLevel::INFO;
+		LogLevel Logger::logLevel = LogLevel::LOG_INFO;
 
-		Logger Trace(LogLevel::TRACE);
+		Logger Trace(LogLevel::LOG_TRACE);
 #ifdef DEBUG
-		Logger Debug(LogLevel::DBG);
+		Logger Debug(LogLevel::LOG_DEBUG);
 #endif
-		Logger Info(LogLevel::INFO);
-		Logger Warning(LogLevel::WARNING);
-		Logger Error(LogLevel::ERROR);
+		Logger Info(LogLevel::LOG_INFO);
+		Logger Warning(LogLevel::LOG_WARNING);
+		Logger Error(LogLevel::LOG_ERROR);
 
 		Logger::Logger(LogLevel level) : m_level(level)
 		{
@@ -71,21 +71,21 @@ namespace Nope
 		{
 			switch (level)
 			{
-			case LogLevel::TRACE:
+			case LogLevel::LOG_TRACE:
 				os << "{{TRACE}}";
 				break;
 #ifdef DEBUG
-			case LogLevel::DBG:
+			case LogLevel::LOG_DEBUG:
 				os << "[DEBUG]\t";
 				break;
 #endif
-			case LogLevel::INFO:
+			case LogLevel::LOG_INFO:
 				os << "[INFO]\t";
 				break;
-			case LogLevel::WARNING:
+			case LogLevel::LOG_WARNING:
 				os << "**WARNING**";
 				break;
-			case LogLevel::ERROR:
+			case LogLevel::LOG_ERROR:
 				os << "!!ERROR!!";
 				break;
 			default:

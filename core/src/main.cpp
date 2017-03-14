@@ -2,6 +2,7 @@
 #include "TCPSocket.hpp"
 #include "GenLibrary.hpp"
 #include "Core.hpp"
+#include "Logger.hpp"
 
 int		main()
 {
@@ -42,6 +43,7 @@ int		main()
 
 	//Launching of the Core
 	arcade::Core core;
+	Nope::Log::Logger::start();
 
 	core.launch();
 	return (0);

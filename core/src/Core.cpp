@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include "Core.hpp"
 #include "GameState.hpp"
+#include "Logger.hpp"
 
 //
 // PLEASE READ CAREFULLY
@@ -22,15 +23,24 @@ namespace arcade
 {
 	Core::Core() : m_currentGameId(0), m_currentLibId(0)
 	{
+#ifdef DEBUG
+		Nope::Log::Debug << "Core constructed";
+#endif
 	}
 
 	Core::~Core()
 	{
+#ifdef DEBUG
+		Nope::Log::Debug << "Core destructed";
+#endif
 	}
 
 	void Core::launch()
 	{
 		GameState state = MENU;
+
+		// Log
+		Nope::Log::Info << "Launching the core";
 
 		// Load all the game and graphic libraries
 		this->initLists();
@@ -55,18 +65,26 @@ namespace arcade
 				break;
 			}
 		}
+		// Log
+		Nope::Log::Info << "Exiting the core";
 	}
 
 	GameState Core::gameLoop()
 	{
+		Nope::Log::Info << "Launching a game";
 		// We have no game currently so we exit immediately
+		Nope::Log::Info << "Exiting a game";
 		return QUIT;
 	}
 
 	GameState Core::menuLoop()
 	{
+		Nope::Log::Info << "Entering the main menu";
+
 		// Here we use directly use the first lib and game, but normally
 		// there is a menu to let the user choose
+
+		Nope::Log::Info << "Leaving the main menu";
 
 		return INGAME;
 	}

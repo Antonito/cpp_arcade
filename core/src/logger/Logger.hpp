@@ -16,19 +16,19 @@ namespace Nope
 
 		enum class LogLevel : int
 		{
-			TRACE,
+			LOG_TRACE,
 #ifdef DEBUG
-			DBG,
+			LOG_DEBUG,
 #endif
-			INFO,
-			WARNING,
-			ERROR
+			LOG_INFO,
+			LOG_WARNING,
+			LOG_ERROR
 		};
 
 		class Logger
 		{
 		public:
-			Logger(LogLevel level = LogLevel::INFO);
+			Logger(LogLevel level = LogLevel::LOG_INFO);
 			~Logger() = default;
 
 			void addSink(LogSink const &s);
