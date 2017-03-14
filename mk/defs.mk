@@ -15,21 +15,8 @@ CPP_VER=	c++14
 
 # Debug Infos | -lasan needs to be first
 ifeq ($(DEBUG), yes)
-CXXFLAGS=	-g -DDEBUG -fomit-frame-pointer 	\
-		-fstack-protector			\
-		-Wformat-security			\
-		$(LOCAL_DEBUG_FLAGS)
-LDFLAGS=	-g					\
-		-Wl,-z,relro				\
-		-Wl,-z,now				\
-		-Wl,--no-undefined			\
-		-L/usr/lib/clang/3.8.1/lib/linux/	\
-		-lasan					\
-		-lclang_rt.ubsan_standalone-x86_64	\
-		-lclang_rt.ubsan_standalone_cxx-x86_64	\
-		-rdynamic				\
-		-ldl					\
-		-lrt
+CXXFLAGS=	-g -DDEBUG $(LOCAL_DEBUG_FLAGS)
+LDFLAGS=	-g
 else
 CXXFLAGS=	-DNDEBUG
 LDFLAGS=
@@ -42,7 +29,7 @@ LDFLAGS+=	-lstdc++			\
 		$(LOCAL_LINK_FLAGS)
 
 ifeq ($(CXX),clang)
-CXXFLAGS+=	-std=$(CPP_VER) -W -Wall -Wextra -fno-exceptions
+CXXFLAGS+=	-std=$(CPP_VER) -W -Wall -Wextra
 LDFLAGS+=
 else ifeq ($(CXX),g++)
 CXXFLAGS+=	-std=$(CPP_VER) -W -Wall -Wextra

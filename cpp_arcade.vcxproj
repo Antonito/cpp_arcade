@@ -146,11 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\src\GenLibrary.cpp" />
+    <ClCompile Include="core\src\main.cpp" />
     <ClCompile Include="src\ASocket.cpp" />
     <ClCompile Include="src\exceptions\AException.cpp" />
     <ClCompile Include="src\exceptions\SockError.cpp" />
-    <ClCompile Include="src\GenLibrary.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\TCPSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
