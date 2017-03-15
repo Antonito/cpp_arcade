@@ -3,13 +3,14 @@ MK_DIR=			./mk/
 include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 
 ###### Add your graphic libraries here #####
-GFX_LIBS_DIR=		./libs/
+GFX_LIBS_DIR=		./libs_sources/
 
 GFX_LIBS=		
 
 ###### Add your games here #####
-GAMES_DIR=		./games
-GAMES=
+GAMES_DIR=		./games_sources/
+
+GAMES=			snake
 
 ###### Add your projects here #####
 PROJECTS=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\

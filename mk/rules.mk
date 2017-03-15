@@ -2,8 +2,6 @@ OBJ_DIR=	./obj/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
-NAME_EXTENSION=	$(suffix $(NAME))
-
 $(NAME):	prepare_obj_dir $(OBJ)
 ifeq ($(NAME_EXTENSION),.a)
 		@$(RANLIB) $(NAME) $(OBJ) && \
