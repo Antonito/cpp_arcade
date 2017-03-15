@@ -15,8 +15,6 @@ INSTALL_PATH=	$(ROOT_DIR)/$(INSTALL_DIR)
 CXX=		clang
 CPP_VER=	c++14
 
-NAME_EXTENSION=	$(suffix $(NAME))
-
 # Debug Infos | -lasan needs to be first
 ifeq ($(DEBUG), yes)
 CXXFLAGS=	-g -DDEBUG $(LOCAL_DEBUG_FLAGS)
@@ -24,10 +22,6 @@ LDFLAGS=	-g
 else
 CXXFLAGS=	-DNDEBUG
 LDFLAGS=
-endif
-
-ifeq ($(NAME),.so)
-LDFLAGS+=	-fPIC
 endif
 
 CXXFLAGS+=	$(INC_DIR)			\

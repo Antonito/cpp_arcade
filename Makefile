@@ -5,7 +5,7 @@ include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 ###### Add your graphic libraries here #####
 GFX_LIBS_DIR=		./libs_sources/
 
-GFX_LIBS=		
+GFX_LIBS=		sdl
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
