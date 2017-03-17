@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6af016f7-175b-45b6-a28a-3a99f2ae3f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{fba4d553-f056-4704-8566-45df3c8496b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common %28link%29">
+      <UniqueIdentifier>{9dec9947-a6b1-4c2d-8ac0-19e3175fbcbb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

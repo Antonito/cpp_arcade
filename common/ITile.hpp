@@ -17,12 +17,12 @@ namespace arcade
     virtual union Color getColor() const = 0;
     virtual void setColor(union Color color) = 0;
 
-    virtual size_t getSpriteId() const = 0;
+    virtual int getSpriteId() const = 0;
     virtual size_t getSpritePos() const = 0;
     virtual void   nextSprite() = 0;
     virtual void   prevSprite() = 0;
     virtual void setSpritePos(size_t pos) = 0;
-    virtual void setSprite(size_t id) = 0;
+    virtual void setSprite(int id) = 0;
 
     // TODO: animation
   };

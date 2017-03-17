@@ -1,13 +1,10 @@
 # Definitions for Makefile
-NAME=			../../libs/lib_arcade_sdl2.so
-
-INC_DIR=		-I./src/			\
-			-I./../common/
+NAME=			../../lib/lib_arcade_sdl.so
 
 DEBUG=			no
 
-LOCAL_COMP_FLAGS=
+LOCAL_COMP_FLAGS=	-fPIC
 
-LOCAL_LINK_FLAGS=	-fPIC
+LOCAL_LINK_FLAGS=	-shared -lSDL2
 
 LOCAL_DEBUG_FLAGS=

@@ -1,51 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\Color.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\Event.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\GameState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IGame.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IGfxLib.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IGUI.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\ILayer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IMap.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IMenu.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IStat.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\ITile.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\Protocol.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\NetworkPacket.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\IMenuItem.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="\\VBOXSVR\Code\cpp_arcade\common\ILevel.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Layer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameState.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGfxLib.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IGUI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ILayer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ILevel.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMap.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMenu.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IMenuItem.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IStat.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ITile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)NetworkPacket.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Protocol.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\AGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Color.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Event.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\libs_sources\libs_common\AGfxLib.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -54,10 +30,36 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{de647ce9-9d2b-432c-8159-77a917080974}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Games">
+      <UniqueIdentifier>{022fa28a-7f9a-4098-b770-b7ef7e2312ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{213c0c38-b084-4d8e-a86b-9272e8a85cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Games\Header Files">
+      <UniqueIdentifier>{01375ab5-8f2b-4320-9995-ccc4e9686233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Games\Source Files">
+      <UniqueIdentifier>{d8432ef1-ddbc-4ac6-a5fd-a9e4777b67f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs\Header Files">
+      <UniqueIdentifier>{ad77a250-7365-4e74-a343-5148727f97db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs\Source Files">
+      <UniqueIdentifier>{af2020e6-f0a8-4327-a764-68d56ced3398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{6740c114-fb8d-4017-b6f4-f9a10b686f59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="\\VBOXSVR\Code\cpp_arcade\common\NetworkPacket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Layer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)NetworkPacket.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\AGame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Color.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\libs_sources\libs_common\AGfxLib.cpp" />
   </ItemGroup>
 </Project>

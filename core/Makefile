@@ -35,7 +35,7 @@ LOGGER_FILES=	Logger.cpp		\
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))		\
 		$(addprefix $(NET_DIR), $(NET_FILES))		\
 		$(addprefix $(EXCEPT_DIR), $(EXCEPT_FILES))	\
-		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))		
+		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

@@ -46,7 +46,7 @@ namespace arcade
 		this->initLists();
 
 		// Set the current library to the first one
-		m_lib = m_libList[0].getFunction<std::unique_ptr<IGfxLib> &&()>("getLib")();
+		m_lib = std::unique_ptr<IGfxLib>(m_libList[0].getFunction<IGfxLib* ()>("getLib")());
 
 		while (state != QUIT)
 		{
@@ -98,19 +98,23 @@ namespace arcade
 		// Open "dir/" directory
 		if ((dir = opendir("lib")) != NULL)
 		{
+			Nope::Log::Info << "Opened directory 'lib'";
 			// Check all the entities in the directory
 			while ((ent = readdir(dir)) != NULL)
 			{
+				Nope::Log::Info << "Reading '" << ent->d_name << "'";
 				// If it's a REGULAR file and it's name
 				// is formated like "lib_arcade_XXX.so"
 				if (ent->d_type == DT_REG &&
 					Core::isNameValid(ent->d_name, "lib_arcade_", ".so"))
 				{
+					Nope::Log::Info << "Adding library '" << ent->d_name << "'";
 					m_libList.emplace_back(std::string("lib/") + ent->d_name);
 				}
 			}
 			// Close the dir after using it because we are well educated people :)
 			closedir(dir);
+			Nope::Log::Info << "Closing dir 'lib'";
 		}
 		else
 		{
@@ -126,19 +130,22 @@ namespace arcade
 		// Open "games/" directory
 		if ((dir = opendir("games")) != NULL)
 		{
+			Nope::Log::Info << "Opened directory 'games'";
 			// Check all the entities in the directory
 			while ((ent = readdir(dir)) != NULL)
 			{
-				// If it's a REGULAR file and it's a .so
+				Nope::Log::Info << "Reading '" << ent->d_name << "'";				// If it's a REGULAR file and it's a .so
 				if (ent->d_type == DT_REG &&
 					Core::isNameValid(ent->d_name, "", ".so"))
 				{
+					Nope::Log::Info << "Adding library '" << ent->d_name << "'";
 					m_gameList.emplace_back(std::string("games/") + ent->d_name);
 				}
 			}
 			// Close the dir after using it because we are well educated people
 			// and yes all of this was copy/pasted :)
 			closedir(dir);
+			Nope::Log::Info << "Closing dir 'lib'";
 		}
 		else
 		{
@@ -154,7 +161,7 @@ namespace arcade
 		std::string const &prefix, std::string const &suffix)
 	{
 		return (name.compare(0, prefix.length(), prefix) == 0 &&
-			name.compare(name.length() - suffix.length() - 1,
+			name.compare(name.length() - suffix.length(),
 				suffix.length(), suffix) == 0);
 	}
 }

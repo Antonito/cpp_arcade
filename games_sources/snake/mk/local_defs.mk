@@ -1,13 +1,10 @@
 # Definitions for Makefile
 NAME=			../../games/snake.so
 
-INC_DIR=		-I./src/			\
-			-I./../common/
-
 DEBUG=			no
 
-LOCAL_COMP_FLAGS=
+LOCAL_COMP_FLAGS=	-fPIC
 
-LOCAL_LINK_FLAGS=	-fPIC
+LOCAL_LINK_FLAGS=	-shared
 
 LOCAL_DEBUG_FLAGS=

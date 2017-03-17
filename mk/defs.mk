@@ -12,7 +12,7 @@ INSTALL_DIR=	bin/
 INSTALL_PATH=	$(ROOT_DIR)/$(INSTALL_DIR)
 
 # Compilation and link definitions
-CXX=		clang
+CXX=		clang++
 CPP_VER=	c++14
 
 # Debug Infos | -lasan needs to be first
@@ -30,7 +30,7 @@ CXXFLAGS+=	$(INC_DIR)			\
 LDFLAGS+=	-lstdc++			\
 		$(LOCAL_LINK_FLAGS)
 
-ifeq ($(CXX),clang)
+ifeq ($(CXX),clang++)
 CXXFLAGS+=	-std=$(CPP_VER) -W -Wall -Wextra
 LDFLAGS+=
 else ifeq ($(CXX),g++)

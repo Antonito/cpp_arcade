@@ -1,4 +1,4 @@
-OBJ_DIR=	./obj/
+OBJ_DIR=	${PWD}/obj/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
