@@ -21,6 +21,7 @@ PROJECTS=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\
 DEBUG=			no
 
 ARGS=			DEBUG=$(DEBUG) -s --warn-undefined-variables -C
+
 CURRENT_DIR=		${PWD}
 
 PRINT_DIR=		$(ECHO) "$(YELLOW)$(path) :$(CLEAR)\n";

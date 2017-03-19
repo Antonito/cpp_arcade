@@ -10,12 +10,13 @@ MKDIR=		mkdir
 ROOT_DIR:=	$(realpath $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/../)
 INSTALL_DIR=	bin/
 INSTALL_PATH=	$(ROOT_DIR)/$(INSTALL_DIR)
+UNAME_S:=	$(shell uname -s)
 
 # Compilation and link definitions
 CXX=		clang++
 CPP_VER=	c++14
 
-# Debug Infos | -lasan needs to be first
+# Debug Infos
 ifeq ($(DEBUG), yes)
 CXXFLAGS=	-g -DDEBUG $(LOCAL_DEBUG_FLAGS)
 LDFLAGS=	-g

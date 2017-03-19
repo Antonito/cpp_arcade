@@ -1,7 +1,7 @@
 #ifndef LIBSDL_HPP_
 #define LIBSDL_HPP_
 
-#if defined(__linux__) || (__APPLE__)
+#if defined(__linux__)
 #include <SDL2/SDL.h>
 #else
 #include <SDL.h>
