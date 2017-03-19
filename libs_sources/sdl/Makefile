@@ -17,7 +17,8 @@ DIR_LIST=	$(SRC_DIR)		\
 # Project's files
 
 SRC_FILES=	LibSDL.cpp		\
-		EntryPoint.cpp
+		EntryPoint.cpp		\
+		KeysMapping.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

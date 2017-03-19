@@ -1,3 +1,5 @@
+// v1.0.3
+
 #ifndef IGFXLIB_HPP_
 #define IGFXLIB_HPP_
 
@@ -5,7 +7,6 @@
 #include <string>
 #include "Event.hpp"
 #include "IMap.hpp"
-#include "IMenu.hpp"
 #include "IGUI.hpp"
 
 namespace arcade
@@ -24,13 +25,16 @@ namespace arcade
     virtual void playSound(int soundId) = 0;
 
     // Map
-    virtual void displayMap(IMap const &map) = 0;
-
-    // Menu
-    virtual void displayMenu(IMenu const &menu) = 0;
+    virtual void updateMap(IMap const &map) = 0;
 
     // GUI
-    virtual void displayGUI(IGUI const &gui) = 0;
+    virtual void updateGUI(IGUI const &gui) = 0;
+
+    // Display
+    virtual void display() = 0;
+
+    // Clear
+    virtual void clear() = 0;
   };
 }
 

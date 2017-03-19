@@ -36,6 +36,16 @@ namespace arcade
 		m_type = type;
 	}
 
+	TileTypeEvolution Tile::getTypeEv() const
+	{
+		return (m_typeEv);
+	}
+
+	void Tile::setTypeEv(TileTypeEvolution type)
+	{
+		m_typeEv = type;
+	}
+
 	Color Tile::getColor() const
 	{
 		return (m_color);
@@ -46,7 +56,7 @@ namespace arcade
 		m_color = color;
 	}
 
-	int Tile::getSpriteId() const
+	size_t Tile::getSpriteId() const
 	{
 		return (m_sprite.getId());
 	}
@@ -71,7 +81,7 @@ namespace arcade
 		m_sprite.setPos(pos);
 	}
 
-	void Tile::setSprite(int id)
+	void Tile::setSprite(size_t id)
 	{
 		m_sprite.setId(id);
 	}

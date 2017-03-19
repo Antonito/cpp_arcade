@@ -49,7 +49,7 @@ namespace Nope
 		void Logger::start()
 		{
 			LogSink console = LogSink::makeOstream(std::cout);
-			LogSink file = LogSink::makeFile("nope.log");
+			LogSink file = LogSink::makeFile("log/arcade.log");
 
 			Trace.addSink(console);
 #ifdef DEBUG

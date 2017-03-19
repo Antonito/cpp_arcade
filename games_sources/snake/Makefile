@@ -16,7 +16,10 @@ DIR_LIST=	$(SRC_DIR)		\
 
 # Project's files
 
-SRC_FILES=		Snake.cpp
+SRC_FILES=		Snake.cpp	\
+			EntryPoint.cpp
+
+COMMON_FILES=		Color.cpp
 
 GAMES_COMMON_FILES=	AGame.cpp	\
 			Layer.cpp	\
@@ -24,7 +27,8 @@ GAMES_COMMON_FILES=	AGame.cpp	\
 			SpriteRef.cpp	\
 			Tile.cpp
 
-SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))	\
+SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))			\
+		$(addprefix $(COMMON_DIR), $(COMMON_FILES))		\
 		$(addprefix $(GAMES_COMMON_DIR), $(GAMES_COMMON_FILES))
 
 INC_DIR=	$(addprefix -I,$(DIR_LIST))

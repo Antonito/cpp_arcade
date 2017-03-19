@@ -71,8 +71,69 @@ namespace arcade
 
 	GameState Core::gameLoop()
 	{
+		GameState state = INGAME;
+		std::vector<Event> events;
+		std::vector<int> sounds;
+		Event ev;
+
 		Nope::Log::Info << "Launching a game";
-		// We have no game currently so we exit immediately
+		while (true)
+		{
+			events.clear();
+			sounds.clear();
+			m_lib->clear();
+			if (state != INGAME && state != PAUSED && state != GAME_MENU)
+			{
+				break ;
+			}
+			// Events
+			while (m_lib->pollEvent(ev))
+				events.push_back(ev);
+
+#ifdef DEBUG
+			Nope::Log::Debug << "Polled events";
+#endif
+			m_game->notifyEvent(std::move(events));
+#ifdef DEBUG
+			Nope::Log::Debug << "Notified events";
+#endif
+			// Network
+			// TODO: implement
+
+			// Game loop
+			m_game->process();
+#ifdef DEBUG
+			Nope::Log::Debug << "Processed game loop";
+#endif
+			// Sound
+			sounds = m_game->getSoundsToPlay();
+#ifdef DEBUG
+			Nope::Log::Debug << "Get sounds to play";
+#endif
+			// play sounds
+
+			// Map
+			m_lib->updateMap(m_game->getCurrentMap());
+#ifdef DEBUG
+			Nope::Log::Debug << "Send map to lib";
+#endif
+
+			// GUI
+//			m_lib->setGUI(m_game->getGUI());
+//#ifdef DEBUG
+//			Nope::Log::Debug << "Send GUI to lib";
+//#endif
+			// Display
+			m_lib->display();
+#ifdef DEBUG
+			Nope::Log::Debug << "Displayed";
+#endif
+			// GameState
+			state = m_game->getGameState();
+#ifdef DEBUG
+			Nope::Log::Debug << "Game state updated";
+#endif
+		}
 		Nope::Log::Info << "Exiting a game";
 		return QUIT;
 	}
@@ -83,6 +144,7 @@ namespace arcade
 
 		// Here we use directly use the first lib and game, but normally
 		// there is a menu to let the user choose
+		m_game = std::unique_ptr<IGame>(m_gameList[0].getFunction<IGame* ()>("getGame")());
 
 		Nope::Log::Info << "Leaving the main menu";
 
@@ -106,7 +168,11 @@ namespace arcade
 				// If it's a REGULAR file and it's name
 				// is formated like "lib_arcade_XXX.so"
 				if (ent->d_type == DT_REG &&
+#if defined(__linux__) || (__APPLE__)
 					Core::isNameValid(ent->d_name, "lib_arcade_", ".so"))
+#else
+					Core::isNameValid(ent->d_name, "lib_arcade_", ".dll"))
+#endif
 				{
 					Nope::Log::Info << "Adding library '" << ent->d_name << "'";
 					m_libList.emplace_back(std::string("lib/") + ent->d_name);
@@ -136,7 +202,11 @@ namespace arcade
 			{
 				Nope::Log::Info << "Reading '" << ent->d_name << "'";				// If it's a REGULAR file and it's a .so
 				if (ent->d_type == DT_REG &&
+#if defined(__linux__) || (__APPLE__)
 					Core::isNameValid(ent->d_name, "", ".so"))
+#else
+					Core::isNameValid(ent->d_name, "", ".dll"))
+#endif
 				{
 					Nope::Log::Info << "Adding library '" << ent->d_name << "'";
 					m_gameList.emplace_back(std::string("games/") + ent->d_name);

@@ -19,7 +19,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\libs_sources\libs_common\AGfxLib.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Color.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Event.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GameState.hpp" />
@@ -42,8 +41,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\libs_sources\libs_common\AGfxLib.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Color.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)NetworkPacket.cpp" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,6 @@
 # Definitions for Makefile
 NAME=			nanotekspice
 
-LIBNAME=			libnanotekspice.a
-
-DEBUG=			no
-
 MODE=
 
 LOCAL_COMP_FLAGS=

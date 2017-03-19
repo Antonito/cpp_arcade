@@ -21,18 +21,22 @@ namespace arcade
 		virtual TileType getType() const;
 		virtual void setType(TileType type);
 
+		virtual TileTypeEvolution getTypeEv() const;
+		virtual void setTypeEv(TileTypeEvolution type);
+
 		virtual Color getColor() const;
 		virtual void setColor(Color color);
 
-		virtual int getSpriteId() const;
+		virtual size_t getSpriteId() const;
 		virtual size_t getSpritePos() const;
 		virtual void   nextSprite();
 		virtual void   prevSprite();
 		virtual void setSpritePos(size_t pos);
-		virtual void setSprite(int id);
+		virtual void setSprite(size_t id);
 
 	private:
 		TileType m_type;
+		TileTypeEvolution m_typeEv;
 		Color m_color;
 		SpriteRef m_sprite;
 	};

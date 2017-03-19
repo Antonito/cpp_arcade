@@ -6,6 +6,7 @@
 #else
 #include <SDL.h>
 #endif
+#include <map>
 #include "IGfxLib.hpp"
 
 namespace arcade
@@ -28,16 +29,34 @@ namespace arcade
 		virtual void playSound(int soundId);
 
 		// Map
-		virtual void displayMap(IMap const &map);
-
-		// Menu
-		virtual void displayMenu(IMenu const &menu);
+		virtual void updateMap(IMap const &map);
 
 		// GUI
-		virtual void displayGUI(IGUI const &gui);
+		virtual void updateGUI(IGUI const &gui);
+
+		// Display
+		virtual void display();
+
+		// Clear
+		virtual void clear();
 	private:
+		static KeyboardKey getKeyboardKey(SDL_Keycode code);
+		static MouseKey getMouseKey(Uint8 code);
+		static MouseKey getMouseWheel(SDL_MouseWheelEvent const &code);
+
+		static std::map<SDL_Keycode, KeyboardKey> m_kb_keys;
+		static std::map<Uint8, MouseKey> m_mouse_keys;
+
+		static constexpr size_t m_tileSize = 10;
+
 		SDL_Window *m_win;
 		SDL_Surface *m_winSurface;
+
+		SDL_Surface *m_map;
+		size_t m_mapWidth;
+		size_t m_mapHeight;
+
+		SDL_Surface *m_gui;
 	};
 }
 

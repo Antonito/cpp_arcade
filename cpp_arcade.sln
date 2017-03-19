@@ -13,10 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GfxLibs", "GfxLibs", "{5C29
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdl", "libs_sources\sdl\sdl.vcxproj", "{DA431F04-FA13-434A-B130-60C695F912A3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "snake", "games_sources\snake\snake.vcxproj", "{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Common\Common.vcxitems*{214c9846-080f-4916-9a28-8fb713400826}*SharedItemsImports = 4
 		Common\Common.vcxitems*{4b985ef5-a2bc-4635-9e15-fef8c6c58650}*SharedItemsImports = 9
+		Common\Common.vcxitems*{92259d7f-3c73-4e3c-80c9-0217d7db14fd}*SharedItemsImports = 4
 		Common\Common.vcxitems*{da431f04-fa13-434a-b130-60c695f912a3}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,11 +45,20 @@ Global
 		{DA431F04-FA13-434A-B130-60C695F912A3}.Release|x64.Build.0 = Release|x64
 		{DA431F04-FA13-434A-B130-60C695F912A3}.Release|x86.ActiveCfg = Release|Win32
 		{DA431F04-FA13-434A-B130-60C695F912A3}.Release|x86.Build.0 = Release|Win32
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Debug|x64.ActiveCfg = Debug|x64
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Debug|x64.Build.0 = Debug|x64
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Debug|x86.ActiveCfg = Debug|Win32
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Debug|x86.Build.0 = Debug|Win32
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Release|x64.ActiveCfg = Release|x64
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Release|x64.Build.0 = Release|x64
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Release|x86.ActiveCfg = Release|Win32
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA431F04-FA13-434A-B130-60C695F912A3} = {5C2945FD-D162-4721-9CA2-BF274398587A}
+		{92259D7F-3C73-4E3C-80C9-0217D7DB14FD} = {9C25028E-55A1-49DA-A913-22837FEA6CFA}
 	EndGlobalSection
 EndGlobal

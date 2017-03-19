@@ -15,6 +15,10 @@ namespace arcade
 
 		Snake &operator=(Snake const &other);
 
+		virtual std::vector<std::string> getSoundsToLoad() const;
+
+		virtual void process();
+
 	private:
 	};
 }

@@ -19,7 +19,8 @@ namespace arcade
 
     Layer &operator=(Layer const &other) = delete;
 
-    virtual std::vector<std::unique_ptr<ITile>> &operator[](int n);
+	virtual std::vector<std::unique_ptr<ITile>> &operator[](int n);
+	virtual std::vector<std::unique_ptr<ITile>> const &operator[](int n) const;
     virtual size_t getWidth() const;
     virtual size_t getHeight() const;
 

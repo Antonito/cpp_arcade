@@ -25,6 +25,11 @@ namespace arcade
 		return (m_tiles[n]);
 	}
 
+	std::vector<std::unique_ptr<ITile>>const &Layer::operator[](int n) const
+	{
+		return (m_tiles[n]);
+	}
+
 	size_t Layer::getWidth() const
 	{
 		return (m_width);

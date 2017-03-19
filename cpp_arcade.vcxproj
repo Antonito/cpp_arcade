@@ -99,18 +99,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)core\src\logger\;$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
+    <TargetName>arcade</TargetName>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)core\src\logger\;$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
+    <TargetName>arcade</TargetName>
+    <OutDir>$(SolutionDir)</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)core\src\logger\;$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
+    <TargetName>arcade</TargetName>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)core\src\logger\;$(ProjectDir)core\src\exceptions\;$(ProjectDir)\core\src\network\;$(ProjectDir)\common\;$(ProjectDir)\core\src;$(ProjectDir)\common;$(IncludePath)</IncludePath>
+    <TargetName>arcade</TargetName>
+    <OutDir>$(SolutionDir)</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

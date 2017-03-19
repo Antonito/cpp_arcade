@@ -44,7 +44,7 @@ namespace		arcade
     CommandType		type;
     uint16_t		width;
     uint16_t		height;
-    TileType		tile[];
+    TileType		tile[0];
   } __attribute__((packed));
   /// The format is length, length * Position quantity of TileType
   struct		Position
@@ -56,7 +56,7 @@ namespace		arcade
   {
     CommandType		type;
     uint16_t		lenght;
-    Position		position[];
+    Position		position[0];
   } __attribute__((packed));
 #endif
 }

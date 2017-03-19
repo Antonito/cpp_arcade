@@ -7,8 +7,6 @@ INC_DIR=		-I./src/exceptions/		\
 			-I./src/			\
 			-I./../common/
 
-DEBUG=			no
-
 LOCAL_COMP_FLAGS=
 
 LOCAL_LINK_FLAGS=	-ldl

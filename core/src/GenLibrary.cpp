@@ -9,10 +9,16 @@ namespace arcade
 		m_libPtr = dlopen(m_filename.c_str(), RTLD_NOW | RTLD_GLOBAL);
 		if (!m_libPtr)
 		{
-			std::cerr << dlerror() << std::endl;
+			std::cerr << "Error while loading '" << m_filename << "'! Error : "
+				<< dlerror() << std::endl;
 		}
 #elif defined(_WIN32)
 		m_libPtr = LoadLibraryA(m_filename.c_str());
+		if (!m_libPtr)
+		{
+			std::cerr << "Error while loading '" << m_filename << "'! Error : "
+				<< GetLastError() << std::endl;
+		}
 #endif
 		// TODO: Check m_libPtr (no such file)
 	}

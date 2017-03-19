@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include "IGame.hpp"
 #include "Map.hpp"
-//#include "GUI.hpp"
+#include "IGUI.hpp"
 
 namespace arcade
 {
@@ -23,26 +23,23 @@ namespace arcade
 		virtual GameState getGameState() const;
 
 		// Events
-		virtual void notifyEvent(std::vector<Event> const &events);
+		virtual void notifyEvent(std::vector<Event> &&events);
 
 		// Network
-		virtual void notifyNetwork(std::vector<NetworkPacket> const &events);
-		virtual std::vector<NetworkPacket> getNetworkToSend() const;
+		virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
+		virtual std::vector<NetworkPacket> &&getNetworkToSend();
 
 		// Sound
 		virtual std::vector<std::string> getSoundsToLoad() const = 0;
-		virtual std::vector<int>         &&getSoundToPlay();
+		virtual std::vector<int>         &&getSoundsToPlay();
 
 		// Map
 		virtual IMap const &getCurrentMap() const;
 
-		// Menu
-		virtual IMenu const &getMenu() const = 0;
-
 		// GUI
-		//virtual IGUI const &getGUI() const;
+		virtual IGUI const &getGUI() const;
 
-	private:
+	protected:
 		GameState m_state;
 
 		std::vector<Event> m_events;
@@ -53,7 +50,7 @@ namespace arcade
 		std::vector<int> m_soundsToPlay;
 
 		std::unique_ptr<Map> m_map;
-		//GUI m_gui;
+		std::unique_ptr<IGUI> m_gui; // TODO: NOT INITIALIZED, FOR COMPILATION ONLY
 	};
 }
 

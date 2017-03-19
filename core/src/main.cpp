@@ -45,6 +45,8 @@ int		main()
 	arcade::Core core;
 	Nope::Log::Logger::start();
 
+	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_TRACE;
+
 	core.launch();
 	return (0);
 }

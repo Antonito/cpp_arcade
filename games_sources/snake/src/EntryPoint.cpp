@@ -2,27 +2,27 @@
 #include <Windows.h>
 #include <cstdbool>
 #endif
-#include "LibSDL.hpp"
-#include "IGfxLib.hpp"
+#include "IGame.hpp"
+#include "Snake.hpp"
 
 #if defined(__linux__) || (__APPLE__)
-#define GFXLIB_API
+#define GAME_API
 #else
-#define GFXLIB_API __declspec(dllexport)
+#define GAME_API __declspec(dllexport)
 #endif
 
 #include <iostream>
 extern "C"
 {
-	GFXLIB_API arcade::IGfxLib* getLib()
+	GAME_API arcade::IGame * getGame()
 	{
-		return (new arcade::LibSDL(1280, 720));
+		return (new arcade::Snake());
 	}
 
 #if defined(_WIN32)
 	BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 	{
-		std::cout << "ENTRY GFX____________" << std::endl;
+		std::cout << "ENTRY GAME______________" << std::endl;
 		return (true);
 	}
 #endif
