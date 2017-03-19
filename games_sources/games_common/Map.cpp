@@ -17,6 +17,11 @@ namespace arcade
 		return (m_layers[n]);
 	}
 
+	Layer const & Map::operator[](size_t n) const
+	{
+		return (m_layers[n]);
+	}
+
 	size_t Map::getLayerNb() const
 	{
 		return (m_layers.size());

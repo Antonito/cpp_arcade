@@ -9,7 +9,7 @@ namespace arcade
 	class SpriteRef
 	{
 	public:
-		SpriteRef(int id = -1);
+		SpriteRef(size_t id = 0);
 		SpriteRef(SpriteRef const &other);
 		~SpriteRef();
 
@@ -27,7 +27,7 @@ namespace arcade
 	private:
 		static std::vector<size_t> m_spriteNbs;
 
-		int m_id;
+		size_t m_id;
 		size_t m_pos;
 	};
 }

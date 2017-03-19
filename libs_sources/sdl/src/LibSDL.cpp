@@ -128,7 +128,9 @@ namespace arcade
 					<< " (" << m_mapWidth * m_tileSize << "x" << m_mapHeight * m_tileSize << ")"
 #endif
 					<< std::endl;
+				throw std::exception(); // TODO : create good exception
 			}
+
 		}
 
 		uint32_t *pixels = static_cast<uint32_t *>(m_map->pixels);
@@ -174,6 +176,10 @@ namespace arcade
 	void LibSDL::display()
 	{
 		// TODO : implement
+		SDL_Rect rec = { 1000, 1000, 0, 0 };
+
+		SDL_BlitSurface(m_map, NULL, m_winSurface, NULL);
+		SDL_UpdateWindowSurface(m_win);
 	}
 	void LibSDL::clear()
 	{

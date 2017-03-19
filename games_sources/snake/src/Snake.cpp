@@ -3,7 +3,23 @@
 namespace arcade
 {
 	Snake::Snake()
-	{}
+	{
+		constexpr size_t width = 25;
+		constexpr size_t height = 25;
+
+		m_map = std::make_unique<Map>(width, height);
+		for (size_t y = 0; y < height; ++y)
+		{
+			for (size_t x = 0; x < width; ++x)
+			{
+				uint8_t r = rand() % 256;
+				uint8_t g = rand() % 256;
+				uint8_t b = rand() % 256;
+
+				(*m_map)[0][y][x]->setColor(Color(r, g, b));
+			}
+		}
+	}
 
 	Snake::Snake(Snake const &other)
 	{}

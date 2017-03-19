@@ -47,7 +47,7 @@ namespace arcade
 		static std::map<SDL_Keycode, KeyboardKey> m_kb_keys;
 		static std::map<Uint8, MouseKey> m_mouse_keys;
 
-		static constexpr size_t m_tileSize = 10;
+		static constexpr size_t m_tileSize = 30;
 
 		SDL_Window *m_win;
 		SDL_Surface *m_winSurface;
