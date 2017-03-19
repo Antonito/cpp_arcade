@@ -18,6 +18,7 @@ namespace arcade
 		Map &operator=(Map const &other) = delete;
 
 		virtual Layer &operator[](size_t n);
+		virtual Layer const &operator[](size_t n) const;
 		virtual size_t getLayerNb() const;
 		virtual size_t getWidth() const;
 		virtual size_t getHeight() const;

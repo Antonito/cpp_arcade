@@ -41,6 +41,9 @@ int		main()
 #endif
 #endif
 
+	// SRAND
+	srand(time(NULL));
+
 	//Launching of the Core
 	arcade::Core core;
 	Nope::Log::Logger::start();

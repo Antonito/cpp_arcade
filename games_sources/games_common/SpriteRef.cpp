@@ -4,12 +4,15 @@ namespace arcade
 {
   std::vector<size_t> SpriteRef::m_spriteNbs;
 
-  SpriteRef::SpriteRef(int id)
+  SpriteRef::SpriteRef(size_t id) :
+	  m_id(id),
+	  m_pos(0)
   {
-    this->setId(id);
   }
 
-  SpriteRef::SpriteRef(SpriteRef const &other)
+  SpriteRef::SpriteRef(SpriteRef const &other) :
+	  m_id(other.m_id), 
+	  m_pos(other.m_pos)
   {
   }
 
@@ -21,6 +24,8 @@ namespace arcade
   {
     if (this != &other)
       {
+		m_id = other.m_id;
+		m_pos = other.m_pos;
       }
     return (*this);
   }
@@ -38,7 +43,7 @@ namespace arcade
   void SpriteRef::next()
   {
     // If we have a sprite
-    if (m_id != -1)
+    if (m_id != 0)
       {
 	m_pos++;
 	if (m_pos == SpriteRef::m_spriteNbs[m_id])
@@ -51,7 +56,7 @@ namespace arcade
   void SpriteRef::prev()
   {
     // If we have a sprite
-    if (m_id != -1)
+    if (m_id != 0)
       {
 	if (m_pos == 0)
 	  {
@@ -62,15 +67,8 @@ namespace arcade
   }
 
   void SpriteRef::setId(int id)
-  {
-    if (m_id < 0)
-      {
-	m_id = -1;
-      }
-    else
-      {
+  { 
 	m_id = id % SpriteRef::m_spriteNbs.size();
-      }
   }
 
   void SpriteRef::setPos(size_t pos)
