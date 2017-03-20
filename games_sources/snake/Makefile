@@ -7,31 +7,19 @@ include $(MK_COMMON_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_COMMON_DIR)defs.mk
 # Project's directories
 
 SRC_DIR=		./src/
-COMMON_DIR=		$(SRC_DIR)common/
-GAMES_COMMON_DIR=	$(SRC_DIR)games_common/
 
-DIR_LIST=	$(SRC_DIR)		\
-		$(COMMON_DIR)		\
-		$(GAMES_COMMON_DIR)
+DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=		Snake.cpp	\
-			EntryPoint.cpp
+SRC_FILES=	Snake.cpp	\
+		EntryPoint.cpp
 
-COMMON_FILES=		Color.cpp
+SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-GAMES_COMMON_FILES=	AGame.cpp	\
-			Layer.cpp	\
-			Map.cpp		\
-			SpriteRef.cpp	\
-			Tile.cpp
-
-SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))			\
-		$(addprefix $(COMMON_DIR), $(COMMON_FILES))		\
-		$(addprefix $(GAMES_COMMON_DIR), $(GAMES_COMMON_FILES))
-
-INC_DIR=	$(addprefix -I,$(DIR_LIST))
+INC_DIR=	$(DIR_LIST)					\
+		$(PROJECT_DIR)/common/src/			\
+		$(PROJECT_DIR)/games_sources/games_common/src
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

@@ -11,11 +11,6 @@ namespace arcade
 		return (m_state);
 	}
 
-	void AGame::notifyEvent(std::vector<Event> && events)
-	{
-		m_events = events;
-	}
-
 	void AGame::notifyNetwork(std::vector<NetworkPacket> &&events)
 	{
 		m_received = events;

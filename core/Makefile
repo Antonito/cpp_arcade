@@ -37,5 +37,8 @@ SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))		\
 		$(addprefix $(EXCEPT_DIR), $(EXCEPT_FILES))	\
 		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))
 
+INC_DIR=	$(DIR_LIST)		\
+		$(PROJECT_DIR)/common/src
+
 # Rules
 include $(MK_COMMON_DIR)rules.mk

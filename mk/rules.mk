@@ -42,23 +42,6 @@ fclean:		clean
 
 re:		fclean all
 
-install:
-ifeq ($(NAME_EXTENSION),)
-		@$(CP) $(NAME) $(INSTALL_PATH) && \
-		$(ECHO) "$(WHITE)[$(PURPLE)CP$(WHITE)] Installed $(CYAN)"$(NAME)"\n$(CLEAR)" || \
-		$(ECHO) "$(WHITE)[$(PURPLE)CP$(WHITE)] Cannot install $(CYAN)"$(NAME)"\n$(CLEAR)"
-else
-		$(ECHO) "$(WHITE)[$(PURPLE)CP$(WHITE)] Not an executable, skipping ...\n$(CLEAR)"
-endif
-
-uninstall:
-ifeq ($(NAME_EXTENSION),)
-		@$(RM) $(INSTALL_PATH)/$(NAME)
-		@$(ECHO) "$(WHITE)[$(RED)RM$(WHITE)] Uninstalled $(CYAN)"$(NAME)"\n$(CLEAR)"
-else
-		$(ECHO) "$(WHITE)[$(RED)RM$(WHITE)] Not an installed, skipping ...\n$(CLEAR)"
-endif
-
 run:
 		./$(NAME)
 

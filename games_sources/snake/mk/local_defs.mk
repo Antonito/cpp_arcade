@@ -1,8 +1,8 @@
 # Definitions for Makefile
-NAME=			../../games/snake.so
+NAME=			$(PROJECT_DIR)/games/snake.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 
-LOCAL_LINK_FLAGS=	-shared -rdynamic
+LOCAL_LINK_FLAGS=	-shared -rdynamic -L$(PROJECT_DIR)/build -lgames_common
 
 LOCAL_DEBUG_FLAGS=

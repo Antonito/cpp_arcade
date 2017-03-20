@@ -14,33 +14,34 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\AGame.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Layer.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Color.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Event.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)GameState.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IGame.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IGfxLib.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IGUI.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ILayer.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ILevel.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IMap.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IMenu.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IMenuItem.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)IStat.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ITile.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)NetworkPacket.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Protocol.hpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\AGame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Layer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Map.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\SpriteRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Tile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Color.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Event.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\AGame.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Layer.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Map.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\SpriteRef.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\Tile.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Color.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\AGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Layer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Map.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\SpriteRef.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\games_common\src\Tile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Color.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Event.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\EventHash.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\GameState.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IComponent.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IGfxLib.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IGUI.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\ILayer.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\ILevel.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IMap.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\IStat.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\ITile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\NetworkPacket.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Protocol.hpp" />
   </ItemGroup>
 </Project>

@@ -22,7 +22,6 @@ extern "C"
 #if defined(_WIN32)
 	BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 	{
-		std::cout << "ENTRY GFX____________" << std::endl;
 		return (true);
 	}
 #endif

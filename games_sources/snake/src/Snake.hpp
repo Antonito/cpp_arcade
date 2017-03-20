@@ -15,11 +15,18 @@ namespace arcade
 
 		Snake &operator=(Snake const &other);
 
+		virtual void notifyEvent(std::vector<Event> &&events);
+
 		virtual std::vector<std::string> getSoundsToLoad() const;
 
 		virtual void process();
 
 	private:
+		struct
+		{
+			size_t x;
+			size_t y;
+		}   m_pos;
 	};
 }
 
