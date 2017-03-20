@@ -10,17 +10,20 @@ GFX_LIBS=		sdl
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
 
-GAMES=			snake
+GAMES=			games_common		\
+			snake
 
 ###### Add your projects here #####
-PROJECTS=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\
+PROJECTS=		./common/					\
+			$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\
 			$(addprefix $(GAMES_DIR), $(GAMES))		\
 			./core/
 
 # Some useful variables
 DEBUG=			no
 
-ARGS=			DEBUG=$(DEBUG) -s --warn-undefined-variables -C
+PROJECT_DIR=		${PWD}
+ARGS=			DEBUG=$(DEBUG) PROJECT_DIR=$(PROJECT_DIR) -s --warn-undefined-variables -C
 
 CURRENT_DIR=		${PWD}
 

@@ -134,14 +134,19 @@ namespace arcade
 		}
 
 		uint32_t *pixels = static_cast<uint32_t *>(m_map->pixels);
+		size_t mapWidth = m_map->w;
 
 		for (size_t l = 0; l < map.getLayerNb(); ++l)
 		{
+			ILayer const &layer = map[l];
+
 			for (size_t y = 0; y < m_mapHeight; ++y)
 			{
+				std::vector<std::unique_ptr<ITile>> const &line = layer[y];
+
 				for (size_t x = 0; x < m_mapWidth; ++x)
 				{
-					ITile const &tile = *map[l][y][x];
+					ITile const &tile = *line[x];
 
 					if (tile.getSpriteId() != 0 && false) // TODO: enable
 					{
@@ -151,14 +156,26 @@ namespace arcade
 					{
 						Color color = tile.getColor();
 
-						for (size_t _y = 0; _y < m_tileSize; ++_y)
+						if (color.rgba[3] != 0)
 						{
-							for (size_t _x = 0; _x < m_tileSize; ++_x)
+							for (size_t _y = 0; _y < m_tileSize; ++_y)
 							{
-								size_t X = x * m_tileSize + _x;
-								size_t Y = y * m_tileSize + _y;
+								for (size_t _x = 0; _x < m_tileSize; ++_x)
+								{
+									size_t X = x * m_tileSize + _x;
+									size_t Y = y * m_tileSize + _y;
+									size_t pix = Y * mapWidth + X;
 
-								pixels[Y * m_map->w + X] = color.full;
+									// Alpha
+									double a(color.rgba[3] / 255.0);
+
+									Color old(pixels[pix]);
+									Color merged(color.rgba[0] * a + old.rgba[0] * (1 - a),
+										color.rgba[1] * a + old.rgba[1] * (1 - a),
+										color.rgba[2] * a + old.rgba[2] * (1 - a));
+
+									pixels[pix] = merged.full;
+								}
 							}
 						}
 					}

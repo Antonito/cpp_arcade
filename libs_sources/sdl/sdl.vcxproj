@@ -73,7 +73,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src</IncludePath>
     <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src</IncludePath>
     <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
@@ -89,7 +89,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src</IncludePath>
     <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
@@ -97,7 +97,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src</IncludePath>
     <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>

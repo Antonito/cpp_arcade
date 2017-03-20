@@ -4,9 +4,12 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <unordered_map>
+#include <functional>
 #include "IGame.hpp"
 #include "Map.hpp"
 #include "IGUI.hpp"
+#include "EventHash.hpp"
 
 namespace arcade
 {
@@ -23,7 +26,7 @@ namespace arcade
 		virtual GameState getGameState() const;
 
 		// Events
-		virtual void notifyEvent(std::vector<Event> &&events);
+		virtual void notifyEvent(std::vector<Event> &&events) = 0;
 
 		// Network
 		virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
@@ -42,13 +45,14 @@ namespace arcade
 	protected:
 		GameState m_state;
 
-		std::vector<Event> m_events;
-
+		// Network buffers
 		std::vector<NetworkPacket> m_received;
 		std::vector<NetworkPacket> m_toSend;
 
+		// Sounds to play buffer
 		std::vector<int> m_soundsToPlay;
 
+		// Game map
 		std::unique_ptr<Map> m_map;
 		std::unique_ptr<IGUI> m_gui; // TODO: NOT INITIALIZED, FOR COMPILATION ONLY
 	};

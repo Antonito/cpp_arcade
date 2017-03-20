@@ -169,6 +169,7 @@ enum KeyboardKey
   //
   struct Event
   {
+	bool operator==(Event const &e) const;
     EventType     type;
     ActionType    action;
     union {

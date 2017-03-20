@@ -25,7 +25,7 @@ CXXFLAGS=	-DNDEBUG
 LDFLAGS=
 endif
 
-CXXFLAGS+=	$(INC_DIR)			\
+CXXFLAGS+=	$(addprefix -I, $(INC_DIR))	\
 		$(LOCAL_COMP_FLAGS)
 
 LDFLAGS+=	-lstdc++			\
