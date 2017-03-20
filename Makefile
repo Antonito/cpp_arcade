@@ -28,6 +28,7 @@ DEBUG=			no
 
 PROJECT_DIR=		${PWD}
 ARGS=			DEBUG=$(DEBUG) PROJECT_DIR=$(PROJECT_DIR) -s --warn-undefined-variables -C
+
 CURRENT_DIR=		${PWD}
 
 PRINT_DIR=		$(ECHO) "$(YELLOW)$(path) :$(CLEAR)\n";

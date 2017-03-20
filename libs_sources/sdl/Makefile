@@ -2,13 +2,17 @@
 MK_DIR=		./mk/
 MK_COMMON_DIR=	./../../mk/
 
-include $(MK_COMMON_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_COMMON_DIR)defs.mk
+include $(MK_COMMON_DIR)colors.mk $(MK_COMMON_DIR)defs.mk $(MK_DIR)local_defs.mk
 
 # Project's directories
 
 SRC_DIR=		./src/
 
 DIR_LIST=	$(SRC_DIR)
+
+ifeq ($(UNAME_S),Darwin)
+DIR_LIST+=	/Library/Frameworks/SDL2.framework/Headers/
+endif
 
 # Project's files
 
