@@ -10,7 +10,7 @@ ifeq ($(NAME_EXTENSION),.a)
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Generated $(CYAN)"$(NAME)"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Generated $(CYAN)"$(NAME)"\n$(CLEAR)"
 else
-		@$(CXX) $(OBJ) $(LDFLAGS) -o $(NAME) && \
+		@$(CXX) $(OBJ) -o $(NAME) $(LDFLAGS) && \
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Linked $(CYAN)"$(NAME)"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Linked $(CYAN)"$(NAME)"\n$(CLEAR)"
 endif
