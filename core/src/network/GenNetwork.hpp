@@ -10,13 +10,13 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#define closesocket(s)		close(s)
+#define closesocket(s) close(s)
 
-typedef int					sock_t;
-typedef struct sockaddr_in	sockaddr_in_t;
-typedef struct sockaddr		sockaddr_t;
-typedef struct in_addr		_in_addr_t;
-typedef struct addrinfo		addrinfo_t;
+typedef int                sock_t;
+typedef struct sockaddr_in sockaddr_in_t;
+typedef struct sockaddr    sockaddr_t;
+typedef struct in_addr     _in_addr_t;
+typedef struct addrinfo    addrinfo_t;
 
 #elif defined(_WIN32)
 
@@ -30,12 +30,12 @@ typedef struct addrinfo		addrinfo_t;
 #include <Ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
-typedef SOCKET				sock_t;
-typedef SOCKADDR_IN			sockaddr_in_t;
-typedef SOCKADDR			sockaddr_t;
-typedef IN_ADDR				_in_addr_t;
-typedef SSIZE_T				ssize_t;
-typedef struct addrinfo		addrinfo_t;
+typedef SOCKET          sock_t;
+typedef SOCKADDR_IN     sockaddr_in_t;
+typedef SOCKADDR        sockaddr_t;
+typedef IN_ADDR         _in_addr_t;
+typedef SSIZE_T         ssize_t;
+typedef struct addrinfo addrinfo_t;
 
 #else
 
