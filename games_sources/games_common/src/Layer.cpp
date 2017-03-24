@@ -4,30 +4,25 @@ namespace arcade
 {
 	Layer::Layer(size_t width, size_t height) : m_width(width), m_height(height)
 	{
-		m_tiles.reserve(height);
-		for (size_t y = 0; y < height; ++y)
-		{
-			m_tiles.emplace_back();
-			m_tiles[y].reserve(width);
-			for (size_t x = 0; x < width; ++x)
-			{
-				m_tiles[y].push_back(std::make_unique<Tile>());
-			}
-		}
+		Tile tile;
+		
+		tile.setColor(Color::Cyan);
+
+		m_tiles.insert(m_tiles.begin(), width * height, tile);
 	}
 
 	Layer::~Layer()
 	{
 	}
 
-	std::vector<std::unique_ptr<ITile>>& Layer::operator[](int n)
+	Tile &Layer::at(size_t x, size_t y)
 	{
-		return (m_tiles[n]);
+		return (m_tiles[y * m_width + x]);
 	}
 
-	std::vector<std::unique_ptr<ITile>>const &Layer::operator[](int n) const
+	Tile const &Layer::at(size_t x, size_t y) const
 	{
-		return (m_tiles[n]);
+		return (m_tiles[y * m_width + x]);
 	}
 
 	size_t Layer::getWidth() const

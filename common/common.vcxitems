@@ -36,7 +36,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)src\IGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\IGfxLib.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\IGUI.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\ILayer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\ILevel.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\IMap.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\IStat.hpp" />

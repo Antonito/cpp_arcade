@@ -5,21 +5,21 @@ namespace arcade
 	Map::Map(size_t width, size_t height) : m_width(width), m_height(height)
 	{
 		// Push a first layer
-		m_layers.emplace_back(width, height);
+		this->addLayer();
 	}
 
 	Map::~Map()
 	{
 	}
 
-	Layer & Map::operator[](size_t n)
+	ITile &Map::at(size_t layer, size_t x, size_t y)
 	{
-		return (m_layers[n]);
+		return (m_layers[layer].at(x, y));
 	}
 
-	Layer const & Map::operator[](size_t n) const
+	ITile const &Map::at(size_t layer, size_t x, size_t y) const
 	{
-		return (m_layers[n]);
+		return (m_layers[layer].at(x, y));
 	}
 
 	size_t Map::getLayerNb() const
