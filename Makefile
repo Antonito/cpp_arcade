@@ -10,8 +10,7 @@ GFX_LIBS=		sdl
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
 
-GAMES=			games_common		\
-			snake
+GAMES=			snake
 
 COMMON=			common
 

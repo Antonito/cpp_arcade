@@ -23,6 +23,42 @@ namespace arcade
 {
 	Core::Core() : m_currentGameId(0), m_currentLibId(0)
 	{
+		m_state = INGAME;
+
+		m_map = std::make_unique<Map>(0, 0);
+		m_gui = std::make_unique<GUI>();
+
+		// Create the main menu GUI
+		Component comp;
+
+		comp.setBackgroundColor(Color::White);
+		comp.setX(0.0);
+		comp.setY(0.0);
+		comp.setWidth(1.0);
+		comp.setHeight(1.0);
+		m_gui->push(comp);
+
+		comp.setBackgroundColor(Color(0, 0, 0, 170));
+
+		comp.setX(0.3);
+		comp.setY(0.1);
+		comp.setWidth(0.4);
+		comp.setHeight(0.1);
+		m_gui->push(comp);
+
+		comp.setWidth(0.35);
+		comp.setHeight(0.6);
+
+		comp.setX(0.1);
+		comp.setY(0.3);
+		m_gui->push(comp);
+
+		comp.setX(0.55);
+		m_gui->push(comp);
+
+		m_inMenu = true;
+		m_game = std::unique_ptr<IGame>(this);
+
 #ifdef DEBUG
 		Nope::Log::Debug << "Core constructed";
 #endif
@@ -97,6 +133,10 @@ namespace arcade
 #ifdef DEBUG
 			Nope::Log::Debug << "Notified events";
 #endif
+			if (m_game.get() == nullptr)
+			{
+				return (QUIT);
+			}
 			// Network
 			// TODO: implement
 
@@ -119,10 +159,10 @@ namespace arcade
 #endif
 
 			// GUI
-//			m_lib->setGUI(m_game->getGUI());
-//#ifdef DEBUG
-//			Nope::Log::Debug << "Send GUI to lib";
-//#endif
+			m_lib->updateGUI(m_game->getGUI());
+#ifdef DEBUG
+			Nope::Log::Debug << "Send GUI to lib";
+#endif
 			// Display
 			m_lib->display();
 #ifdef DEBUG
@@ -144,7 +184,9 @@ namespace arcade
 
 		// Here we use directly use the first lib and game, but normally
 		// there is a menu to let the user choose
-		m_game = std::unique_ptr<IGame>(m_gameList[0].getFunction<IGame* ()>("getGame")());
+		//m_game = std::unique_ptr<IGame>(m_gameList[0].getFunction<IGame* ()>("getGame")());
+
+
 
 		Nope::Log::Info << "Leaving the main menu";
 
@@ -233,5 +275,42 @@ namespace arcade
 		return (name.compare(0, prefix.length(), prefix) == 0 &&
 			name.compare(name.length() - suffix.length(),
 				suffix.length(), suffix) == 0);
+	}
+
+	void Core::notifyEvent(std::vector<Event>&& events)
+	{
+		std::vector<Event> ev = events;
+
+		for (Event const &e : ev)
+		{
+			if (e.type == EventType::ET_QUIT)
+			{
+				m_state = QUIT;
+				m_game.release();
+			}
+			else if (e.type == EventType::ET_KEYBOARD &&
+				e.action == ActionType::AT_PRESSED)
+			{
+				if (e.kb_key == KeyboardKey::KB_ESCAPE)
+				{
+					m_state = QUIT;
+					m_game.release();
+				}
+				else if (e.kb_key == KeyboardKey::KB_ENTER)
+				{
+					m_game.release();
+					m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
+				}
+			}
+		}
+	}
+
+	std::vector<std::string> Core::getSoundsToLoad() const
+	{
+		return (std::vector<std::string>());
+	}
+
+	void Core::process()
+	{
 	}
 }
