@@ -5,13 +5,13 @@ include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 ###### Add your graphic libraries here #####
 GFX_LIBS_DIR=		./libs_sources/
 
-GFX_LIBS=		sdl
+GFX_LIBS=		sdl		\
+			sfml
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
 
-GAMES=			games_common		\
-			snake
+GAMES=			snake
 
 COMMON=			common
 

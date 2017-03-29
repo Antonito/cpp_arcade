@@ -18,8 +18,7 @@ SRC_FILES=	Snake.cpp	\
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR=	$(DIR_LIST)					\
-		$(PROJECT_DIR)/common/src/			\
-		$(PROJECT_DIR)/games_sources/games_common/src
+		$(PROJECT_DIR)/common/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

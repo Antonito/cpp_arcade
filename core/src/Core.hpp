@@ -8,10 +8,11 @@
 #include "IGame.hpp"
 #include "IGfxLib.hpp"
 #include "GenLibrary.hpp"
+#include "AGame.hpp"
 
 namespace arcade
 {
-	class Core
+	class Core : public AGame
 	{
 	public:
 		Core();
@@ -37,10 +38,17 @@ namespace arcade
 		size_t m_currentGameId;
 		size_t m_currentLibId;
 
+		bool m_inMenu;
+
 		std::unique_ptr<IGame> m_game;
 		std::unique_ptr<IGfxLib> m_lib;
 		// std::unique_ptr<ISoundLib> m_sound;
 		// std::unique_ptr<Network> m_network;
+
+		// Game implementation part (for main menu)
+		virtual void notifyEvent(std::vector<Event> &&events);
+		virtual std::vector<std::string> getSoundsToLoad() const;
+		virtual void process();
 	};
 }
 

@@ -20,6 +20,17 @@ namespace arcade
 		m_pos = { width / 2, height / 2 };
 
 		m_map->addLayer();
+
+		m_gui = std::make_unique<GUI>();
+
+		Component comp;
+
+		comp.setX(0.05);
+		comp.setY(0.05);
+		comp.setWidth(0.15);
+		comp.setHeight(0.05);
+		comp.setBackgroundColor(Color(0, 0, 0, 170));
+		m_gui->push(std::move(comp));
 	}
 
 	Snake::Snake(Snake const &other)

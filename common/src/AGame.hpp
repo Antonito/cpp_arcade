@@ -8,7 +8,7 @@
 #include <functional>
 #include "IGame.hpp"
 #include "Map.hpp"
-#include "IGUI.hpp"
+#include "GUI.hpp"
 #include "EventHash.hpp"
 
 namespace arcade
@@ -54,7 +54,7 @@ namespace arcade
 
 		// Game map
 		std::unique_ptr<Map> m_map;
-		std::unique_ptr<IGUI> m_gui; // TODO: NOT INITIALIZED, FOR COMPILATION ONLY
+		std::unique_ptr<GUI> m_gui;
 	};
 }
 

@@ -120,7 +120,8 @@ namespace arcade
 			m_mapWidth = map.getWidth();
 			m_mapHeight = map.getHeight();
 
-			m_map = SDL_CreateRGBSurface(0, m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32, 0, 0, 0, 0);
+			m_map = SDL_CreateRGBSurface(0, m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32,
+				0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 			if (!m_map)
 			{
 				std::cerr << "Failed to create SDL RGB surface"
@@ -130,7 +131,6 @@ namespace arcade
 					<< std::endl;
 				throw std::exception(); // TODO : create good exception
 			}
-
 		}
 
 		uint32_t *pixels = static_cast<uint32_t *>(m_map->pixels);
@@ -162,12 +162,13 @@ namespace arcade
 									size_t pix = Y * mapWidth + X;
 
 									// Alpha
-									double a(color.rgba[3] / 255.0);
+									double a(color.a / 255.0);
 
 									Color old(pixels[pix]);
-									Color merged(color.rgba[0] * a + old.rgba[0] * (1 - a),
-										color.rgba[1] * a + old.rgba[1] * (1 - a),
-										color.rgba[2] * a + old.rgba[2] * (1 - a));
+									Color merged(color.r * a + old.r * (1 - a),
+										color.g * a + old.g * (1 - a),
+										color.b * a + old.b * (1 - a),
+										color.a + old.a * (1 - a));
 
 									pixels[pix] = merged.full;
 								}
@@ -181,14 +182,64 @@ namespace arcade
 
 	void LibSDL::updateGUI(IGUI const & gui)
 	{
-		(void)gui;
-		// TODO : implement
+		if (!m_gui)
+		{
+			m_gui = SDL_CreateRGBSurface(0, m_winSurface->w, m_winSurface->h, 32,
+				0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+			if (!m_gui)
+			{
+				std::cerr << "Failed to create SDL RGB surface"
+#ifdef DEBUG
+					<< " (" << m_winSurface->w << "x" << m_winSurface->h << ")"
+#endif
+					<< std::endl;
+				throw std::exception(); // TODO : create good exception
+			}
+		}
+
+		Color *pixels = static_cast<Color *>(m_gui->pixels);
+
+		memset(pixels, 0, m_gui->w * m_gui->h * sizeof(Color));
+
+		for (size_t i = 0; i < gui.size(); ++i)
+		{
+			IComponent const &comp = gui.at(i);
+			size_t x = comp.getX() * m_gui->w;
+			size_t y = comp.getY() * m_gui->h;
+			size_t width = comp.getWidth() * m_gui->w;
+			size_t height = comp.getHeight() * m_gui->h;
+
+			Color color = comp.getBackgroundColor();
+			double a(color.a / 255.0);
+
+			//std::cout << x << "," << y << " " << width << "," << height << std::endl;
+
+			if (color.a != 0)
+			{
+				for (size_t _y = 0; _y < height; ++_y)
+				{
+					for (size_t _x = 0; _x < width; ++_x)
+					{
+						size_t pix = (y + _y) * m_gui->w + (x + _x);
+
+						Color old(pixels[pix]);
+						Color merged(color.r * a + old.r * (1 - a),
+							color.g * a + old.g * (1 - a),
+							color.b * a + old.b * (1 - a),
+							color.a + old.a * (1 - a));
+
+						pixels[pix] = merged.full;
+					}
+				}
+			}
+		}
 	}
 
 	void LibSDL::display()
 	{
 		// TODO : implement
 		SDL_BlitSurface(m_map, NULL, m_winSurface, NULL);
+		SDL_BlitSurface(m_gui, NULL, m_winSurface, NULL);
 		SDL_UpdateWindowSurface(m_win);
 	}
 	void LibSDL::clear()
