@@ -1,7 +1,8 @@
 #ifndef LIBSFML_HPP_
 #define LIBSFML_HPP_
 
-#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <map>
 #include "IGfxLib.hpp"
 
@@ -36,26 +37,30 @@ namespace arcade
     // Clear
     virtual void clear();
   private:
-#if 0
-    static KeyboardKey getKeyboardKey(SFML_Keycode code);
-    static MouseKey getMouseKey(Uint8 code);
-    static MouseKey getMouseWheel(SFML_MouseWheelEvent const &code);
+    static KeyboardKey getKeyboardKey(sf::Keyboard::Key code);
+    static MouseKey getMouseKey(sf::Mouse::Button code);
+    static MouseKey getMouseWheel(sf::Mouse::Wheel code);
+    MousePos getMousePos();
 
-    static std::map<SFML_Keycode, KeyboardKey> m_kb_keys;
-    static std::map<Uint8, MouseKey> m_mouse_keys;
-#endif
+    static std::map<sf::Keyboard::Key, KeyboardKey> m_kb_keys;
+    static std::map<sf::Mouse::Button, MouseKey> m_mouse_keys;
 
     static constexpr size_t m_tileSize = 24;
 
-    std::unique_ptr<sf::Window> m_win;
+    std::unique_ptr<sf::RenderWindow> m_win;
+    std::vector<std::unique_ptr<sf::SoundBuffer>> m_soundBuffer;
+    std::vector<std::unique_ptr<sf::Sound>> m_sound;
+    sf::Vector2i m_mousePos;
+
+    std::unique_ptr<uint32_t[]> m_guiPix;
+    std::unique_ptr<sf::Texture> m_gui;
+    std::unique_ptr<sf::Sprite> m_guiSprite;
 #if 0
     SFML_Surface *m_winSurface;
 
     SFML_Surface *m_map;
     size_t m_mapWidth;
     size_t m_mapHeight;
-
-    SFML_Surface *m_gui;
 #endif
   };
 }

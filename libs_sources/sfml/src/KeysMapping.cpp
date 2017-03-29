@@ -2,7 +2,7 @@
 
 namespace arcade
 {
-  // Mapping SDL Mouse Button with MouseKey enum
+  // Mapping SFML Mouse Button with MouseKey enum
   std::map<sf::Mouse::Button, MouseKey> LibSFML::m_mouse_keys =
     {
       { sf::Mouse::Button::Left, M_LEFT_CLICK },
