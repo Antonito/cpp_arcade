@@ -13,12 +13,12 @@ namespace arcade
 		Map(size_t width, size_t height);
 
 		Map(Map const &other) = delete;
-		~Map();
+		virtual ~Map();
 			
 		Map &operator=(Map const &other) = delete;
 
-		virtual Layer &operator[](size_t n);
-		virtual Layer const &operator[](size_t n) const;
+		virtual ITile &at(size_t layer, size_t x, size_t y);
+		virtual ITile const &at(size_t layer, size_t x, size_t y) const;
 		virtual size_t getLayerNb() const;
 		virtual size_t getWidth() const;
 		virtual size_t getHeight() const;

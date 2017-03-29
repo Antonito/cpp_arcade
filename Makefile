@@ -13,11 +13,15 @@ GAMES_DIR=		./games_sources/
 GAMES=			games_common		\
 			snake
 
+COMMON=			common
+
+CORE=			core
+
 ###### Add your projects here #####
-PROJECTS=		./common/					\
+PROJECTS=		./$(COMMON)/					\
 			$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\
 			$(addprefix $(GAMES_DIR), $(GAMES))		\
-			./core/
+			./$(CORE)/
 
 # Some useful variables
 DEBUG=			no
@@ -35,6 +39,22 @@ all:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path);)
+
+$(GAMES):
+			@$(ECHO) "$(YELLOW)$(GAMES_DIR)$@ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(GAMES_DIR)$@
+
+$(GFX_LIBS):
+			@$(ECHO) "$(YELLOW)$(GFX_LIBS_DIR)$@ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(GFX_LIBS_DIR)$@
+
+$(COMMON):
+			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(COMMON)
+
+$(CORE):
+			@$(ECHO) "$(YELLOW)./$(CORE)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(CORE)
 
 clean:
 			@$(foreach path, $(PROJECTS),			\
@@ -56,4 +76,4 @@ infos:
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) infos;)
 
-.PHONY: all clean fclean re infos
+.PHONY: all clean fclean re infos $(GAMES) $(GFX_LIBS) $(COMMON) $(CORE)

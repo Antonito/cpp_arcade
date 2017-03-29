@@ -138,19 +138,14 @@ namespace arcade
 
 		for (size_t l = 0; l < map.getLayerNb(); ++l)
 		{
-			ILayer const &layer = map[l];
-
-			for (size_t y = 0; y < m_mapHeight; ++y)
+			for (size_t y = 0; y < m_mapWidth; ++y)
 			{
-				std::vector<std::unique_ptr<ITile>> const &line = layer[y];
-
-				for (size_t x = 0; x < m_mapWidth; ++x)
+				for (size_t x = 0; x < m_mapHeight; ++x)
 				{
-					ITile const &tile = *line[x];
+					ITile const &tile = map.at(l, x, y);
 
 					if (tile.getSpriteId() != 0 && false) // TODO: enable
 					{
-
 					}
 					else
 					{
@@ -193,8 +188,6 @@ namespace arcade
 	void LibSDL::display()
 	{
 		// TODO : implement
-		SDL_Rect rec = { 1000, 1000, 0, 0 };
-
 		SDL_BlitSurface(m_map, NULL, m_winSurface, NULL);
 		SDL_UpdateWindowSurface(m_win);
 	}

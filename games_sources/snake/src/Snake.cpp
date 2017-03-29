@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Snake.hpp"
 
 namespace arcade
@@ -12,7 +13,7 @@ namespace arcade
 		{
 			for (size_t x = 0; x < width; ++x)
 			{
-				(*m_map)[0][y][x]->setColor(Color::White);
+				m_map->at(0, x, y).setColor(Color::White);
 			}
 		};
 
@@ -33,7 +34,7 @@ namespace arcade
 		{
 			for (size_t x = 0; x < width; ++x)
 			{
-				(*m_map)[0][y][x]->setColor(Color::White);
+				m_map->at(0, x, y).setColor(Color::White);
 			}
 		};
 
@@ -45,6 +46,7 @@ namespace arcade
 
 	Snake &Snake::operator=(Snake const &other)
 	{
+		std::cout << "eq" << std::endl;
 		if (this != &other)
 		{
 		}
@@ -98,9 +100,9 @@ namespace arcade
 		{
 			for (size_t x = 0; x < m_map->getWidth(); ++x)
 			{
-				(*m_map)[1][y][x]->setColor(Color::Transparent);
+				m_map->at(1, x, y).setColor(Color::Transparent);
 			}
 		};
-		(*m_map)[1][m_pos.y][m_pos.x]->setColor(Color::Red);
+		m_map->at(1, m_pos.x, m_pos.y).setColor(Color::Red);
 	}
 }
