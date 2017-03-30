@@ -4,7 +4,7 @@
 
 namespace arcade
 {
-  Libcaca::Libcaca(size_t width, size_t height)
+  Libcaca::Libcaca(size_t width, size_t height) : m_win(nullptr)
   {
     // TODO : implement
   }
@@ -16,23 +16,77 @@ namespace arcade
 
   bool Libcaca::pollEvent(Event &e)
   {
-    // TODO : implement
+    caca_event_t	event;
+
+    if (caca_get_event(m_win, CACA_EVENT_ANY, &event, 0))
+      {
+	switch (caca_get_event_type(&event))
+	  {
+	  case CACA_EVENT_QUIT:
+	    // The window requested to be closed
+	    e.type = EventType::ET_QUIT;
+	    break;
+	  case CACA_EVENT_RESIZE:
+	    // The window was resized
+	    break;
+
+	  case CACA_EVENT_MOUSE_MOTION:
+	    // The mouse moved
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_MOVED;
+	    e.m_key = MouseKey::M_NONE;
+	    //e.pos_abs = ;
+	    // TODO: Get mouse position
+	    break;
+	  case CACA_EVENT_MOUSE_PRESS:
+	    // A mouse button was pressed
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_PRESSED;
+	    e.m_key = Libcaca::getMouseKey(caca_get_event_mouse_button(&event));
+	    break;
+	  case CACA_EVENT_MOUSE_RELEASE:
+	    // A mouse button was released
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_RELEASED;
+	    e.m_key = Libcaca::getMouseKey(caca_get_event_mouse_button(&event));
+	    break;
+
+	  case CACA_EVENT_KEY_PRESS:
+	    // A key was pressed
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_PRESSED;
+	    e.kb_key = getKeyboardKey(caca_get_event_key_ch(&event));
+	    break;
+	  case CACA_EVENT_KEY_RELEASE:
+	    // A key was released
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_RELEASED;
+	    e.kb_key = getKeyboardKey(caca_get_event_key_ch(&event));
+	    break;
+	  default:
+	    e.type = EventType::ET_NONE;
+	    e.action = ActionType::AT_NONE;
+	    e.kb_key = KeyboardKey::KB_NONE;
+	    break;
+	  }
+	return (true);
+      }
     return (false);
   }
 
   bool Libcaca::doesSupportSound() const
   {
-    return (true);
+    return (false);
   }
 
   void Libcaca::loadSounds(std::vector<std::string> const & sounds)
   {
-    // TODO : implement
+    static_cast<void>(sounds);
   }
 
   void Libcaca::playSound(int soundId)
   {
-    // TODO : implement
+    static_cast<void>(soundId);
   }
 
   void Libcaca::updateMap(IMap const & map)
@@ -55,26 +109,27 @@ namespace arcade
     // TODO : implement
   }
 
-  KeyboardKey Libcaca::getKeyboardKey(caca_event_t const *code)
+  KeyboardKey Libcaca::getKeyboardKey(int code)
   {
-    // TODO : implement
+    if (m_kb_keys.find(code) != m_kb_keys.end())
+      return (m_kb_keys[code]);
     return (KeyboardKey::KB_NONE);
   }
 
-  MouseKey Libcaca::getMouseKey(caca_event_t const *code)
+  MouseKey Libcaca::getMouseKey(int code)
   {
-    // TODO : implement
-    return (MouseKey::M_NONE);
-  }
-
-  MouseKey Libcaca::getMouseWheel(caca_event_t const *code)
-  {
-    // TODO : implement
+    if (m_mouse_keys.find(code) != m_mouse_keys.end())
+      return (m_mouse_keys[code]);
     return (MouseKey::M_NONE);
   }
 
   MousePos Libcaca::getMousePos()
   {
-    // TODO : implement
+    MousePos pos;
+
+    // TODO : Check correctness
+    pos.x = caca_get_mouse_x(m_win);
+    pos.y = caca_get_mouse_y(m_win);
+    return (pos);
   }
 }

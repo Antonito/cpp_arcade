@@ -37,15 +37,15 @@ namespace arcade
     virtual void clear();
   private:
 
-    static KeyboardKey getKeyboardKey(caca_event_t const *code);
-    static MouseKey getMouseKey(caca_event_t const *code);
-    static MouseKey getMouseWheel(caca_event_t const *code);
+    static KeyboardKey getKeyboardKey(int code);
+    static MouseKey getMouseKey(int code);
     MousePos getMousePos();
 
     static std::map<int, KeyboardKey> m_kb_keys;
     static std::map<int, MouseKey> m_mouse_keys;
 
     static constexpr size_t m_tileSize = 24;
+    caca_display_t *m_win;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
