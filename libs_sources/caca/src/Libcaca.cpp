@@ -4,73 +4,76 @@
 
 namespace arcade
 {
-  LibSFML::LibSFML(size_t width, size_t height)
+  Libcaca::Libcaca(size_t width, size_t height)
   {
     // TODO : implement
   }
 
-  LibSFML::~LibSFML()
+  Libcaca::~Libcaca()
   {
     // TODO : implement
   }
 
-  bool LibSFML::pollEvent(Event & e)
+  bool Libcaca::pollEvent(Event &e)
   {
     // TODO : implement
     return (false);
   }
 
-  bool LibSFML::doesSupportSound() const
+  bool Libcaca::doesSupportSound() const
   {
     return (true);
   }
 
-  void LibSFML::loadSounds(std::vector<std::string> const & sounds)
+  void Libcaca::loadSounds(std::vector<std::string> const & sounds)
   {
     // TODO : implement
   }
 
-  void LibSFML::playSound(int soundId)
+  void Libcaca::playSound(int soundId)
   {
     // TODO : implement
   }
 
-  void LibSFML::updateMap(IMap const & map)
+  void Libcaca::updateMap(IMap const & map)
   {
     // TODO : implement
   }
 
-  void LibSFML::updateGUI(IGUI const & gui)
+  void Libcaca::updateGUI(IGUI const & gui)
   {
     // TODO : implement
   }
 
-  void LibSFML::display()
+  void Libcaca::display()
   {
     // TODO : implement
   }
 
-  void LibSFML::clear()
+  void Libcaca::clear()
   {
     // TODO : implement
   }
 
-  KeyboardKey LibSFML::getKeyboardKey(sf::Keyboard::Key code)
+  KeyboardKey Libcaca::getKeyboardKey(caca_event_t const *code)
   {
+    // TODO : implement
     return (KeyboardKey::KB_NONE);
   }
 
-  MouseKey LibSFML::getMouseKey(sf::Mouse::Button code)
+  MouseKey Libcaca::getMouseKey(caca_event_t const *code)
   {
+    // TODO : implement
     return (MouseKey::M_NONE);
   }
 
-  MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel code)
+  MouseKey Libcaca::getMouseWheel(caca_event_t const *code)
   {
     // TODO : implement
+    return (MouseKey::M_NONE);
   }
 
-  MousePos LibSFML::getMousePos()
+  MousePos Libcaca::getMousePos()
   {
     // TODO : implement
   }
