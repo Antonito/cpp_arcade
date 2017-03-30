@@ -134,7 +134,7 @@ namespace arcade
 
     bool ASocket::connectToHost()
     {
-      addrinfo_t  hints = {0};
+      addrinfo_t  hints = {};
       addrinfo_t *res = nullptr;
       bool        connected = false;
       SocketType  typeBackup;

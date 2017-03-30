@@ -8,6 +8,21 @@ namespace arcade
   {
     m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade");
     m_mousePos = sf::Mouse::getPosition(*m_win.get());
+    // Create GUI
+    m_guiPix = std::make_unique<uint32_t[]>(width * height);
+    memset(m_guiPix.get(), 0, width * height * sizeof(Color));
+    m_gui = std::make_unique<sf::Texture>();
+    if (!m_gui->create(width, height))
+      {
+	std::cerr << "Cannot create SFML Texture"
+#if defined(DEBUG)
+		  << " (" << width << "x" << height << ")"
+#endif
+		  << std::endl;
+	throw std::exception(); // TODO: Exception
+      }
+    // Create GUI sprite
+    m_guiSprite = std::make_unique<sf::Sprite>(*m_gui);
   }
 
   LibSFML::~LibSFML()
@@ -122,19 +137,8 @@ namespace arcade
 
   void LibSFML::updateGUI(IGUI const & gui)
   {
-    sf::Vector2u size = m_win->getSize();
+    sf::Vector2u const size = m_win->getSize();
 
-    if (!m_gui)
-      {
-	// Create GUI
-	m_guiPix = std::make_unique<uint32_t[]>(size.x * size.y);
-	memset(m_guiPix.get(), 0, size.x * size.y * sizeof(Color));
-	m_gui = std::make_unique<sf::Texture>();
-	if (!m_gui->create(size.x, size.y))
-	  throw std::exception(); // TODO: Exception
-	// Create GUI sprite
-	m_guiSprite = std::make_unique<sf::Sprite>(*m_gui);
-      }
     // TODO: Check reinterpret_cast
     Color *pixels = reinterpret_cast<Color *>(m_guiPix.get());
     memset(pixels, 0, size.x * size.y * sizeof(Color));

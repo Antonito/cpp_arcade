@@ -86,7 +86,7 @@ namespace arcade
 	  ret = ::send(m_socket, reinterpret_cast<char const *>(msg + off),
 	               static_cast<int>(len - off), 0);
 #endif
-	  if (ret == -1 || ret == len - off)
+	  if (ret == -1 || static_cast<size_t>(ret) == len - off)
 	    {
 	      if (ret == -1 && errno != EWOULDBLOCK && errno != EAGAIN)
 		{
