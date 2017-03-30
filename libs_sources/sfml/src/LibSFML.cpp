@@ -4,10 +4,11 @@
 
 namespace arcade
 {
-  LibSFML::LibSFML(size_t width, size_t height) : m_guiPix(nullptr), m_gui(nullptr), m_guiSprite(nullptr)
+  LibSFML::LibSFML(size_t width, size_t height) : m_guiPix(nullptr), m_gui(nullptr), m_guiSprite(nullptr), m_mapPix(nullptr), m_map(nullptr), m_mapSprite(nullptr), m_mapWidth(0), m_mapHeight(0)
   {
     m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade");
     m_mousePos = sf::Mouse::getPosition(*m_win.get());
+
     // Create GUI
     m_guiPix = std::make_unique<uint32_t[]>(width * height);
     memset(m_guiPix.get(), 0, width * height * sizeof(Color));
@@ -131,8 +132,69 @@ namespace arcade
 
   void LibSFML::updateMap(IMap const & map)
   {
-    (void)map;
-    // TODO : implement
+    if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+      {
+	m_mapPix.release();
+	m_map.release();
+	m_mapSprite.release();
+	m_mapWidth = map.getWidth();
+	m_mapHeight = map.getHeight();
+	if (!m_mapWidth || !m_mapHeight)
+	  return ;
+	// Create MAP
+	m_mapPix = std::make_unique<uint32_t[]>(m_mapWidth * m_tileSize * m_mapHeight * m_tileSize);
+	m_map = std::make_unique<sf::Texture>();
+	if (!m_map->create(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize))
+	  {
+	    std::cerr << "Cannot create SFML Texture"
+#if defined(DEBUG)
+		      << " (" << m_mapWidth * m_tileSize << "x" << m_mapHeight * m_tileSize << ")"
+#endif
+		      << std::endl;
+	    throw std::exception(); // TODO: create good exception
+	  }
+	m_mapSprite = std::make_unique<sf::Sprite>(*m_map);
+      }
+    Color *pixels = reinterpret_cast<Color *>(m_mapPix.get());
+    size_t mapWidth = m_mapWidth * m_tileSize;
+
+    for (size_t l = 0; l < map.getLayerNb(); ++l)
+      {
+	for (size_t y = 0; y < m_mapWidth; ++y)
+	  {
+	    for (size_t x = 0; x < m_mapHeight; ++x)
+	      {
+		ITile const &tile = map.at(l, x, y);
+		if (tile.getSpriteId() != 0 && false) // TODO: Enable
+		  {
+		  }
+		else
+		  {
+		    Color color = tile.getColor();
+		    if (color.rgba[3] != 0) // TODO: color.a ?
+		      {
+			for (size_t _y = 0; _y < m_tileSize; ++_y)
+			  {
+			    for (size_t _x = 0; _x < m_tileSize; ++_x)
+			      {
+				size_t X = x * m_tileSize + _x;
+				size_t Y = y * m_tileSize + _y;
+				size_t pix = Y * mapWidth + X;
+				double a(color.a / 255.0);
+				Color old(pixels[pix]);
+				Color merged(color.r * a + old.r * (1 - a),
+					     color.g * a + old.g * (1 - a),
+					     color.b * a + old.b * (1 - a),
+					     color.a + old.a * (1 - a));
+				pixels[pix] = merged.full;
+			      }
+			  }
+		      }
+		  }
+	      }
+	  }
+      }
+    m_map->update(reinterpret_cast<uint8_t *>(m_mapPix.get()));
   }
 
   void LibSFML::updateGUI(IGUI const & gui)
@@ -173,7 +235,8 @@ namespace arcade
 
   void LibSFML::display()
   {
-    // TODO : Implement
+    if (m_mapSprite)
+      m_win->draw(*m_mapSprite);
     m_win->draw(*m_guiSprite);
     m_win->display();
   }

@@ -55,13 +55,16 @@ namespace arcade
     std::unique_ptr<uint32_t[]> m_guiPix;
     std::unique_ptr<sf::Texture> m_gui;
     std::unique_ptr<sf::Sprite> m_guiSprite;
+
+    std::unique_ptr<uint32_t[]> m_mapPix;
+    std::unique_ptr<sf::Texture> m_map;
+    std::unique_ptr<sf::Sprite> m_mapSprite;
 #if 0
     SFML_Surface *m_winSurface;
-
     SFML_Surface *m_map;
+#endif
     size_t m_mapWidth;
     size_t m_mapHeight;
-#endif
   };
 }
 
