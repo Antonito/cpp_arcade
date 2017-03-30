@@ -4,14 +4,33 @@
 
 namespace arcade
 {
-  Libcaca::Libcaca(size_t width, size_t height) : m_win(nullptr)
+  Libcaca::Libcaca(size_t width, size_t height) : m_win(nullptr), m_canvas(nullptr),
+						  m_mapWidth(0), m_mapHeight(0)
   {
-    // TODO : implement
+    static_cast<void>(width);
+    static_cast<void>(height);
+    m_win = caca_create_display(NULL);
+    if (!m_win)
+      {
+	std::cerr << "Cannot create libcaca window" << std::endl;
+	throw std::exception(); // TODO: Exception
+      }
+    caca_set_display_title(m_win, "Arcade");
+    m_canvas = caca_get_canvas(m_win);
+    if (!m_canvas)
+      {
+	std::cerr << "Cannot get libcaca canvas" << std::endl;
+	throw std::exception(); // TODO: Exception
+      }
+    m_width = caca_get_canvas_width(m_canvas);
+    m_height = caca_get_canvas_height(m_canvas);
   }
 
   Libcaca::~Libcaca()
   {
     // TODO : implement
+    caca_free_canvas(m_canvas);
+    caca_free_display(m_win);
   }
 
   bool Libcaca::pollEvent(Event &e)
@@ -102,11 +121,12 @@ namespace arcade
   void Libcaca::display()
   {
     // TODO : implement
+    caca_refresh_display(m_win);
   }
 
   void Libcaca::clear()
   {
-    // TODO : implement
+    caca_clear_canvas(m_canvas);
   }
 
   KeyboardKey Libcaca::getKeyboardKey(int code)
