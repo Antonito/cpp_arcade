@@ -91,7 +91,7 @@ namespace arcade
 					m_pos.x = (m_pos.x + 1) % m_map->getWidth();
 					break;
 				case KB_ESCAPE:
-					m_state = QUIT;
+					m_state = MENU;
 				default:
 					break;
 				}

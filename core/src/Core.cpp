@@ -56,9 +56,6 @@ namespace arcade
 		comp.setX(0.55);
 		m_gui->push(comp);
 
-		m_inMenu = true;
-		m_game = std::unique_ptr<IGame>(this);
-
 #ifdef DEBUG
 		Nope::Log::Debug << "Core constructed";
 #endif
@@ -88,13 +85,12 @@ namespace arcade
 		{
 			switch (state)
 			{
+			case MENU:
+				this->m_game = std::unique_ptr<IGame>(this);
 			case INGAME:
 			case PAUSED:
 			case GAME_MENU:
 				state = this->gameLoop();
-				break;
-			case MENU:
-				state = this->menuLoop();
 				break;
 			default:
 				state = QUIT;
@@ -175,7 +171,7 @@ namespace arcade
 #endif
 		}
 		Nope::Log::Info << "Exiting a game";
-		return QUIT;
+		return (state);
 	}
 
 	GameState Core::menuLoop()
@@ -296,7 +292,7 @@ namespace arcade
 					m_state = QUIT;
 					m_game.release();
 				}
-				else if (e.kb_key == KeyboardKey::KB_ENTER)
+				else if (e.kb_key == KeyboardKey::KB_SPACE)
 				{
 					m_game.release();
 					m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());

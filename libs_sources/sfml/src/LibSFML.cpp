@@ -1,5 +1,6 @@
 #include <exception>
 #include <iostream>
+#include <cstring>
 #include "LibSFML.hpp"
 
 namespace arcade
@@ -11,7 +12,7 @@ namespace arcade
 
     // Create GUI
     m_guiPix = std::make_unique<uint32_t[]>(width * height);
-    memset(m_guiPix.get(), 0, width * height * sizeof(Color));
+    memset(static_cast<void *>(m_guiPix.get()), 0, width * height * sizeof(Color));
     m_gui = std::make_unique<sf::Texture>();
     if (!m_gui->create(width, height))
       {
