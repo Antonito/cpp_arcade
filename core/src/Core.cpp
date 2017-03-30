@@ -296,9 +296,10 @@ namespace arcade
 					m_state = QUIT;
 					m_game.release();
 				}
-				else if (e.kb_key == KeyboardKey::KB_ENTER)
+				else if (e.kb_key == KeyboardKey::KB_SPACE)
 				{
 					m_game.release();
+					std::cout << "oui" << std::endl;
 					m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
 				}
 			}
