@@ -103,9 +103,9 @@ namespace arcade
 		// TODO : implement
 	}
 
-	void LibSDL::playSound(int soundId)
+	void LibSDL::soundControl(Sound const &sound)
 	{
-		(void)soundId;
+		(void)sound;
 		// TODO : implement
 	}
 
@@ -138,9 +138,9 @@ namespace arcade
 
 		for (size_t l = 0; l < map.getLayerNb(); ++l)
 		{
-			for (size_t y = 0; y < m_mapWidth; ++y)
+			for (size_t y = 0; y < m_mapHeight; ++y)
 			{
-				for (size_t x = 0; x < m_mapHeight; ++x)
+				for (size_t x = 0; x < m_mapWidth; ++x)
 				{
 					ITile const &tile = map.at(l, x, y);
 
@@ -180,7 +180,7 @@ namespace arcade
 		}
 	}
 
-	void LibSDL::updateGUI(IGUI const & gui)
+	void LibSDL::updateGUI(IGUI & gui)
 	{
 		if (!m_gui)
 		{
@@ -242,6 +242,13 @@ namespace arcade
 		SDL_BlitSurface(m_gui, NULL, m_winSurface, NULL);
 		SDL_UpdateWindowSurface(m_win);
 	}
+
+	void LibSDL::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+	{
+		(void)sprites;
+		// TODO : implement
+	}
+
 	void LibSDL::clear()
 	{
 		// TODO : implement

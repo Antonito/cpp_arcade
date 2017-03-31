@@ -38,6 +38,10 @@ namespace arcade
 		void setBackgroundColor(Color color);
 		void setText(std::string const &text);
 
+		virtual void setClicked();
+		void setClicked(bool click);
+		bool isClicked() const;
+
 	private:
 		typedef struct
 		{
@@ -51,6 +55,7 @@ namespace arcade
 		std::size_t m_sprite;
 		Color m_color;
 		std::string m_text;
+		bool m_clicked;
 	};
 }
 

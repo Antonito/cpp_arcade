@@ -32,6 +32,8 @@ namespace arcade
 		static bool isNameValid(std::string const &name,
 			std::string const &prefix, std::string const &sufix);
 
+		void loadGame();
+
 		std::vector<GenLibrary> m_gameList;
 		std::vector<GenLibrary> m_libList;
 
@@ -49,6 +51,7 @@ namespace arcade
 		virtual void notifyEvent(std::vector<Event> &&events);
 		virtual std::vector<std::string> getSoundsToLoad() const;
 		virtual void process();
+		virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
 	};
 }
 

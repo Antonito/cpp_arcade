@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Layer.hpp"
 
 namespace arcade
@@ -6,7 +7,7 @@ namespace arcade
 	{
 		Tile tile;
 		
-		tile.setColor(Color::Cyan);
+		tile.setColor(Color::Transparent);
 
 		m_tiles.insert(m_tiles.begin(), width * height, tile);
 	}

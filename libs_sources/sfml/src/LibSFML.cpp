@@ -126,9 +126,16 @@ namespace arcade
       }
   }
 
-  void LibSFML::playSound(int soundId)
+  void LibSFML::soundControl(Sound const &sound)
   {
-    m_sound[soundId]->play();
+    m_sound[sound.id]->play();
+  }
+
+  void LibSFML::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  {
+	  std::vector<std::unique_ptr<ISprite>> sp(std::move(sprites));
+
+	  (void)sp;
   }
 
   void LibSFML::updateMap(IMap const & map)
@@ -198,7 +205,7 @@ namespace arcade
     m_map->update(reinterpret_cast<uint8_t *>(m_mapPix.get()));
   }
 
-  void LibSFML::updateGUI(IGUI const & gui)
+  void LibSFML::updateGUI(IGUI & gui)
   {
     sf::Vector2u const size = m_win->getSize();
 

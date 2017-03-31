@@ -87,9 +87,9 @@ namespace arcade
 			{
 			case MENU:
 				this->m_game = std::unique_ptr<IGame>(this);
+			case LOADING:
+				this->loadGame();
 			case INGAME:
-			case PAUSED:
-			case GAME_MENU:
 				state = this->gameLoop();
 				break;
 			default:
@@ -114,7 +114,7 @@ namespace arcade
 			events.clear();
 			sounds.clear();
 			m_lib->clear();
-			if (state != INGAME && state != PAUSED && state != GAME_MENU)
+			if (state != INGAME)
 			{
 				break ;
 			}
@@ -273,6 +273,12 @@ namespace arcade
 				suffix.length(), suffix) == 0);
 	}
 
+	void Core::loadGame()
+	{
+		m_lib->loadSounds(m_game->getSoundsToLoad());
+		m_lib->loadSprites(m_game->getSpritesToLoad());
+	}
+
 	void Core::notifyEvent(std::vector<Event>&& events)
 	{
 		std::vector<Event> ev = events;
@@ -308,5 +314,11 @@ namespace arcade
 
 	void Core::process()
 	{
+	}
+	std::vector<std::unique_ptr<ISprite>>&& Core::getSpritesToLoad() const
+	{
+		std::vector<std::unique_ptr<ISprite>> s;
+
+		return (std::move(s));
 	}
 }

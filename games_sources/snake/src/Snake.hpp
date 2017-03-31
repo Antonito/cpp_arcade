@@ -19,6 +19,8 @@ namespace arcade
 
 		virtual std::vector<std::string> getSoundsToLoad() const;
 
+		virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+
 		virtual void process();
 
 	private:

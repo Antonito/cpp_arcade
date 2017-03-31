@@ -34,11 +34,20 @@ namespace arcade
 		virtual void setSpritePos(size_t pos);
 		virtual void setSprite(size_t id);
 
+		virtual double getShiftX() const;
+		virtual double getShiftY() const;
+
+		void setShiftX(double shift);
+		void setShiftY(double shift);
+		void setShift(double x, double y);
+
 	private:
 		TileType m_type;
 		TileTypeEvolution m_typeEv;
 		Color m_color;
 		SpriteRef m_sprite;
+		double m_shiftX;
+		double m_shiftY;
 	};
 }
 

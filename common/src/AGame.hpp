@@ -40,7 +40,7 @@ namespace arcade
 		virtual IMap const &getCurrentMap() const;
 
 		// GUI
-		virtual IGUI const &getGUI() const;
+		virtual IGUI &getGUI() const;
 
 	protected:
 		GameState m_state;

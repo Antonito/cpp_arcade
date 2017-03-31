@@ -18,11 +18,11 @@ namespace arcade
 	{}
 
 	Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
-#if IS_LITTLE_ENDIAN
+	#if IS_LITTLE_ENDIAN
 		r(r), g(g), b(b), a(a)
-#else
+	#else
 		a(a), b(b), g(g), r(r)
-#endif
+	#endif
 	{}
 
 	Color::Color(Color const &c) :

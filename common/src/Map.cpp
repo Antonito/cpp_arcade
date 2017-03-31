@@ -12,12 +12,12 @@ namespace arcade
 	{
 	}
 
-	ITile &Map::at(size_t layer, size_t x, size_t y)
+	Tile &Map::at(size_t layer, size_t x, size_t y)
 	{
 		return (m_layers[layer].at(x, y));
 	}
 
-	ITile const &Map::at(size_t layer, size_t x, size_t y) const
+	Tile const &Map::at(size_t layer, size_t x, size_t y) const
 	{
 		return (m_layers[layer].at(x, y));
 	}

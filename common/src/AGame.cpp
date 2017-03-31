@@ -31,7 +31,7 @@ namespace arcade
 		return (*m_map);
 	}
 
-	IGUI const & AGame::getGUI() const
+	IGUI & AGame::getGUI() const
 	{
 		return (*m_gui);
 	}

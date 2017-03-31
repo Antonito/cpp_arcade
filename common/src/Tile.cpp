@@ -58,7 +58,7 @@ namespace arcade
 
 	size_t Tile::getSpriteId() const
 	{
-		return (m_sprite.getId());
+		return (0);
 	}
 
 	size_t Tile::getSpritePos() const
@@ -84,6 +84,32 @@ namespace arcade
 	void Tile::setSprite(size_t id)
 	{
 		m_sprite.setId(id);
+	}
+
+	double Tile::getShiftX() const
+	{
+		return (m_shiftX);
+	}
+
+	double Tile::getShiftY() const
+	{
+		return (m_shiftY);
+	}
+
+	void Tile::setShiftX(double shift)
+	{
+		m_shiftX = shift;
+	}
+
+	void Tile::setShiftY(double shift)
+	{
+		m_shiftY = shift;
+	}
+
+	void Tile::setShift(double x, double y)
+	{
+		setShiftX(x);
+		setShiftY(y);
 	}
 
 }

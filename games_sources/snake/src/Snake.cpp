@@ -5,7 +5,7 @@ namespace arcade
 {
 	Snake::Snake()
 	{
-		constexpr size_t width = 24;
+		constexpr size_t width = 30;
 		constexpr size_t height = 24;
 
 		m_map = std::make_unique<Map>(width, height);
@@ -103,6 +103,13 @@ namespace arcade
 	{
 		// TODO: implement
 		return (std::vector<std::string>());
+	}
+
+	std::vector<std::unique_ptr<ISprite>>&& Snake::getSpritesToLoad() const
+	{
+		std::vector<std::unique_ptr<ISprite>> s;
+
+		return (std::move(s));
 	}
 
 	void Snake::process()

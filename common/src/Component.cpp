@@ -78,4 +78,19 @@ namespace arcade
 		m_text = text;
 	}
 
+	void Component::setClicked()
+	{
+		this->setClicked(true);
+	}
+
+	void Component::setClicked(bool click)
+	{
+		m_clicked = click;
+	}
+
+	bool Component::isClicked() const
+	{
+		return (m_clicked);
+	}
+
 }
