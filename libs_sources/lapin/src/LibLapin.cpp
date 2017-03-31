@@ -40,7 +40,7 @@ namespace arcade
     bunny_set_resize_response(&LibLapin::_resizeHandler);
     bunny_set_close_response(&LibLapin::_closeHandler);
     bunny_set_loop_main_function(&LibLapin::_eventLoop);
-    if (bunny_loop(m_win, 60, &e) == EXIT_ON_ERROR)
+    if (bunny_loop(m_win, 60, &e) == EXIT_ON_SUCCESS)
       {
 	ret = true;
       }
