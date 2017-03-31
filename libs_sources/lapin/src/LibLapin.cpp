@@ -39,7 +39,7 @@ namespace arcade
     bunny_set_get_focus_response(&LibLapin::_gotFocusHandler);
     bunny_set_resize_response(&LibLapin::_resizeHandler);
     bunny_set_close_response(&LibLapin::_closeHandler);
-    bunny_set_loop_main_function(NULL);
+    bunny_set_loop_main_function(&LibLapin::_eventLoop);
     if (bunny_loop(m_win, 60, &e) == GO_ON)
       {
 	ret = true;
@@ -171,6 +171,11 @@ namespace arcade
 
   // LibLapin Handlers
   t_bunny_response LibLapin::_mainLoop(void *data)
+  {
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_eventLoop(void *data)
   {
     return (EXIT_ON_SUCCESS);
   }

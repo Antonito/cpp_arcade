@@ -39,6 +39,7 @@ namespace arcade
   private:
     // LibLapin handlers
     static t_bunny_response _mainLoop(void *data);
+    static t_bunny_response _eventLoop(void *data);
     static t_bunny_response _keyHandler(t_bunny_event_state state,
 					t_bunny_keysym key,
 					void *dat);
