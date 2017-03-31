@@ -54,11 +54,11 @@ namespace arcade
 					   t_bunny_position const *size, void *data);
     static t_bunny_response _closeHandler(t_bunny_window const *win, void *data);
 
-    static KeyboardKey getKeyboardKey(int code);
+    static KeyboardKey getKeyboardKey(t_bunny_keysym code);
     static MouseKey getMouseKey(int code);
     MousePos getMousePos();
 
-    static std::map<int, KeyboardKey> m_kb_keys;
+    static std::map<t_bunny_keysym, KeyboardKey> m_kb_keys;
     static std::map<int, MouseKey> m_mouse_keys;
 
     static constexpr size_t m_tileSize = 24;
