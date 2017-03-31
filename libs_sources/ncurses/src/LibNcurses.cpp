@@ -29,7 +29,6 @@ namespace arcade
   LibNcurses::~LibNcurses()
   {
     // TODO : implement
-    std::cout << "Byyyye" << std::endl;
     delwin(m_win);
     endwin();
   }
@@ -92,7 +91,6 @@ namespace arcade
 
   void LibNcurses::updateMap(IMap const & map)
   {
-    return ;
     // TODO
     if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
       {
@@ -132,7 +130,6 @@ namespace arcade
 
   void LibNcurses::updateGUI(IGUI const & gui)
   {
-    return ;
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
