@@ -59,17 +59,18 @@ namespace arcade
     static t_bunny_response _closeHandler(t_bunny_window const *win, void *data);
 
     static KeyboardKey getKeyboardKey(t_bunny_keysym code);
-    static MouseKey getMouseKey(int code);
+    static MouseKey getMouseKey(t_bunny_mouse_button code);
     MousePos getMousePos();
 
     static std::map<t_bunny_keysym, KeyboardKey> m_kb_keys;
-    static std::map<int, MouseKey> m_mouse_keys;
+    static std::map<t_bunny_mouse_button, MouseKey> m_mouse_keys;
 
     static constexpr size_t m_tileSize = 24;
     size_t m_width;
     size_t m_height;
 
     t_bunny_window	*m_win;
+    t_bunny_pixelarray	*m_gui;
     t_bunny_pixelarray	*m_map;
 
     size_t m_mapWidth;
