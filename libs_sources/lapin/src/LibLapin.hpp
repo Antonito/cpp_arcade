@@ -37,6 +37,23 @@ namespace arcade
     // Clear
     virtual void clear();
   private:
+    // LibLapin handlers
+    static t_bunny_response _mainLoop(void *data);
+    static t_bunny_response _keyHandler(t_bunny_event_state state,
+					t_bunny_keysym key,
+					void *dat);
+    static t_bunny_response _clickHandler(t_bunny_event_state state,
+					  t_bunny_mouse_button but,
+					  void *dat);
+    static t_bunny_response _moveHandler(t_bunny_position const *relative,
+					 void *dat);
+    static t_bunny_response _wheelHandler(int wheelId, int delta, void *dat);
+    static t_bunny_response _lostFocusHandler(t_bunny_window const *win, void *data);
+    static t_bunny_response _gotFocusHandler(t_bunny_window const *win, void *data);
+    static t_bunny_response _resizeHandler(t_bunny_window const *win,
+					   t_bunny_position const *size, void *data);
+    static t_bunny_response _closeHandler(t_bunny_window const *win, void *data);
+
     static KeyboardKey getKeyboardKey(int code);
     static MouseKey getMouseKey(int code);
     MousePos getMousePos();
