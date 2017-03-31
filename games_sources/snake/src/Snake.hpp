@@ -6,28 +6,47 @@
 
 namespace arcade
 {
-	class Snake : public AGame
-	{
-	public:
-		Snake();
-		Snake(Snake const &other);
-		~Snake();
 
-		Snake &operator=(Snake const &other);
+  class Snake : public AGame
+  {
+    struct t_pos
+    {
+      int x;
+      int y;
+    };
 
-		virtual void notifyEvent(std::vector<Event> &&events);
+    enum e_dir
+    {
+      UP,
+      DOWN,
+      LEFT,
+      RIGHT,
+    };
 
-		virtual std::vector<std::string> getSoundsToLoad() const;
+  public:
+    Snake();
+    Snake(Snake const &other);
+    ~Snake();
 
-		virtual void process();
+    Snake &operator=(Snake const &other);
 
-	private:
-		struct
-		{
-			size_t x;
-			size_t y;
-		}   m_pos;
-	};
+    virtual void notifyEvent(std::vector<Event> &&events);
+
+    virtual std::vector<std::string> getSoundsToLoad() const;
+
+    virtual void process();
+
+  private:
+    bool isDead(t_pos const &) const;
+    bool onSnake(t_pos const &) const;
+    void didEat();
+    void placeFood();
+
+    t_pos              m_food;
+    std::vector<t_pos> m_pos;
+    e_dir              m_dir;
+    bool               m_eat;
+  };
 }
 
 #endif // !SNAKE_HPP_

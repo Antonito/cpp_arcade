@@ -1,119 +1,243 @@
 #include <iostream>
+#include <unistd.h>
 #include "Snake.hpp"
 
 namespace arcade
 {
-	Snake::Snake()
-	{
-		constexpr size_t width = 24;
-		constexpr size_t height = 24;
+  Snake::Snake()
+  {
+    constexpr size_t width = 24;
+    constexpr size_t height = 24;
+    t_pos            start_pos;
 
-		m_map = std::make_unique<Map>(width, height);
-		for (size_t y = 0; y < height; ++y)
-		{
-			for (size_t x = 0; x < width; ++x)
-			{
-				m_map->at(0, x, y).setColor(Color::White);
-			}
-		};
+    start_pos.x = width / 2;
+    start_pos.y = height / 2;
+    for (size_t i = 0; i < 4; i++)
+      m_pos.push_back(start_pos);
+    m_map = std::make_unique<Map>(width, height);
+    for (size_t y = 0; y < height; ++y)
+      {
+	for (size_t x = 0; x < width; ++x)
+	  {
+	    m_map->at(0, x, y).setColor(Color::White);
+	  }
+      };
 
-		m_pos = { width / 2, height / 2 };
+    m_map->addLayer();
+    m_dir = LEFT;
+    placeFood();
+    m_gui = std::make_unique<GUI>();
 
-		m_map->addLayer();
+    Component comp;
 
-		m_gui = std::make_unique<GUI>();
+    comp.setX(0.05);
+    comp.setY(0.05);
+    comp.setWidth(0.15);
+    comp.setHeight(0.05);
+    comp.setBackgroundColor(Color(0, 0, 0, 170));
+    m_gui->push(std::move(comp));
+  }
 
-		Component comp;
+  Snake::Snake(Snake const &other)
+  {
+    size_t width = other.m_map->getWidth();
+    size_t height = other.m_map->getHeight();
+    t_pos  start_pos;
 
-		comp.setX(0.05);
-		comp.setY(0.05);
-		comp.setWidth(0.15);
-		comp.setHeight(0.05);
-		comp.setBackgroundColor(Color(0, 0, 0, 170));
-		m_gui->push(std::move(comp));
-	}
+    start_pos.x = width / 2;
+    start_pos.y = height / 2;
+    for (size_t i = 0; i < 4; i++)
+      m_pos.push_back(start_pos);
 
-	Snake::Snake(Snake const &other)
-	{
-		size_t width = other.m_map->getWidth();
-		size_t height = other.m_map->getHeight();
+    m_dir = LEFT;
+    placeFood();
+    // TODO : also copy layers
 
-		// TODO : also copy layers
+    m_map = std::make_unique<Map>(width, height);
+    for (size_t y = 0; y < height; ++y)
+      {
+	for (size_t x = 0; x < width; ++x)
+	  {
+	    m_map->at(0, x, y).setColor(Color::White);
+	  }
+      };
+  }
 
-		m_map = std::make_unique<Map>(width, height);
-		for (size_t y = 0; y < height; ++y)
-		{
-			for (size_t x = 0; x < width; ++x)
-			{
-				m_map->at(0, x, y).setColor(Color::White);
-			}
-		};
+  Snake::~Snake()
+  {
+  }
 
-		m_pos = { width / 2, height / 2 };
-	}
+  Snake &Snake::operator=(Snake const &other)
+  {
+    std::cout << "eq" << std::endl;
+    if (this != &other)
+      {
+      }
+    return (*this);
+  }
 
-	Snake::~Snake()
-	{}
+  void Snake::notifyEvent(std::vector<Event> &&events)
+  {
+    std::vector<Event> ev = events;
 
-	Snake &Snake::operator=(Snake const &other)
-	{
-		std::cout << "eq" << std::endl;
-		if (this != &other)
-		{
-		}
-		return (*this);
-	}
+    for (Event const &e : ev)
+      {
+	if (e.type == ET_QUIT)
+	  {
+	    m_state = QUIT;
+	  }
+	else if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
+	  {
+	    switch (e.kb_key)
+	      {
+	      case KB_ARROW_UP:
+		if (m_dir != DOWN)
+		  m_dir = UP;
+		break;
+	      case KB_ARROW_DOWN:
+		if (m_dir != UP)
+		  m_dir = DOWN;
+		break;
+	      case KB_ARROW_LEFT:
+		if (m_dir != RIGHT)
+		  m_dir = LEFT;
+		break;
+	      case KB_ARROW_RIGHT:
+		if (m_dir != LEFT)
+		  m_dir = RIGHT;
+		break;
+	      case KB_ESCAPE:
+		m_state = MENU;
+	      default:
+		break;
+	      }
+	  }
+      }
+  }
 
-	void Snake::notifyEvent(std::vector<Event>&& events)
-	{
-		std::vector<Event> ev = events;
+  std::vector<std::string> Snake::getSoundsToLoad() const
+  {
+    // TODO: implement
+    return (std::vector<std::string>());
+  }
 
-		for (Event const &e : ev)
-		{
-			if (e.type == ET_QUIT)
-			{
-				m_state = QUIT;
-			}
-			else if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
-			{
-				switch (e.kb_key)
-				{
-				case KB_ARROW_UP:
-					m_pos.y = (m_pos.y - 1 + m_map->getHeight()) % m_map->getHeight();
-					break;
-				case KB_ARROW_DOWN:
-					m_pos.y = (m_pos.y + 1) % m_map->getHeight();
-					break;
-				case KB_ARROW_LEFT:
-					m_pos.x = (m_pos.x - 1 + m_map->getWidth()) % m_map->getWidth();
-					break;
-				case KB_ARROW_RIGHT:
-					m_pos.x = (m_pos.x + 1) % m_map->getWidth();
-					break;
-				case KB_ESCAPE:
-					m_state = MENU;
-				default:
-					break;
-				}
-			}
-		}
-	}
+  bool Snake::isDead(Snake::t_pos const &next) const
+  {
+    if (next.x < 0 || next.x >= m_map->getWidth() || next.y < 0 ||
+        next.y >= m_map->getHeight())
+      return true;
+    for (t_pos const &p : m_pos)
+      {
+	if (next.x == p.x && next.y == p.y)
+	  return true;
+      }
+    return false;
+  }
 
-	std::vector<std::string> Snake::getSoundsToLoad() const
-	{
-		// TODO: implement
-		return (std::vector<std::string>());
-	}
+  void Snake::didEat()
+  {
+    m_eat = false;
+    if (m_food.x == m_pos.front().x && m_food.y == m_pos.front().y)
+      {
+	m_eat = true;
+      }
+  }
 
-	void Snake::process()
-	{
-		for (size_t y = 0; y < m_map->getHeight(); ++y)
-		{
-			for (size_t x = 0; x < m_map->getWidth(); ++x)
-			{
-				m_map->at(1, x, y).setColor(Color::Transparent);
-			}
-		};
-		m_map->at(1, m_pos.x, m_pos.y).setColor(Color::Red);
-	}
+  bool Snake::onSnake(Snake::t_pos const &new_food) const
+  {
+    for (t_pos const &p : m_pos)
+      {
+	if (p.x == new_food.x && p.y == new_food.y)
+	  return true;
+      }
+    return false;
+  }
+
+  void Snake::placeFood()
+  {
+    t_pos new_food;
+
+    new_food.x = rand() % m_map->getWidth();
+    new_food.y = rand() % m_map->getHeight();
+    while (onSnake(new_food))
+      {
+	new_food.x = rand() % m_map->getWidth();
+	new_food.y = rand() % m_map->getHeight();
+      }
+    m_food = new_food;
+  }
+
+  void Snake::process()
+  {
+    t_pos next;
+
+    usleep(100000);
+    didEat();
+    if (m_eat)
+      placeFood();
+    switch (m_dir)
+      {
+      case UP:
+	next.x = m_pos.front().x;
+	next.y = m_pos.front().y - 1;
+	if (!m_eat)
+	  m_pos.pop_back();
+	if (isDead(next))
+	  m_state = MENU;
+	else
+	  m_pos.insert(m_pos.begin(), next);
+	break;
+      case DOWN:
+	next.x = m_pos.front().x;
+	next.y = m_pos.front().y + 1;
+	if (!m_eat)
+	  m_pos.pop_back();
+	if (isDead(next))
+	  m_state = MENU;
+	else
+	  m_pos.insert(m_pos.begin(), next);
+	break;
+      case LEFT:
+	next.x = m_pos.front().x - 1;
+	next.y = m_pos.front().y;
+	if (!m_eat)
+	  m_pos.pop_back();
+	if (isDead(next))
+	  m_state = MENU;
+	else
+	  m_pos.insert(m_pos.begin(), next);
+	break;
+      case RIGHT:
+	next.x = m_pos.front().x + 1;
+	next.y = m_pos.front().y;
+	if (!m_eat)
+	  m_pos.pop_back();
+	if (isDead(next))
+	  m_state = MENU;
+	else
+	  m_pos.insert(m_pos.begin(), next);
+	break;
+      default:
+	break;
+      }
+    for (size_t y = 0; y < m_map->getHeight(); ++y)
+      {
+	for (size_t x = 0; x < m_map->getWidth(); ++x)
+	  {
+	    m_map->at(1, x, y).setColor(Color::Transparent);
+	  }
+      };
+
+    m_map->at(1, m_food.x, m_food.y).setColor(Color::Green);
+    for (t_pos const &p : m_pos)
+      {
+#ifdef DEBUG
+	std::cout << " Snake : x = " << p.x << ", y = " << p.y << std::endl;
+#endif
+	if (p.x == m_pos.front().x && p.y == m_pos.front().y)
+	  m_map->at(1, p.x, p.y).setColor(Color::Red);
+	else
+	  m_map->at(1, p.x, p.y).setColor(Color::Blue);
+      }
+  }
 }
