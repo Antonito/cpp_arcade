@@ -172,7 +172,7 @@ namespace arcade
 		else
 		  {
 		    Color color = tile.getColor();
-		    if (color.rgba[3] != 0) // TODO: color.a ?
+		    if (color.a != 0)
 		      {
 			for (size_t _y = 0; _y < m_tileSize; ++_y)
 			  {

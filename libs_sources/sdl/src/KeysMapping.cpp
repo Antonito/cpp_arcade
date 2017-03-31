@@ -12,7 +12,7 @@ namespace arcade
 		{ SDL_BUTTON_X2, M_BT1 }
 	};
 
-	std::map<SDL_Keycode, KeyboardKey> LibSDL::m_kb_keys = 
+	std::map<SDL_Keycode, KeyboardKey> LibSDL::m_kb_keys =
 	{
 		{ SDLK_0, KB_0 },
 		{ SDLK_1, KB_1 },
@@ -123,6 +123,7 @@ namespace arcade
 		{ SDLK_QUESTION, KB_QUESTION },
 		{ SDLK_QUOTEDBL, KB_DOUBLEQUOTE },
 		{ SDLK_RIGHTPAREN, KB_RIGHTPAREN },
-		{ SDLK_UNDERSCORE, KB_UNDERSCORE }
+		{ SDLK_UNDERSCORE, KB_UNDERSCORE },
+		{ SDLK_RETURN, KB_ENTER }
 	};
 }

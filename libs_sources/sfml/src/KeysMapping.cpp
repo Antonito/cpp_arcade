@@ -119,7 +119,8 @@ namespace arcade
       //{ SDLK_LEFTPAREN, KB_LEFTPAREN },
       //{ SDLK_LESS, KB_INFERIOR },OB
       //{ SDLK_PERCENT, KB_PERCENT },
-      { sf::Keyboard::Key::Add, KB_PLUS }
+      { sf::Keyboard::Key::Add, KB_PLUS },
+      { sf::Keyboard::Key::Return, KB_ENTER}
       //{ SDLK_QUESTION, KB_QUESTION },
       //{ SDLK_QUOTEDBL, KB_DOUBLEQUOTE },
       //{ SDLK_RIGHTPAREN, KB_RIGHTPAREN },
