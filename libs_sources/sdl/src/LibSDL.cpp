@@ -77,7 +77,7 @@ namespace arcade
 				e.action = ActionType::AT_NONE;
 				e.m_key = LibSDL::getMouseWheel(ev.wheel);
 				// TODO : add mouse position
-				break; 
+				break;
 			case SDL_QUIT:
 				e.type = EventType::ET_QUIT;
 				break;
@@ -151,7 +151,7 @@ namespace arcade
 					{
 						Color color = tile.getColor();
 
-						if (color.rgba[3] != 0)
+						if (color.a != 0)
 						{
 							for (size_t _y = 0; _y < m_tileSize; ++_y)
 							{

@@ -6,7 +6,10 @@ include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 GFX_LIBS_DIR=		./libs_sources/
 
 GFX_LIBS=		sdl		\
-			sfml
+			sfml		\
+			caca		\
+			ncurses		\
+			lapin
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
