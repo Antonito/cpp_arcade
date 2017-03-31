@@ -6,7 +6,7 @@
 namespace arcade
 {
   LibLapin::LibLapin(size_t width, size_t height) : m_width(width), m_height(height),
-						    m_map(nullptr),
+						    m_gui(nullptr), m_map(nullptr),
 						    m_mapWidth(0), m_mapHeight(0)
   {
     m_win = bunny_start(width, height, false, "Arcade");
@@ -19,12 +19,20 @@ namespace arcade
 		  << std::endl;
 	throw std::exception(); // TODO: Exception
       }
+    m_gui = bunny_new_pixelarray(width, height);
+    if (!m_gui)
+      {
+	std::cerr << "Cannot create pixelarray" << std::endl;
+	throw std::exception(); // TODO: Exception
+      }
     bunny_set_loop_main_function(&LibLapin::_mainLoop);
   }
 
   LibLapin::~LibLapin()
   {
+    bunny_delete_clipable(&m_gui->clipable);
     bunny_stop(m_win);
+    bunny_free(m_gui);
   }
 
   bool LibLapin::pollEvent(Event &e)
@@ -64,11 +72,13 @@ namespace arcade
   void LibLapin::loadSounds(std::vector<std::string> const & sounds)
   {
     // TODO
+    static_cast<void>(sounds);
   }
 
   void LibLapin::playSound(int soundId)
   {
     // TODO
+    static_cast<void>(soundId);
   }
 
   void LibLapin::updateMap(IMap const & map)
@@ -81,9 +91,9 @@ namespace arcade
 
     for (size_t l = 0; l < map.getLayerNb(); ++l)
       {
-	for (size_t y = 0; y < m_mapWidth; ++y)
+	for (size_t y = 0; y < m_mapHeight; ++y)
 	  {
-	    for (size_t x = 0; x < m_mapHeight; ++x)
+	    for (size_t x = 0; x < m_mapWidth; ++x)
 	      {
 		ITile const &tile = map.at(l, x, y);
 		if (tile.getSpriteId() != 0 && false) // TODO: Enable
@@ -112,6 +122,7 @@ namespace arcade
 
   void LibLapin::updateGUI(IGUI const & gui)
   {
+    Color *pixels = reinterpret_cast<Color *>(m_gui->pixels);
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
@@ -121,14 +132,19 @@ namespace arcade
 	size_t height = comp.getWidth() * m_height;
 	Color color = comp.getBackgroundColor();
 	double a(color.a / 255.0);
-
 	if (color.a != 0)
 	  {
 	    for (size_t _y = 0; _y < height; ++_y)
 	      {
 		for (size_t _x = 0; _x < width; ++_x)
 		  {
-		    // TODO
+		    size_t pix = (y + _y) * m_width + (x + _x);
+		    Color old(pixels[pix]);
+		    Color merged(color.r * a + old.r * (1 - a),
+				 color.g * a + old.g * (1 - a),
+				 color.b * a + old.b * (1 - a),
+				 color.a + old.a * (1 - a));
+		    pixels[pix] = merged.full;
 		  }
 	      }
 	  }
@@ -152,7 +168,7 @@ namespace arcade
     return (KeyboardKey::KB_NONE);
   }
 
-  MouseKey LibLapin::getMouseKey(int code)
+  MouseKey LibLapin::getMouseKey(t_bunny_mouse_button code)
   {
     if (m_mouse_keys.find(code) != m_mouse_keys.end())
       return (m_mouse_keys[code]);
@@ -172,11 +188,13 @@ namespace arcade
   // LibLapin Handlers
   t_bunny_response LibLapin::_mainLoop(void *data)
   {
+    static_cast<void>(data);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_eventLoop(void *data)
   {
+    static_cast<void>(data);
     return (SWITCH_CONTEXT);
   }
 
@@ -189,7 +207,6 @@ namespace arcade
     e->type = EventType::ET_KEYBOARD;
     e->action = (state == GO_UP) ? ActionType::AT_RELEASED : ActionType::AT_PRESSED;
     e->kb_key = LibLapin::getKeyboardKey(key);
-    std::cout << "Pressed a key !" << std::endl;
     return (EXIT_ON_SUCCESS);
   }
 
@@ -199,6 +216,9 @@ namespace arcade
     Event	*e = static_cast<Event *>(dat);
 
     assert(e);
+    e->type = EventType::ET_MOUSE;
+    e->action = (state == GO_UP) ? ActionType::AT_RELEASED : ActionType::AT_PRESSED;
+    e->m_key = LibLapin::getMouseKey(but);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -206,7 +226,10 @@ namespace arcade
   {
     Event	*e = static_cast<Event *>(dat);
 
+    // TODO
     assert(e);
+    static_cast<void>(relative);
+    static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -214,7 +237,11 @@ namespace arcade
   {
     Event	*e = static_cast<Event *>(dat);
 
+    // TODO
     assert(e);
+    static_cast<void>(wheelId);
+    static_cast<void>(delta);
+    static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -222,7 +249,10 @@ namespace arcade
   {
     Event	*e = static_cast<Event *>(dat);
 
+    // TODO
     assert(e);
+    static_cast<void>(win);
+    static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -230,7 +260,10 @@ namespace arcade
   {
     Event	*e = static_cast<Event *>(dat);
 
+    // TODO
     assert(e);
+    static_cast<void>(win);
+    static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -238,7 +271,11 @@ namespace arcade
   {
     Event	*e = static_cast<Event *>(dat);
 
+    // TODO
     assert(e);
+    static_cast<void>(win);
+    static_cast<void>(size);
+    static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
@@ -247,6 +284,7 @@ namespace arcade
     Event	*e = static_cast<Event *>(dat);
 
     assert(e);
+    static_cast<void>(win);
     e->type = EventType::ET_QUIT;
     return (EXIT_ON_SUCCESS);
   }
