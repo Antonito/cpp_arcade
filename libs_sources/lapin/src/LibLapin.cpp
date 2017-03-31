@@ -16,19 +16,43 @@ namespace arcade
 		  << " [" << width << "x" << height << "]"
 #endif
 		  << std::endl;
+	throw std::exception(); // TODO: Exception
       }
+    bunny_set_loop_main_function(&LibLapin::_mainLoop);
   }
 
   LibLapin::~LibLapin()
   {
-    if (m_win)
-      bunny_stop(m_win);
+    bunny_stop(m_win);
   }
 
   bool LibLapin::pollEvent(Event &e)
   {
-    // TODO
-    return (false);
+    bool	ret = false;
+
+    bunny_set_key_response(&LibLapin::_keyHandler);
+    bunny_set_click_response(&LibLapin::_clickHandler);
+    bunny_set_move_response(&LibLapin::_moveHandler);
+    bunny_set_wheel_response(&LibLapin::_wheelHandler);
+    bunny_set_lost_focus_response(&LibLapin::_lostFocusHandler);
+    bunny_set_get_focus_response(&LibLapin::_gotFocusHandler);
+    bunny_set_resize_response(&LibLapin::_resizeHandler);
+    bunny_set_close_response(&LibLapin::_closeHandler);
+    bunny_set_loop_main_function(NULL);
+    if (bunny_loop(m_win, 60, &e) == GO_ON)
+      {
+	ret = true;
+      }
+    bunny_set_loop_main_function(&LibLapin::_mainLoop);
+    bunny_set_key_response(nullptr);
+    bunny_set_click_response(nullptr);
+    bunny_set_move_response(nullptr);
+    bunny_set_wheel_response(nullptr);
+    bunny_set_lost_focus_response(nullptr);
+    bunny_set_get_focus_response(nullptr);
+    bunny_set_resize_response(nullptr);
+    bunny_set_close_response(nullptr);
+    return (ret);
   }
 
   bool LibLapin::doesSupportSound() const
@@ -112,13 +136,12 @@ namespace arcade
 
   void LibLapin::display()
   {
-    // TODO
+    bunny_loop(m_win, 60, nullptr);
   }
 
   void LibLapin::clear()
   {
-    if (m_win)
-      bunny_clear(&m_win->buffer, BLACK);
+    bunny_clear(&m_win->buffer, BLACK);
   }
 
   KeyboardKey LibLapin::getKeyboardKey(int code)
@@ -143,5 +166,61 @@ namespace arcade
     pos.x = 0;
     pos.y = 0;
     return (pos);
+  }
+
+  // LibLapin Handlers
+  t_bunny_response LibLapin::_mainLoop(void *data)
+  {
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_keyHandler(t_bunny_event_state state, t_bunny_keysym key,
+					 void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_clickHandler(t_bunny_event_state state, t_bunny_mouse_button but,
+					   void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_moveHandler(t_bunny_position const*relative, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_wheelHandler(int wheelId, int delta, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_lostFocusHandler(t_bunny_window const *win, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_gotFocusHandler(t_bunny_window const *win, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_resizeHandler(t_bunny_window const *win, t_bunny_position const *size, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
+  }
+
+  t_bunny_response LibLapin::_closeHandler(t_bunny_window const *win, void *dat)
+  {
+    Event	*e = static_cast<Event *>(dat);
+    return (EXIT_ON_SUCCESS);
   }
 }
