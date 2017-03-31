@@ -40,7 +40,7 @@ namespace arcade
     bunny_set_resize_response(&LibLapin::_resizeHandler);
     bunny_set_close_response(&LibLapin::_closeHandler);
     bunny_set_loop_main_function(&LibLapin::_eventLoop);
-    if (bunny_loop(m_win, 60, &e) == GO_ON)
+    if (bunny_loop(m_win, 60, &e) == EXIT_ON_ERROR)
       {
 	ret = true;
       }
@@ -177,7 +177,7 @@ namespace arcade
 
   t_bunny_response LibLapin::_eventLoop(void *data)
   {
-    return (EXIT_ON_SUCCESS);
+    return (SWITCH_CONTEXT);
   }
 
   t_bunny_response LibLapin::_keyHandler(t_bunny_event_state state, t_bunny_keysym key,
@@ -190,7 +190,7 @@ namespace arcade
     e->action = (state == GO_UP) ? ActionType::AT_RELEASED : ActionType::AT_PRESSED;
     e->kb_key = LibLapin::getKeyboardKey(key);
     std::cout << "Pressed a key !" << std::endl;
-    return (GO_ON);
+    return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_clickHandler(t_bunny_event_state state, t_bunny_mouse_button but,
@@ -248,6 +248,6 @@ namespace arcade
 
     assert(e);
     e->type = EventType::ET_QUIT;
-    return (GO_ON);
+    return (EXIT_ON_SUCCESS);
   }
 }
