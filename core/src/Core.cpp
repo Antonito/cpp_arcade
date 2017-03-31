@@ -5,7 +5,7 @@
 
 //
 // PLEASE READ CAREFULLY
-// 
+//
 // To compile you need "dirent.h".
 // This file is not directly available in Visual Studio.
 // You can download it here:

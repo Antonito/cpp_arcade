@@ -3,6 +3,7 @@
 #include <curses.h>
 #include <cstdio>
 #include <sys/select.h>
+#include <sys/poll.h>
 #include <sys/time.h>
 #include "LibNcurses.hpp"
 
@@ -28,51 +29,48 @@ namespace arcade
   LibNcurses::~LibNcurses()
   {
     // TODO : implement
+    std::cout << "Byyyye" << std::endl;
     delwin(m_win);
     endwin();
   }
 
   bool LibNcurses::pollEvent(Event &e)
   {
-    fd_set	readfds;
-    int		fd = fileno(stdin);
-    int		ret;
-    struct timeval	tv;
+    struct pollfd	fds;
+    int			fd = fileno(stdin);
 
-    FD_ZERO(&readfds);
-    FD_SET(fd, &readfds);
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    ret = select(fd + 1, &readfds, NULL, NULL, &tv);
-    if (ret == -1)
+    fds.fd = fd;
+    fds.events = POLLIN;
+    switch(poll(&fds, 1, 0))
       {
-	std::cerr << "select() failed" << std::endl;
-	throw std::exception(); // TODO
-      }
-    else if (ret)
-      {
-	int key;
-	e.type = EventType::ET_KEYBOARD;
-	e.action = ActionType::AT_PRESSED;
-	key = getch();
-	if (key == 27)
+      case -1:
+	refresh();
+	break;
+      default:
+	if (fds.revents & POLLIN)
 	  {
-	    fd_set	_readfds;
-	    FD_ZERO(&_readfds);
-	    FD_SET(fd, &_readfds);
-	    tv.tv_sec = 0;
-	    tv.tv_usec = 0;
-	    ret = select(fd + 1, &_readfds, NULL, NULL, &tv);
-	    if (ret)
+	    int key;
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_PRESSED;
+	    key = getch();
+	    if (key == 27)
 	      {
-		getch();
-		getch();
-		e.kb_key = KB_NONE;
-		return (true);
+		poll(&fds, 1, 1);
+		if (fds.revents & POLLIN)
+		  {
+		    getch();
+		    e.kb_key = KeyboardKey::KB_NONE;
+		  }
+		else
+		  {
+		    e.kb_key = KeyboardKey::KB_ESCAPE;
+		    return (true);
+		  }
 	      }
+	    else
+	      e.kb_key = LibNcurses::getKeyboardKey(key);
+	    return (true);
 	  }
-	e.kb_key = LibNcurses::getKeyboardKey(key);
-	return (true);
       }
     return (false);
   }
@@ -94,6 +92,7 @@ namespace arcade
 
   void LibNcurses::updateMap(IMap const & map)
   {
+    return ;
     // TODO
     if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
       {
@@ -133,6 +132,7 @@ namespace arcade
 
   void LibNcurses::updateGUI(IGUI const & gui)
   {
+    return ;
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
