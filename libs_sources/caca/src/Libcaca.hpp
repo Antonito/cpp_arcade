@@ -1,6 +1,7 @@
 #ifndef LIBCACA_HPP_
 #define LIBCACA_HPP_
 
+#include <cstdint>
 #include <map>
 #include <caca.h>
 #include "IGfxLib.hpp"
@@ -37,6 +38,8 @@ namespace arcade
     virtual void clear();
   private:
 
+    uint16_t convert32bitsColorTo16Bits(Color color) const;
+
     static KeyboardKey getKeyboardKey(int code);
     static MouseKey getMouseKey(int code);
     MousePos getMousePos();
@@ -49,6 +52,7 @@ namespace arcade
     size_t m_height;
     caca_display_t *m_win;
     caca_canvas_t *m_canvas;
+    caca_canvas_t *m_map;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
