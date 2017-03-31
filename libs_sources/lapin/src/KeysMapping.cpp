@@ -13,7 +13,7 @@ namespace arcade
     };
 
   // Mapping caca keyboard map
-  std::map<int, KeyboardKey> LibLapin::m_kb_keys =
+  std::map<t_bunny_keysym, KeyboardKey> LibLapin::m_kb_keys =
     {
       { BKS_0, KB_0 },
       { BKS_1, KB_1 },

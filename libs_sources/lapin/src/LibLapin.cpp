@@ -145,7 +145,7 @@ namespace arcade
     bunny_clear(&m_win->buffer, BLACK);
   }
 
-  KeyboardKey LibLapin::getKeyboardKey(int code)
+  KeyboardKey LibLapin::getKeyboardKey(t_bunny_keysym code)
   {
     if (m_kb_keys.find(code) != m_kb_keys.end())
       return (m_kb_keys[code]);
@@ -179,43 +179,61 @@ namespace arcade
 					 void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
-    return (EXIT_ON_SUCCESS);
+
+    assert(e);
+    e->type = EventType::ET_KEYBOARD;
+    e->action = (state == GO_UP) ? ActionType::AT_RELEASED : ActionType::AT_PRESSED;
+    e->kb_key = LibLapin::getKeyboardKey(key);
+    std::cout << "Pressed a key !" << std::endl;
+    return (GO_ON);
   }
 
   t_bunny_response LibLapin::_clickHandler(t_bunny_event_state state, t_bunny_mouse_button but,
 					   void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_moveHandler(t_bunny_position const*relative, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_wheelHandler(int wheelId, int delta, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_lostFocusHandler(t_bunny_window const *win, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_gotFocusHandler(t_bunny_window const *win, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
   t_bunny_response LibLapin::_resizeHandler(t_bunny_window const *win, t_bunny_position const *size, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
+
+    assert(e);
     return (EXIT_ON_SUCCESS);
   }
 
