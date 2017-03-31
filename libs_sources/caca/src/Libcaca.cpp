@@ -103,9 +103,16 @@ namespace arcade
     static_cast<void>(sounds);
   }
 
-  void Libcaca::playSound(int soundId)
+  void Libcaca::soundControl(Sound const &sound)
   {
-    static_cast<void>(soundId);
+    static_cast<void>(sound);
+  }
+
+  void Libcaca::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  {
+	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+
+	  (void)s;
   }
 
   void Libcaca::updateMap(IMap const & map)
@@ -171,7 +178,7 @@ namespace arcade
       }
   }
 
-  void Libcaca::updateGUI(IGUI const & gui)
+  void Libcaca::updateGUI(IGUI & gui)
   {
     for (size_t i = 0; i < gui.size(); ++i)
       {

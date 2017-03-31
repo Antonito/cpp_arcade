@@ -84,9 +84,16 @@ namespace arcade
     static_cast<void>(sounds);
   }
 
-  void LibNcurses::playSound(int soundId)
+  void LibNcurses::soundControl(Sound const &sound)
   {
-    static_cast<void>(soundId);
+    static_cast<void>(sound);
+  }
+
+  void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  {
+	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+
+	  (void)s;
   }
 
   void LibNcurses::updateMap(IMap const & map)
@@ -128,7 +135,7 @@ namespace arcade
       }
   }
 
-  void LibNcurses::updateGUI(IGUI const & gui)
+  void LibNcurses::updateGUI(IGUI & gui)
   {
     for (size_t i = 0; i < gui.size(); ++i)
       {

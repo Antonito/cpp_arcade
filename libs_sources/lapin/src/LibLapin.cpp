@@ -66,9 +66,16 @@ namespace arcade
     // TODO
   }
 
-  void LibLapin::playSound(int soundId)
+  void LibLapin::soundControl(Sound const &sound)
   {
     // TODO
+  }
+
+  void LibLapin::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  {
+	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+
+
   }
 
   void LibLapin::updateMap(IMap const & map)
@@ -110,7 +117,7 @@ namespace arcade
       }
   }
 
-  void LibLapin::updateGUI(IGUI const & gui)
+  void LibLapin::updateGUI(IGUI & gui)
   {
     for (size_t i = 0; i < gui.size(); ++i)
       {
