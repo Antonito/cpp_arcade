@@ -1,3 +1,4 @@
+#include <cassert>
 #include <exception>
 #include <iostream>
 #include "LibLapin.hpp"
@@ -221,6 +222,9 @@ namespace arcade
   t_bunny_response LibLapin::_closeHandler(t_bunny_window const *win, void *dat)
   {
     Event	*e = static_cast<Event *>(dat);
-    return (EXIT_ON_SUCCESS);
+
+    assert(e);
+    e->type = EventType::ET_QUIT;
+    return (GO_ON);
   }
 }
