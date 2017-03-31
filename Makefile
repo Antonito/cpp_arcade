@@ -7,7 +7,8 @@ GFX_LIBS_DIR=		./libs_sources/
 
 GFX_LIBS=		sdl		\
 			sfml		\
-			caca
+			caca		\
+			ncurses
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
