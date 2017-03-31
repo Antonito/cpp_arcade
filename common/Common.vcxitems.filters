@@ -39,6 +39,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AGame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SpriteRef.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Tile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Color.hpp" />
@@ -62,5 +63,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)src\AGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\SpriteRef.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Tile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\ISprite.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Sound.hpp" />
   </ItemGroup>
 </Project>
