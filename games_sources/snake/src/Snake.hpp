@@ -2,7 +2,6 @@
 #define SNAKE_HPP_
 
 #include <cstdlib>
-#include <ctime>
 #include "AGame.hpp"
 
 namespace arcade
