@@ -30,8 +30,10 @@ namespace arcade
 
   LibLapin::~LibLapin()
   {
+    bunny_delete_clipable(&m_map->clipable);
     bunny_delete_clipable(&m_gui->clipable);
     bunny_stop(m_win);
+    bunny_free(m_game);
     bunny_free(m_gui);
   }
 
@@ -77,12 +79,34 @@ namespace arcade
 
   void LibLapin::soundControl(Sound const &sound)
   {
-    // TODO
+    t_bunny_sound	*cur;
+    // TODO: WAIT FOR INTERFACE UPDATE
+    if (sound.type == SoundType::MUSIC)
+      cur = m_music[];
+    else
+      cur = m_sound[m_];
+    bunny_sound_volume(cur, sound.volume);
+    switch (sound.mode)
+      {
+      case SoundAction::REPEAT:
+	bunny_sound_loop(cur, true);
+      case SoundAction::UNIQUE:
+      case SoundAction::RESUME:
+	bunny_sound_play(cur);
+	break;
+      case SoundAction::PAUSE:
+	break;
+      case SoundAction::STOP:
+	bunny_sound_stop(cur);
+	break;
+      default:
+	break;
+      }
   }
 
   void LibLapin::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
-	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+    std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
   }
 
   void LibLapin::updateMap(IMap const & map)
