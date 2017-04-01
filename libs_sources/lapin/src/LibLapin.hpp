@@ -25,8 +25,8 @@ namespace arcade
     virtual void loadSounds(std::vector<std::string> const &sounds);
     virtual void soundControl(Sound const &sound);
 
-	// Sprite
-	virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
+    // Sprite
+    virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
 
     // Map
     virtual void updateMap(IMap const &map);
@@ -39,6 +39,11 @@ namespace arcade
 
     // Clear
     virtual void clear();
+
+    t_bunny_window	*getWin() const;
+    t_bunny_pixelarray	*getMap() const;
+    t_bunny_pixelarray	*getGui() const;
+
   private:
     // LibLapin handlers
     static t_bunny_response _mainLoop(void *data);
