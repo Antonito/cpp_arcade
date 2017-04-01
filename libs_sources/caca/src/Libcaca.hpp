@@ -22,11 +22,11 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::string> const &sounds);
+    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
     virtual void soundControl(Sound const &sound);
 
-	// Sprite
-	virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
+    // Sprite
+    virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
 
     // Map
     virtual void updateMap(IMap const &map);

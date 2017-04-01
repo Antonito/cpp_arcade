@@ -25,7 +25,7 @@ namespace arcade
 
 		// Sound
 		virtual bool doesSupportSound() const;
-		virtual void loadSounds(std::vector<std::string> const &sounds);
+		virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
 		virtual void soundControl(Sound const &sound);
 
 		// Map

@@ -33,7 +33,7 @@ namespace arcade
 		virtual std::vector<NetworkPacket> &&getNetworkToSend();
 
 		// Sound
-		virtual std::vector<std::string> getSoundsToLoad() const = 0;
+		virtual std::vector<std::pair<std::string, SoundType> > getSoundsToLoad() const = 0;
 		virtual std::vector<int>         &&getSoundsToPlay();
 
 		// Map

@@ -307,9 +307,9 @@ namespace arcade
 		}
 	}
 
-	std::vector<std::string> Core::getSoundsToLoad() const
+	std::vector<std::pair<std::string, SoundType > > Core::getSoundsToLoad() const
 	{
-		return (std::vector<std::string>());
+	  return (std::vector<std::pair<std::string, SoundType > >());
 	}
 
 	void Core::process()

@@ -77,7 +77,7 @@ namespace arcade
     static_cast<void>(sounds);
   }
 
-  void LibLapin::soundControl(Sound const &sound)
+  void LibLapin::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
     t_bunny_sound	*cur;
     // TODO: WAIT FOR INTERFACE UPDATE

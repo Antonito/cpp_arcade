@@ -33,6 +33,7 @@ namespace arcade
 		virtual std::size_t getBackgroundId() const;
 		virtual Color getBackgroundColor() const;
 		virtual std::string const &getText() const;
+		virtual bool hasSprite() const;
 
 		void setBackgroundId(std::size_t id);
 		void setBackgroundColor(Color color);

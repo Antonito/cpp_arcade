@@ -43,7 +43,7 @@ namespace arcade
 
     virtual void notifyEvent(std::vector<Event> &&events);
 
-    virtual std::vector<std::string> getSoundsToLoad() const;
+    virtual std::vector<std::pair<std::string, SoundType > > getSoundsToLoad() const;
 
     virtual void process();
 

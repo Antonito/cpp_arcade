@@ -111,8 +111,9 @@ namespace arcade
     return (true);
   }
 
-  void LibSFML::loadSounds(std::vector<std::string> const & sounds)
+  void LibSFML::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
+    # if 0
     m_soundBuffer.reserve(sounds.size());
     for (std::vector<std::string>::size_type i = 0; i != sounds.size(); i++)
       {
@@ -124,6 +125,7 @@ namespace arcade
 	m_sound[i] = std::make_unique<sf::Sound>();
 	m_sound[i]->setBuffer(*m_soundBuffer[i]);
       }
+    #endif
   }
 
   void LibSFML::soundControl(Sound const &sound)
