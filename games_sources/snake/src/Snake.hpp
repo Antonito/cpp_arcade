@@ -36,6 +36,8 @@ namespace arcade
 	virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
 
     virtual void process();
+	
+	virtual WhereAmI *getWhereAmI() const;
 
   private:
     bool isDead(t_pos const &) const;

@@ -33,6 +33,7 @@ namespace arcade
 			std::string const &prefix, std::string const &sufix);
 
 		void loadGame();
+		void mainEvent(Event const &e);
 
 		std::vector<GenLibrary> m_gameList;
 		std::vector<GenLibrary> m_libList;
@@ -40,10 +41,13 @@ namespace arcade
 		size_t m_currentGameId;
 		size_t m_currentLibId;
 
+		std::vector<Event> m_eventBuffer;
+
 		bool m_inMenu;
 
 		std::unique_ptr<IGame> m_game;
 		std::unique_ptr<IGfxLib> m_lib;
+		GameState m_gameState;
 		// std::unique_ptr<ISoundLib> m_sound;
 		// std::unique_ptr<Network> m_network;
 
@@ -52,6 +56,7 @@ namespace arcade
 		virtual std::vector<std::pair<std::string, SoundType> > getSoundsToLoad() const;
 		virtual void process();
 		virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+		virtual WhereAmI *getWhereAmI() const;
 	};
 }
 

@@ -105,9 +105,9 @@ namespace arcade
 
     for (size_t l = 0; l < map.getLayerNb(); ++l)
       {
-	for (size_t y = 0; y < m_mapWidth; ++y)
+	for (size_t y = 0; y < m_mapHeight; ++y)
 	  {
-	    for (size_t x = 0; x < m_mapHeight; ++x)
+	    for (size_t x = 0; x < m_mapWidth; ++x)
 	      {
 		ITile const &tile = map.at(l, x, y);
 		if (tile.getSpriteId() != 0 && false) // TODO: Enable

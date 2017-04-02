@@ -82,11 +82,7 @@ namespace arcade
 
     for (Event const &e : ev)
       {
-	if (e.type == ET_QUIT)
-	  {
-	    m_state = QUIT;
-	  }
-	else if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
+	if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
 	  {
 	    switch (e.kb_key)
 	      {
@@ -106,8 +102,6 @@ namespace arcade
 		if (m_dir != LEFT)
 		  m_dir = RIGHT;
 		break;
-	      case KB_ESCAPE:
-		m_state = MENU;
 	      default:
 		break;
 	      }
@@ -246,5 +240,14 @@ namespace arcade
 	else
 	  m_map->at(1, p.x, p.y).setColor(Color::Blue);
       }
+  }
+
+  WhereAmI * Snake::getWhereAmI() const
+  {
+	  WhereAmI *w = new WhereAmI;
+
+	  w->type = CommandType::WHERE_AM_I;
+	  w->lenght = 0;
+	  return (w);
   }
 }

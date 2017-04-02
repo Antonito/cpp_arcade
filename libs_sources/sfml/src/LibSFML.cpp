@@ -7,8 +7,8 @@ namespace arcade
 {
   LibSFML::LibSFML(size_t width, size_t height) : m_guiPix(nullptr), m_gui(nullptr), m_guiSprite(nullptr), m_mapPix(nullptr), m_map(nullptr), m_mapSprite(nullptr), m_mapWidth(0), m_mapHeight(0)
   {
-    m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade");
-    m_mousePos = sf::Mouse::getPosition(*m_win.get());
+    m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade sfml");
+    m_mousePos = sf::Mouse::getPosition(*m_win);	
 
     // Create GUI
     m_guiPix = std::make_unique<uint32_t[]>(width * height);

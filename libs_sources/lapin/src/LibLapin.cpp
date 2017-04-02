@@ -9,7 +9,7 @@ namespace arcade
 						    m_gui(nullptr), m_map(nullptr),
 						    m_mapWidth(0), m_mapHeight(0)
   {
-    m_win = bunny_start(width, height, false, "Arcade");
+    m_win = bunny_start(width, height, false, "Arcade lapin");
     if (!m_win)
       {
 	std::cerr << "Cannot create libLapin Window"
@@ -26,6 +26,7 @@ namespace arcade
 	throw std::exception(); // TODO: Exception
       }
     bunny_set_loop_main_function(&LibLapin::_mainLoop);
+	bunny_loop(m_win, 60, nullptr);
   }
 
   LibLapin::~LibLapin()
