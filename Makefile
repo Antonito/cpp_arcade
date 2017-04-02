@@ -88,6 +88,6 @@ link:
 
 # Update every dependency
 update:
-			git pull --recurse-submodules
+			git submodule foreach git pull origin master
 
 .PHONY: all clean fclean re infos $(GAMES) $(GFX_LIBS) $(COMMON) $(CORE)
