@@ -56,6 +56,7 @@ namespace arcade
     ALLEGRO_DISPLAY	*m_win;
     ALLEGRO_EVENT_QUEUE	*m_event;
     ALLEGRO_TIMER	*m_timer;
+    ALLEGRO_BITMAP	*m_gui;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
