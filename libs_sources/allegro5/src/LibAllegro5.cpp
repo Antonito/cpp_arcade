@@ -59,7 +59,6 @@ namespace arcade
 
     if (al_get_next_event(m_event, &events))
       {
-	std::cout << "Event !" << std::endl;
 	switch (events.type)
 	  {
 	  case ALLEGRO_EVENT_TIMER:
@@ -72,14 +71,26 @@ namespace arcade
 
 	    // Mouse
 	  case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_PRESSED;
+	    e.m_key = LibAllegro5::getMouseKey(event.mouse.button);
 	    break;
 	  case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_RELEASED;
+	    e.m_key = LibAllegro5::getMouseKey(event.mouse.button);
 	    break;
 
 	    // Keyboard
 	  case ALLEGRO_EVENT_KEY_DOWN:
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_PRESSED;
+	    e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
 	    break;
 	  case ALLEGRO_EVENT_KEY_UP:
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_RELEASED;
+	    e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
 	    break;
 	  default:
 	    break;
