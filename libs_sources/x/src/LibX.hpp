@@ -40,7 +40,8 @@ namespace arcade
     // Clear
     virtual void clear();
   private:
-
+    void drawPixel(size_t x, size_t y, Color color);
+    void putPixel(size_t x, size_t y, Color color, XImage *img);
     static constexpr long eventMask =
       KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
       PointerMotionMask | ResizeRedirectMask;
@@ -66,9 +67,16 @@ namespace arcade
     uint64_t	m_blackPixel;
     Atom	m_del;
     int		m_fd;
+    Visual	*m_vis;
+
+    uint32_t	*m_mapData;
+    XImage	*m_map;
+    uint32_t	*m_guiData;
+    XImage	*m_gui;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
+    bool m_canDraw;
   };
 }
 

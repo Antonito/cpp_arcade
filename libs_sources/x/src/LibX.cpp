@@ -1,11 +1,17 @@
 #include <exception>
 #include <iostream>
+#include <cstring>
 #include <sys/select.h>
 #include "LibX.hpp"
+#include <X11/Xutil.h>
+#include <X11/Xlibint.h>
 
 namespace arcade
 {
-  LibX::LibX(size_t width, size_t height) : m_mapWidth(0), m_mapHeight(0)
+  LibX::LibX(size_t width, size_t height) : m_mapData(nullptr), m_map(nullptr),
+					    m_guiData(nullptr), m_gui(nullptr),
+					    m_mapWidth(0), m_mapHeight(0),
+					    m_canDraw(true)
   {
     m_width = width;
     m_height = height;
@@ -17,7 +23,12 @@ namespace arcade
       }
     // Map keyboard and mouse
     setKeyMapping();
-
+    m_vis = DefaultVisual(m_disp, 0);
+    if (m_vis->c_class != TrueColor)
+      {
+	std::cerr << "TrueColor not supported." << std::endl;
+	throw std::exception(); // TODO
+      }
     // Set up a window
     m_screen = DefaultScreen(m_disp);
     m_gc = DefaultGC(m_disp, m_screen);
@@ -31,20 +42,32 @@ namespace arcade
     XMapWindow(m_disp, m_win);
     XRaiseWindow(m_disp, m_win);
     m_fd = ConnectionNumber(m_disp);
+
+    // Create an image
+    m_guiData = static_cast<uint32_t *>(Xmalloc(m_width * m_height * sizeof(uint32_t)));
+    memset(m_guiData, 0, m_width * m_height * sizeof(Color));
+    m_gui = XCreateImage(m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
+			 reinterpret_cast<char *>(m_guiData), m_width, m_height, 32, 0);
+    if (!m_gui)
+      {
+	std::cerr << "Cannot create XImage" << std::endl;
+	throw std::exception(); // TODO
+      }
     XFlush(m_disp);
   }
 
   LibX::~LibX()
   {
-    // TODO : implement
     XUnmapWindow(m_disp, m_win);
+    if (m_map)
+      XDestroyImage(m_map);
+    XDestroyImage(m_gui);
     XDestroyWindow(m_disp, m_win);
     XCloseDisplay(m_disp);
   }
 
   bool LibX::pollEvent(Event &e)
   {
-    // TODO
     struct timeval	tv;
     fd_set		readfds;
     int			ret;
@@ -69,6 +92,10 @@ namespace arcade
 	    XNextEvent(m_disp, &ev);
 	    switch (ev.type)
 	      {
+	      case Expose:
+		m_canDraw = true;
+		return (false);
+		break;
 	      case ClientMessage:
 		e.type = EventType::ET_QUIT;
 		break;
@@ -104,8 +131,7 @@ namespace arcade
 	      case KeyRelease:
 		e.type = EventType::ET_KEYBOARD;
 		e.action = ActionType::AT_PRESSED;
-		// TODO
-		std::cout << "A key was released" << std::endl;
+		e.kb_key = LibX::getKeyboardKey(ev.xkey.keycode);
 		break;
 	      default:
 		break;
@@ -139,11 +165,29 @@ namespace arcade
 
   void LibX::updateMap(IMap const & map)
   {
-    //if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
-    //{
-    // TODO
-    //}
+    if (!m_mapData || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+      {
+	if (m_map)
+	  XDestroyImage(m_map);
+	m_map = nullptr;
+	m_mapData = nullptr;
+	m_mapWidth = map.getWidth();
+	m_mapHeight = map.getHeight();
+	if (!m_mapWidth || !m_mapHeight)
+	  return ;
+	m_mapData = static_cast<uint32_t *>(Xmalloc(m_mapWidth * m_tileSize * m_mapHeight * m_tileSize * sizeof(uint32_t)));
+	m_map = XCreateImage(m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
+			     reinterpret_cast<char *>(m_mapData),
+			     m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32, 0);
+	if (!m_map)
+	  {
+	    std::cerr << "Cannot create XImage map" << std::endl;
+	    throw std::exception(); // TODO
+	  }
+      }
 
+    Color *pixels = reinterpret_cast<Color *>(m_mapData);
+    size_t mapWidth = m_mapWidth * m_tileSize;
     for (size_t l = 0; l < map.getLayerNb(); ++l)
       {
 	for (size_t y = 0; y < m_mapWidth; ++y)
@@ -166,7 +210,12 @@ namespace arcade
 				size_t X = x * m_tileSize + _x;
 				size_t Y = y * m_tileSize + _y;
 				double a(color.a / 255.0);
-				// TODO
+				Color old(pixels[Y * mapWidth + X]);
+				Color merged(color.r * a + old.r * (1 - a),
+					     color.g * a + old.g * (1 - a),
+					     color.b * a + old.b * (1 - a),
+					     color.a + old.a * (1 - a));
+				putPixel(X, Y, merged, m_map);
 			      }
 			  }
 		      }
@@ -178,6 +227,7 @@ namespace arcade
 
   void LibX::updateGUI(IGUI & gui)
   {
+    Color *pixels = reinterpret_cast<Color *>(m_guiData);
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
@@ -194,7 +244,12 @@ namespace arcade
 	      {
 		for (size_t _x = 0; _x < width; ++_x)
 		  {
-		    // TODO
+		    Color old(pixels[(y + _y) * m_width + x + _x]);
+		    Color merged(color.r * a + old.r * (1 - a),
+				 color.g * a + old.g * (1 - a),
+				 color.b * a + old.b * (1 - a),
+				 color.a + old.a * (1 - a));
+		    putPixel(x + _x, y + _y, merged, m_gui);
 		  }
 	      }
 	  }
@@ -203,12 +258,36 @@ namespace arcade
 
   void LibX::display()
   {
-    // TODO
+    if (m_canDraw)
+      {
+	if (m_map)
+	  XPutImage(m_disp, m_win, m_gc, m_map, 0, 0, 0, 0, m_width, m_height); // TODO : Check positiiiioooonn
+	XPutImage(m_disp, m_win, m_gc, m_gui, 0, 0, 0, 0, m_width, m_height);
+	XFlush(m_disp);
+      }
+    m_canDraw = false;
   }
 
   void LibX::clear()
   {
     // TODO
+  }
+
+  void LibX::drawPixel(size_t x, size_t y, Color color)
+  {
+    XColor col;
+
+    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) | ((color.r & 0xff) << 16));
+    XSetForeground(m_disp, m_gc, col.pixel);
+    XDrawPoint(m_disp, m_win, m_gc, x, y);
+  }
+
+  void LibX::putPixel(size_t x, size_t y, Color color, XImage *img)
+  {
+    XColor col;
+
+    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) | ((color.r & 0xff) << 16));
+    XPutPixel(img, x, y, col.pixel);
   }
 
   KeyboardKey LibX::getKeyboardKey(int code)

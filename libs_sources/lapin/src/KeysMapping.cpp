@@ -2,6 +2,7 @@
 
 namespace arcade
 {
+
   // Mapping caca Mouse Button with MouseKey enum
   std::map<t_bunny_mouse_button, MouseKey> LibLapin::m_mouse_keys =
     {
