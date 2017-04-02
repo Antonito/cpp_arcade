@@ -201,7 +201,7 @@ enum KeyboardKey
   ///
   struct Event
   {
-    EventType     type; /// Type of the event
+	EventType     type; /// Type of the event
     ActionType    action; /// Action of the event
 
 	///

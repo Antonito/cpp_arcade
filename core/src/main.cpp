@@ -48,7 +48,7 @@ int		main()
 	arcade::Core core;
 	Nope::Log::Logger::start();
 
-	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_TRACE;
+	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 
 	core.launch();
 	return (0);

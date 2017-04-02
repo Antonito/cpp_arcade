@@ -70,7 +70,7 @@ namespace arcade
 
 	void Core::launch()
 	{
-		GameState state = MENU;
+		m_gameState = MENU;
 
 		// Log
 		Nope::Log::Info << "Launching the core";
@@ -79,56 +79,74 @@ namespace arcade
 		this->initLists();
 
 		// Set the current library to the first one
-		m_lib = std::unique_ptr<IGfxLib>(m_libList[0].getFunction<IGfxLib* ()>("getLib")());
+		m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
 
-		while (state != QUIT)
+		while (m_gameState != QUIT)
 		{
-			switch (state)
+			switch (m_gameState)
 			{
 			case MENU:
+				if (m_game.get() == this)
+					m_game.release();
 				this->m_game = std::unique_ptr<IGame>(this);
 			case LOADING:
 				this->loadGame();
 			case INGAME:
-				state = this->gameLoop();
+				m_gameState = this->gameLoop();
+				if (m_gameState == QUIT)
+					std::cout << "QUIT #3" << std::endl;
 				break;
 			default:
-				state = QUIT;
+				m_gameState = QUIT;
 				break;
 			}
 		}
 		// Log
+		if (m_game.get() == this)
+			m_game.release();
 		Nope::Log::Info << "Exiting the core";
 	}
 
 	GameState Core::gameLoop()
 	{
-		GameState state = INGAME;
-		std::vector<Event> events;
 		std::vector<int> sounds;
 		Event ev;
 
+		m_gameState = INGAME;
 		Nope::Log::Info << "Launching a game";
 		while (true)
 		{
-			events.clear();
+			m_eventBuffer.clear();
 			sounds.clear();
 			m_lib->clear();
-			if (state != INGAME)
+			if (m_gameState != INGAME)
 			{
 				break ;
 			}
 			// Events
+			ev = { ET_NONE, AT_NONE, { KB_NONE }, { 0, 0 }, { 0, 0 } };
 			while (m_lib->pollEvent(ev))
-				events.push_back(ev);
-
+			{
+				mainEvent(ev);
+				ev = { ET_NONE, AT_NONE, { KB_NONE }, { 0, 0 }, { 0, 0 } };
+			}
+				// m_eventBuffer.push_back(ev);
+			if (m_gameState == QUIT)
+				std::cout << "QUIT #1" << std::endl;
+			if (m_gameState != INGAME)
+			{
+				if (m_gameState == QUIT)
+					std::cout << "QUIT #2" << std::endl;
+				break;
+			}
 #ifdef DEBUG
 			Nope::Log::Debug << "Polled events";
 #endif
-			m_game->notifyEvent(std::move(events));
+			m_game->notifyEvent(std::move(m_eventBuffer));
 #ifdef DEBUG
 			Nope::Log::Debug << "Notified events";
 #endif
+
 			if (m_game.get() == nullptr)
 			{
 				return (QUIT);
@@ -165,13 +183,13 @@ namespace arcade
 			Nope::Log::Debug << "Displayed";
 #endif
 			// GameState
-			state = m_game->getGameState();
+			m_gameState = m_game->getGameState();
 #ifdef DEBUG
 			Nope::Log::Debug << "Game state updated";
 #endif
 		}
 		Nope::Log::Info << "Exiting a game";
-		return (state);
+		return (m_gameState);
 	}
 
 	GameState Core::menuLoop()
@@ -279,6 +297,74 @@ namespace arcade
 		m_lib->loadSprites(m_game->getSpritesToLoad());
 	}
 
+	void Core::mainEvent(Event const & e)
+	{
+		int game = m_currentGameId;
+		int lib = m_currentLibId;
+
+		if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
+		{
+			switch (e.kb_key)
+			{
+			case KB_2:
+				if (m_currentLibId == 0)
+				{
+					m_currentLibId = m_libList.size();
+				}
+				m_currentLibId--;
+				break;
+			case KB_3:
+				m_currentLibId++;
+				if (m_currentLibId == m_libList.size())
+				{
+					m_currentLibId = 0;
+				}
+				break;
+			case KB_4:
+				if (m_currentGameId == 0)
+				{
+					m_currentGameId = m_gameList.size();
+				}
+				m_currentGameId--;
+				break;
+			case KB_5:
+				m_currentGameId++;
+				if (m_currentGameId == m_gameList.size())
+				{
+					m_currentGameId = 0;
+				}
+				break;
+			case KB_9:
+				m_gameState = MENU;
+				break;
+			case KB_ESCAPE:
+				m_gameState = QUIT;
+				break;
+			default:
+				m_eventBuffer.push_back(e);
+				break;
+			}
+
+			if (m_currentGameId != game)
+			{
+				if (m_game.get() == this)
+					m_game.release();
+				std::cout << "Using game " << m_currentGameId << std::endl;
+				m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame* ()>("getGame")());
+				std::cout << "Done." << std::endl;
+			}
+			if (m_currentLibId != lib)
+			{
+				std::cout << "Using lib " << m_currentLibId << std::endl;
+				m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
+				std::cout << "Done." << std::endl;
+			}
+
+			return;
+		}
+		m_eventBuffer.push_back(e);
+	}
+
 	void Core::notifyEvent(std::vector<Event>&& events)
 	{
 		std::vector<Event> ev = events;
@@ -320,5 +406,10 @@ namespace arcade
 		std::vector<std::unique_ptr<ISprite>> s;
 
 		return (std::move(s));
+	}
+
+	WhereAmI * Core::getWhereAmI() const
+	{
+		return nullptr;
 	}
 }

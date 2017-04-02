@@ -10,6 +10,10 @@
 # define		__ARCADE_PROTOCOL_HPP__
 # include		<stdint.h>
 
+#ifndef __linux__
+#define __linux__
+#endif
+
 namespace		arcade
 {
   enum class		CommandType : uint16_t

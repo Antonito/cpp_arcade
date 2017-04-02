@@ -13,7 +13,7 @@ namespace arcade
 			throw std::exception(); // TODO: create a good exception
 		}
 
-		m_win = SDL_CreateWindow("Arcade", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+		m_win = SDL_CreateWindow("Arcade sdl", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 
 		if (m_win == NULL)
 		{

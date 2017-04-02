@@ -19,7 +19,7 @@ CPP_VER=	c++14
 # Debug Infos
 ifeq ($(DEBUG), yes)
 CXXFLAGS=	-g -DDEBUG $(LOCAL_DEBUG_FLAGS)
-LDFLAGS=	-g
+LDFLAGS=	-g -fsanitize=safe-stack
 else
 CXXFLAGS=	-DNDEBUG
 LDFLAGS=

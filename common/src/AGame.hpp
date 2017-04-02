@@ -42,7 +42,13 @@ namespace arcade
 		// GUI
 		virtual IGUI &getGUI() const;
 
+		// Play
+		void Play();
+
 	protected:
+		virtual WhereAmI *getWhereAmI() const = 0;
+		GetMap *getMap() const;
+
 		GameState m_state;
 
 		// Network buffers

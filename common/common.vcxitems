@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AGame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\AGfxLib.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Color.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Component.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Event.cpp" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)src\AGame.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\AGfxLib.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Color.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Component.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Event.hpp" />
