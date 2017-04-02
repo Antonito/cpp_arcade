@@ -40,7 +40,7 @@ namespace arcade
 		virtual IMap const &getCurrentMap() const;
 
 		// GUI
-		virtual IGUI &getGUI() const;
+		virtual IGUI &getGUI();
 
 		// Play
 		void Play();
