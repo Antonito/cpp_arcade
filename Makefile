@@ -7,7 +7,8 @@ LINK_INTERFACE=		./link_interface.sh
 ###### Add your graphic libraries here #####
 GFX_LIBS_DIR=		./libs_sources/
 
-GFX_LIBS=		sdl		\
+GFX_LIBS=		allegro5	\
+			sdl		\
 			sfml		\
 			caca		\
 			ncurses		\
