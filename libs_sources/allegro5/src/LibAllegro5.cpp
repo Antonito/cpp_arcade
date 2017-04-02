@@ -57,7 +57,7 @@ namespace arcade
   {
     ALLEGRO_EVENT events;
 
-    al_wait_for_event(m_event, &events);
+    if (al_get_next_event(m_event, &events))
       {
 	std::cout << "Event !" << std::endl;
 	switch (events.type)
