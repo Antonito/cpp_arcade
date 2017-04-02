@@ -73,12 +73,12 @@ namespace arcade
 	  case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_PRESSED;
-	    e.m_key = LibAllegro5::getMouseKey(event.mouse.button);
+	    e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
 	    break;
 	  case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_RELEASED;
-	    e.m_key = LibAllegro5::getMouseKey(event.mouse.button);
+	    e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
 	    break;
 
 	    // Keyboard
