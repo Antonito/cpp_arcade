@@ -98,7 +98,7 @@ namespace arcade
     return (false);
   }
 
-  void Libcaca::loadSounds(std::vector<std::string> const & sounds)
+  void Libcaca::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
     static_cast<void>(sounds);
   }

@@ -112,4 +112,8 @@ namespace arcade
 		setShiftY(y);
 	}
 
+  bool Tile::hasSprite() const
+  {
+    return (false);
+  }
 }

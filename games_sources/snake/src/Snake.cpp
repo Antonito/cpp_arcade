@@ -109,10 +109,10 @@ namespace arcade
       }
   }
 
-  std::vector<std::string> Snake::getSoundsToLoad() const
+  std::vector<std::pair<std::string, SoundType > > Snake::getSoundsToLoad() const
   {
     // TODO: implement
-    return (std::vector<std::string>());
+    return (std::vector<std::pair<std::string, SoundType> >());
   }
 
   std::vector<std::unique_ptr<ISprite>>&& Snake::getSpritesToLoad() const

@@ -31,9 +31,11 @@ namespace arcade
 
   LibLapin::~LibLapin()
   {
-    //bunny_delete_clipable(&m_gui->clipable);
+    bunny_delete_clipable(&m_map->clipable);
+    bunny_delete_clipable(&m_gui->clipable);
     bunny_stop(m_win);
-    //bunny_free(m_gui);
+    bunny_free(m_game);
+    bunny_free(m_gui);
   }
 
   bool LibLapin::pollEvent(Event &e)
@@ -76,24 +78,61 @@ namespace arcade
     static_cast<void>(sounds);
   }
 
-  void LibLapin::soundControl(Sound const &sound)
+  void LibLapin::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
-    // TODO
+    t_bunny_sound	*cur;
+    // TODO: WAIT FOR INTERFACE UPDATE
+    if (sound.type == SoundType::MUSIC)
+      cur = m_music[];
+    else
+      cur = m_sound[m_];
+    bunny_sound_volume(cur, sound.volume);
+    switch (sound.mode)
+      {
+      case SoundAction::REPEAT:
+	bunny_sound_loop(cur, true);
+      case SoundAction::UNIQUE:
+      case SoundAction::RESUME:
+	bunny_sound_play(cur);
+	break;
+      case SoundAction::PAUSE:
+	break;
+      case SoundAction::STOP:
+	bunny_sound_stop(cur);
+	break;
+      default:
+	break;
+      }
   }
 
   void LibLapin::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
-	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+    std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
   }
 
   void LibLapin::updateMap(IMap const & map)
   {
-    // TODO
     if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
       {
-
+	bunny_free(m_map);
+	m_map = nullptr;
+	m_mapWidth = map.getWidth();
+	m_mapHeight = map.getHeight();
+	if (!m_mapWidth || !m_mapHeight)
+	  return ;
+	m_map = bunny_new_pixelarray(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
+	if (!m_map)
+	  {
+	    std::cerr << "Cannot create LibLapin pixelarray"
+#if defined(DEBUG)
+	      << " [" << m_mapWidth * m_tileSize << "x" << m_mapHeight * m_tileSize << "]"
+#endif
+	      << std::endl;
+	    throw std::exception(); // TODO
+	  }
       }
 
+    Color *pixels = reinterpret_cast<Color *>(m_map->pixels);
     for (size_t l = 0; l < map.getLayerNb(); ++l)
       {
 	for (size_t y = 0; y < m_mapHeight; ++y)
@@ -158,7 +197,7 @@ namespace arcade
 
   void LibLapin::display()
   {
-    bunny_loop(m_win, 60, nullptr);
+    bunny_loop(m_win, 60, this);
   }
 
   void LibLapin::clear()
@@ -190,10 +229,32 @@ namespace arcade
     return (pos);
   }
 
+  t_bunny_window	*LibLapin::getWin() const
+  {
+    return (m_win);
+  }
+
+  t_bunny_pixelarray	*LibLapin::getMap() const
+  {
+    return (m_map);
+  }
+
+  t_bunny_pixelarray	*LibLapin::getGui() const
+  {
+    return (m_gui);
+  }
+
   // LibLapin Handlers
   t_bunny_response LibLapin::_mainLoop(void *data)
   {
-    static_cast<void>(data);
+    LibLapin	*lib = static_cast<LibLapin *>(data);
+    t_bunny_window	*win = lib->getWin();
+    t_bunny_pixelarray	*gui = lib->getGui();
+    t_bunny_pixelarray	*map = lib->getMap();
+
+    bunny_blit(&win->buffer, &map->clipable, nullptr);
+    bunny_blit(&win->buffer, &gui->clipable, nullptr);
+    bunny_display(win);
     return (EXIT_ON_SUCCESS);
   }
 

@@ -36,6 +36,7 @@ namespace arcade
 
 		virtual double getShiftX() const;
 		virtual double getShiftY() const;
+		virtual bool hasSprite() const;
 
 		void setShiftX(double shift);
 		void setShiftY(double shift);

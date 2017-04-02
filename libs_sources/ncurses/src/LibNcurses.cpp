@@ -79,7 +79,7 @@ namespace arcade
     return (false);
   }
 
-  void LibNcurses::loadSounds(std::vector<std::string> const & sounds)
+  void LibNcurses::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
     static_cast<void>(sounds);
   }

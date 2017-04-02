@@ -97,7 +97,7 @@ namespace arcade
 		return (true);
 	}
 
-	void LibSDL::loadSounds(std::vector<std::string> const & sounds)
+	void LibSDL::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
 	{
 		(void)sounds;
 		// TODO : implement

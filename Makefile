@@ -2,14 +2,18 @@ MK_DIR=			./mk/
 
 include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 
+LINK_INTERFACE=		./link_interface.sh
+
 ###### Add your graphic libraries here #####
 GFX_LIBS_DIR=		./libs_sources/
 
-GFX_LIBS=		sdl		\
+GFX_LIBS=		allegro5	\
+			sdl		\
 			sfml		\
 			caca		\
 			ncurses		\
-			lapin
+			lapin		\
+			x
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
@@ -69,7 +73,7 @@ fclean:
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) fclean;)
 
-re:
+re:			link
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) re;)
@@ -78,5 +82,12 @@ infos:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) infos;)
+
+link:
+			@$(LINK_INTERFACE)
+
+# Update every dependency
+update:
+			git pull --recurse-submodules
 
 .PHONY: all clean fclean re infos $(GAMES) $(GFX_LIBS) $(COMMON) $(CORE)

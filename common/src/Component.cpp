@@ -93,4 +93,8 @@ namespace arcade
 		return (m_clicked);
 	}
 
+	bool Component::hasSprite() const
+	{
+	  return (false);
+	}
 }
