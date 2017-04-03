@@ -78,6 +78,10 @@ namespace arcade
     t_bunny_pixelarray	*m_gui;
     t_bunny_pixelarray	*m_map;
 
+    std::vector<t_bunny_music *>	m_music;
+    std::vector<t_bunny_effect *>	m_effect;
+    std::vector<t_bunny_sound *>	m_sound;
+
     size_t m_mapWidth;
     size_t m_mapHeight;
   };
