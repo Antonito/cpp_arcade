@@ -16,7 +16,7 @@ Centipede::Centipede()
   m_map = std::make_unique<Map>(width, height);
   start_centi.x = width / 2;
   start_centi.y = 0;
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < 15; i++)
     centi.part.push_back(start_centi);
   centi.dir = RIGHT;
   isShot = false;
@@ -100,13 +100,13 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
       switch (e.kb_key)
       {
       case KB_ARROW_UP:
-        if (m_pos.y > m_map->getHeight() - (m_map->getHeight() / 5) - 1)
+        if (static_cast<size_t>(m_pos.y) > m_map->getHeight() - (m_map->getHeight() / 5) - 1)
         {
           m_pos.y -= 1;
         }
         break;
       case KB_ARROW_DOWN:
-        if (m_pos.y < m_map->getHeight() - 1)
+        if (static_cast<size_t>(m_pos.y) < m_map->getHeight() - 1)
         {
           m_pos.y += 1;
         }
@@ -118,7 +118,7 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
         }
         break;
       case KB_ARROW_RIGHT:
-        if (m_pos.x < m_map->getWidth() - 1)
+        if (static_cast<size_t>(m_pos.x) < m_map->getWidth() - 1)
         {
           m_pos.x += 1;
         }
@@ -140,10 +140,10 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
   }
 }
 
-std::vector<std::string> Centipede::getSoundsToLoad() const
+std::vector<std::pair<std::string, SoundType>> Centipede::getSoundsToLoad() const
 {
   // TODO: implement
-  return (std::vector<std::string>());
+  return (std::vector<std::pair<std::string, SoundType>>());
 }
 
 std::vector<std::unique_ptr<ISprite>> &&Centipede::getSpritesToLoad() const
@@ -155,7 +155,7 @@ std::vector<std::unique_ptr<ISprite>> &&Centipede::getSpritesToLoad() const
 
 bool Centipede::touchObstacle(t_centipede const &centi, t_pos &next)
 {
-  if (next.x < 0 || next.x > m_map->getWidth() - 1)
+  if (next.x < 0 || static_cast<size_t>(next.x) > m_map->getWidth() - 1)
   {
     next.x = centi.part.front().x;
     next.y = centi.part.front().y + 1;
@@ -177,19 +177,32 @@ void Centipede::splitCentipede(size_t i, size_t j)
 {
   t_obstacle new_obs;
   t_centipede new_centi;
-  std::vector<t_pos> new_part(m_centipedes[i].part.begin() + j, m_centipedes[i].part.end());
 
-  new_obs.pos.x = m_centipedes[i].part[j].x;
-  new_obs.pos.y = m_centipedes[i].part[j].y;
-  new_obs.life = 5;
-  m_obstacles.push_back(new_obs);
-  if (m_centipedes[i].dir == RIGHT)
-    new_centi.dir = LEFT;
+  std::cout << "j = " << j << std::endl;
+  std::cout << "i = " << i << std::endl;
+  std::cout << "size = " << m_centipedes[i].part.size() << std::endl;
+
+  if (j == 0)
+  {
+    std::cout << "START TAIL" << std::endl;
+  }
+  else if (j == m_centipedes[i].part.size() - 1)
+  {
+    std::cout << "END TAIL" << std::endl;
+  }
   else
-    new_centi.dir = RIGHT;
-  new_centi.part = new_part;
-  m_centipedes[i].part.resize(j - 1);
-  m_centipedes.push_back(new_centi);
+  {
+    std::vector<t_pos> new_part(m_centipedes[i].part.begin() + j, m_centipedes[i].part.end());
+
+    new_obs.pos.x = m_centipedes[i].part[j].x;
+    new_obs.pos.y = m_centipedes[i].part[j].y;
+    new_obs.life = 5;
+    m_obstacles.push_back(new_obs);
+    new_centi.dir = m_centipedes[i].dir;
+    new_centi.part = new_part;
+    m_centipedes[i].part.resize(j);
+    m_centipedes.push_back(new_centi);
+  }
 }
 
 void Centipede::moveCentipedes()
@@ -200,7 +213,7 @@ void Centipede::moveCentipedes()
   {
     centi.part.pop_back();
     if ((centi.part.front().x == m_pos.x && centi.part.front().y == m_pos.y) ||
-        centi.part.front().y == m_map->getHeight() - 1)
+        static_cast<size_t>(centi.part.front().y) == m_map->getHeight() - 1)
     {
       m_state = MENU;
       return;
@@ -232,7 +245,7 @@ void Centipede::placeObstacles()
   t_pos new_obs_pos;
   t_obstacle new_obs;
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 5; i++)
   {
     new_obs_pos.x = rand() % m_map->getWidth();
     new_obs_pos.y = rand() % (m_map->getHeight() - (m_map->getHeight() / 5) - 1);
@@ -263,20 +276,20 @@ bool Centipede::touchTarget()
     }
 
     // check if the shot touch a Centipede
-    // for (t_centipede const &centi : m_centipedes)
-    // {
-    //   i++;
-    //   j = 0;
-    //   for (t_pos const &pos : centi.part)
-    //   {
-    //     j++;
-    //     if (pos.x == m_shoot.x && pos.y == m_shoot.y)
-    //     {
-    //       //splitCentipede(i, j);
-    //       return true;
-    //     }
-    //   }
-    // }
+    for (t_centipede const &centi : m_centipedes)
+    {
+      j = 0;
+      for (t_pos const &pos : centi.part)
+      {
+        if (pos.x == m_shoot.x && pos.y == m_shoot.y)
+        {
+          splitCentipede(i, j);
+          return true;
+        }
+        j++;
+      }
+      i++;
+    }
   }
 
   return false;
@@ -313,10 +326,19 @@ void Centipede::process()
     }
   }
 
-  // Obstacles display
-  for (t_obstacle const &obs : m_obstacles)
+  // Obstacles display and check destructed obstacles
+  for (std::vector<Centipede::t_obstacle>::iterator it = m_obstacles.begin();
+       it != m_obstacles.end();)
   {
-    m_map->at(1, obs.pos.x, obs.pos.y).setColor(Color::Red);
+    if (it->life <= 0)
+    {
+      it = m_obstacles.erase(it);
+    }
+    else
+    {
+      m_map->at(1, it->pos.x, it->pos.y).setColor(Color::Red);
+      ++it;
+    }
   }
 
   // Centipedes display

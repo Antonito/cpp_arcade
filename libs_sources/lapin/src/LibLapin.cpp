@@ -243,8 +243,8 @@ namespace arcade
   {
     if (m_map)
       bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
-    //if (m_gui)
-    //bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
+    if (m_gui)
+    bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
     bunny_display(m_win);
   }
 

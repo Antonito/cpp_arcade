@@ -19,8 +19,8 @@ class Centipede : public AGame
 
   struct t_pos
   {
-    int x;
-    int y;
+    ssize_t x;
+    ssize_t y;
   };
 
   struct t_centipede
@@ -32,7 +32,7 @@ class Centipede : public AGame
   struct t_obstacle
   {
     t_pos pos;
-    int life;
+    ssize_t life;
   };
 
 public:
@@ -44,7 +44,7 @@ public:
 
   virtual void notifyEvent(std::vector<Event> &&events);
 
-  virtual std::vector<std::string> getSoundsToLoad() const;
+  virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
 
   virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
 
