@@ -254,7 +254,7 @@ bool Centipede::touchTarget()
   }
 
   //Check if the shot touch an Obstacles
-  for (t_obstacle const &obs : m_obstacles)
+  for (t_obstacle &obs : m_obstacles)
   {
     if (obs.pos.x == m_shoot.x && obs.pos.y == m_shoot.y)
     {
