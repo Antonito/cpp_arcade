@@ -47,9 +47,11 @@ int		main()
 	//Launching of the Core
 	arcade::Core core;
 	Nope::Log::Logger::start();
-
+#if defined(DEBUG)
+	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
+#else
 	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
-
+#endif
 	core.launch();
 	return (0);
 }
