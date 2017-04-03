@@ -241,12 +241,11 @@ namespace arcade
 
   void LibLapin::display()
   {
-    //if (m_map)
-    //bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
-    if (m_gui)
-      bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
+    if (m_map)
+      bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
+    //if (m_gui)
+    //bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
     bunny_display(m_win);
-    //bunny_loop(m_win, 60, this);
   }
 
   void LibLapin::clear()
