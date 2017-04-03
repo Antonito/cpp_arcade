@@ -2,6 +2,7 @@
 #include <exception>
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 #include "LibLapin.hpp"
 
 namespace arcade
@@ -189,7 +190,7 @@ namespace arcade
 			      {
 				size_t X = x * m_tileSize + _x;
 				size_t Y = y * m_tileSize + _y;
-				size_t pix = Y * m_mapWidth + X;
+				size_t pix = Y * (m_mapWidth * m_tileSize) + X;
 				double a(color.a / 255.0);
 				Color old(pixels[pix]);
 				Color merged(color.r * a + old.r * (1 - a),
@@ -216,7 +217,7 @@ namespace arcade
 	size_t x = comp.getX() * m_width;
 	size_t y = comp.getY() * m_height;
 	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getWidth() * m_height;
+	size_t height = comp.getHeight() * m_height;
 	Color color = comp.getBackgroundColor();
 	double a(color.a / 255.0);
 	if (color.a != 0)
@@ -241,9 +242,9 @@ namespace arcade
   void LibLapin::display()
   {
     if (m_map)
-      bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
+      _blit(&m_win->buffer, m_map);
     if (m_gui)
-      bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
+      _blit(&m_win->buffer, m_gui);
     bunny_display(m_win);
   }
 
@@ -394,5 +395,30 @@ namespace arcade
     static_cast<void>(win);
     e->type = EventType::ET_QUIT;
     return (EXIT_ON_SUCCESS);
+  }
+
+  void LibLapin::_blit(t_bunny_buffer* dest_buff, t_bunny_pixelarray const * src)
+  {
+    t_bunny_pixelarray *dest = bunny_read_pixelarray(dest_buff);
+    size_t width = std::min(dest->clipable.clip_width, src->clipable.clip_width);
+    size_t height = std::min(dest->clipable.clip_height, src->clipable.clip_height);
+    Color *dest_pixels = static_cast<Color *>(dest->pixels);
+    Color *src_pixels = static_cast<Color *>(src->pixels);
+
+    for (size_t y = 0; y < height; ++y)
+    {
+      for (size_t x = 0; x < width; ++x)
+      {
+        Color old = dest_pixels[y * dest->clipable.clip_width + x];
+        Color color = src_pixels[y * src->clipable.clip_width + x];
+        double a = color.a / 255.0;
+
+        Color merged(color.r * a + old.r * (1 - a),
+          color.g * a + old.g * (1 - a),
+          color.b * a + old.b * (1 - a),
+          color.a + old.a * (1 - a));
+        dest_pixels[y * dest->clipable.clip_width + x] = merged.full;
+      }
+    }
   }
 }

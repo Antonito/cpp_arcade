@@ -19,7 +19,7 @@ namespace arcade
 	std::cerr << "Cannot create libcaca window" << std::endl;
 	throw std::exception(); // TODO: Exception
       }
-    caca_set_display_title(m_win, "Arcade");
+    caca_set_display_title(m_win, "Arcade caca");
     m_width = caca_get_canvas_width(m_canvas);
     m_height = caca_get_canvas_height(m_canvas);
   }
@@ -250,11 +250,17 @@ namespace arcade
 
   uint16_t Libcaca::convert32bitsColorTo16Bits(Color color) const
   {
-    uint8_t a = color.a >> 3;
-    uint8_t r = color.r >> 3;
-    uint8_t g = color.g >> 3;
-    uint8_t b = color.b >> 3;
+    uint8_t a = color.a >> 4;
+    uint8_t r = color.r >> 4;
+    uint8_t g = color.g >> 4;
+    uint8_t b = color.b >> 4;
 
-    return ((a << 15) | (b << 10) | (g << 5) | (r));
+    return ((a << 12) | (b << 8) | (g << 4) | (r));
+	/*uint8_t a = color.a >> 3;
+	uint8_t r = color.r >> 3;
+	uint8_t g = color.g >> 3;
+	uint8_t b = color.b >> 3;
+
+	return ((a << 15) | (b << 10) | (g << 5) | (r));*/
   }
 }

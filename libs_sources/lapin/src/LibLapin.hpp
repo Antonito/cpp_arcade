@@ -62,6 +62,7 @@ namespace arcade
     static t_bunny_response _resizeHandler(t_bunny_window const *win,
 					   t_bunny_position const *size, void *data);
     static t_bunny_response _closeHandler(t_bunny_window const *win, void *data);
+    static void _blit(t_bunny_buffer *dest, t_bunny_pixelarray const *src);
 
     static KeyboardKey getKeyboardKey(t_bunny_keysym code);
     static MouseKey getMouseKey(t_bunny_mouse_button code);
