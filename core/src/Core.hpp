@@ -56,7 +56,9 @@ namespace arcade
 		virtual std::vector<std::pair<std::string, SoundType> > getSoundsToLoad() const;
 		virtual void process();
 		virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+#if defined(__linux__)
 		virtual WhereAmI *getWhereAmI() const;
+#endif
 	};
 }
 

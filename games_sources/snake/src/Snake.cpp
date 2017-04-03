@@ -1,5 +1,9 @@
 #include <iostream>
+#if defined(_WIN32)
+#include <Windows.h>
+#else
 #include <unistd.h>
+#endif
 #include "Snake.hpp"
 
 namespace arcade
@@ -172,7 +176,11 @@ namespace arcade
   {
     t_pos next;
 
+#if defined(_WIN32)
+	Sleep(100);
+#else
     usleep(100000);
+#endif
     didEat();
     if (m_eat)
       placeFood();
@@ -242,6 +250,7 @@ namespace arcade
       }
   }
 
+#if defined(__linux__)
   WhereAmI * Snake::getWhereAmI() const
   {
 	  WhereAmI *w = new WhereAmI;
@@ -250,4 +259,5 @@ namespace arcade
 	  w->lenght = 0;
 	  return (w);
   }
+#endif
 }

@@ -6,10 +6,12 @@
 #include <cstdlib>
 #include <unordered_map>
 #include <functional>
+#include <chrono>
 #include "IGame.hpp"
 #include "Map.hpp"
 #include "GUI.hpp"
 #include "EventHash.hpp"
+#include "Protocol.hpp"
 
 namespace arcade
 {
@@ -33,7 +35,7 @@ namespace arcade
 		virtual std::vector<NetworkPacket> &&getNetworkToSend();
 
 		// Sound
-		virtual std::vector<std::pair<std::string, SoundType> > getSoundsToLoad() const = 0;
+		virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
 		virtual std::vector<int>         &&getSoundsToPlay();
 
 		// Map
@@ -46,8 +48,10 @@ namespace arcade
 		void Play();
 
 	protected:
+#if defined(__linux__)
 		virtual WhereAmI *getWhereAmI() const = 0;
 		GetMap *getMap() const;
+#endif
 
 		GameState m_state;
 
@@ -61,6 +65,13 @@ namespace arcade
 		// Game map
 		std::unique_ptr<Map> m_map;
 		std::unique_ptr<GUI> m_gui;
+
+		size_t getCurrentTick() const;
+
+	private:
+		typedef std::chrono::high_resolution_clock m_clock_t;
+
+		std::chrono::time_point<m_clock_t> m_startTick;
 	};
 }
 

@@ -37,8 +37,9 @@ namespace arcade
 
     virtual void process();
 	
+#if defined(__linux__)
 	virtual WhereAmI *getWhereAmI() const;
-
+#endif
   private:
     bool isDead(t_pos const &) const;
     bool onSnake(t_pos const &) const;

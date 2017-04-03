@@ -4,7 +4,9 @@
 
 namespace arcade
 {
-	AGame::AGame() : m_state(INGAME)
+	AGame::AGame() :
+		m_state(INGAME),
+		m_startTick(m_clock_t::now())
 	{
 	}
 
@@ -38,6 +40,7 @@ namespace arcade
 		return (*m_gui);
 	}
 
+#if defined(__linux__)
 	GetMap * AGame::getMap() const
 	{
 		// Allocate the struct
@@ -72,7 +75,6 @@ namespace arcade
 		return (map);
 	}
 
-#if defined (__linux__)
 	void AGame::Play(void)
 	{
 		CommandType type;
@@ -126,4 +128,9 @@ namespace arcade
 		}
 	}
 #endif
+
+	size_t AGame::getCurrentTick() const
+	{
+		return ((m_startTick - m_clock_t::now()).count());
+	}
 }
