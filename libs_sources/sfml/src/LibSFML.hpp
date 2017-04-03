@@ -39,6 +39,7 @@ namespace arcade
 
     // Clear
     virtual void clear();
+
   private:
     static KeyboardKey getKeyboardKey(sf::Keyboard::Key code);
     static MouseKey getMouseKey(sf::Mouse::Button code);
@@ -51,6 +52,7 @@ namespace arcade
     static constexpr size_t m_tileSize = 24;
 
     std::unique_ptr<sf::RenderWindow> m_win;
+    std::vector<std::unique_ptr<sf::Music>> m_music;
     std::vector<std::unique_ptr<sf::SoundBuffer>> m_soundBuffer;
     std::vector<std::unique_ptr<sf::Sound>> m_sound;
     sf::Vector2i m_mousePos;
@@ -62,10 +64,7 @@ namespace arcade
     std::unique_ptr<uint32_t[]> m_mapPix;
     std::unique_ptr<sf::Texture> m_map;
     std::unique_ptr<sf::Sprite> m_mapSprite;
-#if 0
-    SFML_Surface *m_winSurface;
-    SFML_Surface *m_map;
-#endif
+
     size_t m_mapWidth;
     size_t m_mapHeight;
   };

@@ -8,7 +8,7 @@ namespace arcade
   LibSFML::LibSFML(size_t width, size_t height) : m_guiPix(nullptr), m_gui(nullptr), m_guiSprite(nullptr), m_mapPix(nullptr), m_map(nullptr), m_mapSprite(nullptr), m_mapWidth(0), m_mapHeight(0)
   {
     m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade sfml");
-    m_mousePos = sf::Mouse::getPosition(*m_win);	
+    m_mousePos = sf::Mouse::getPosition(*m_win);
 
     // Create GUI
     m_guiPix = std::make_unique<uint32_t[]>(width * height);
@@ -113,19 +113,32 @@ namespace arcade
 
   void LibSFML::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
-    # if 0
-    m_soundBuffer.reserve(sounds.size());
-    for (std::vector<std::string>::size_type i = 0; i != sounds.size(); i++)
+    for (std::pair<std::string, SoundType> const &p : sounds)
       {
-	m_soundBuffer[i] = std::make_unique<sf::SoundBuffer>();
-	if (m_soundBuffer[i]->loadFromFile(sounds[i].c_str()))
+	if (p.second == SoundType::MUSIC)
 	  {
-	    throw std::exception(); // TODO: Exception
+	    m_music.push_back(std::make_unique<sf::Music>());
+	    sf::Music *cur = m_music.back().get();
+	    if (!cur->openFromFile(p.first))
+	      {
+		std::cerr << "Cannot open music: " << p.first << std::endl;
+		throw std::exception(); // TODO
+	      }
 	  }
-	m_sound[i] = std::make_unique<sf::Sound>();
-	m_sound[i]->setBuffer(*m_soundBuffer[i]);
+	else
+	  {
+	    m_soundBuffer.push_back(std::make_unique<sf::SoundBuffer>());
+	    sf::SoundBuffer *buf = m_soundBuffer.back().get();
+	    if (!buf->loadFromFile(p.first))
+	      {
+		std::cerr << "Cannot open sound: " << p.first << std::endl;
+		throw std::exception(); // TODO
+	      }
+	    m_sound.push_back(std::make_unique<sf::Sound>());
+	    sf::Sound *cur = m_sound.back().get();
+	    cur->setBuffer(*buf);
+	  }
       }
-    #endif
   }
 
   void LibSFML::soundControl(Sound const &sound)
