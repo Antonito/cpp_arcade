@@ -137,6 +137,7 @@ namespace arcade
 		break;
 	      }
 	  }
+	m_canDraw = true;
 	return (true);
       }
     return (false);
@@ -260,17 +261,18 @@ namespace arcade
   {
     if (m_canDraw)
       {
+	std::cout << "Draw" << std::endl;
 	if (m_map)
 	  XPutImage(m_disp, m_win, m_gc, m_map, 0, 0, 0, 0, m_width, m_height); // TODO : Check positiiiioooonn
 	XPutImage(m_disp, m_win, m_gc, m_gui, 0, 0, 0, 0, m_width, m_height);
 	XFlush(m_disp);
+	m_canDraw = false;
       }
-    m_canDraw = false;
   }
 
   void LibX::clear()
   {
-    // TODO
+    //XClearWindow(m_disp, m_win);
   }
 
   void LibX::drawPixel(size_t x, size_t y, Color color)

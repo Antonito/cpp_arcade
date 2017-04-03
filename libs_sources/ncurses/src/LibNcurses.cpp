@@ -2,9 +2,7 @@
 #include <iostream>
 #include <curses.h>
 #include <cstdio>
-#include <sys/select.h>
 #include <sys/poll.h>
-#include <sys/time.h>
 #include "LibNcurses.hpp"
 
 namespace arcade
@@ -12,23 +10,36 @@ namespace arcade
   LibNcurses::LibNcurses(size_t width, size_t height) : m_win(nullptr), m_map(nullptr), m_gui(nullptr),
 							m_mapWidth(0), m_mapHeight(0)
   {
-    // TODO : implement
     initscr();
-    cbreak();
+    clear();
     keypad(stdscr, TRUE);
     noecho();
+    cbreak();
+    nodelay(stdscr, true);
     scrollok(stdscr, TRUE);
     m_win = newwin(height, width, 0, 0);
+    m_height = height;
+    m_width = width;
     if (!m_win)
       {
 	std::cerr << "Cannot create ncurses window" << std::endl;
 	throw std::exception(); // TODO: Exception
       }
+    if (has_colors())
+      {
+        start_color();
+        init_pair(1, COLOR_RED, COLOR_BLACK);
+        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+        init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(4, COLOR_BLUE, COLOR_BLACK);
+        init_pair(5, COLOR_CYAN, COLOR_BLACK);
+        init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(7, COLOR_WHITE, COLOR_BLACK);
+      }
   }
 
   LibNcurses::~LibNcurses()
   {
-    // TODO : implement
     delwin(m_win);
     endwin();
   }
@@ -61,10 +72,7 @@ namespace arcade
 		    e.kb_key = KeyboardKey::KB_NONE;
 		  }
 		else
-		  {
-		    e.kb_key = KeyboardKey::KB_ESCAPE;
-		    return (true);
-		  }
+		  e.kb_key = KeyboardKey::KB_ESCAPE;
 	      }
 	    else
 	      e.kb_key = LibNcurses::getKeyboardKey(key);
@@ -91,9 +99,8 @@ namespace arcade
 
   void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
-	  std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
-
-	  (void)s;
+    std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+    (void)s;
   }
 
   void LibNcurses::updateMap(IMap const & map)
@@ -162,7 +169,7 @@ namespace arcade
 
   void LibNcurses::display()
   {
-    // TODO
+    refresh();
   }
 
   void LibNcurses::clear()

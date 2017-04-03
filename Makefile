@@ -8,26 +8,31 @@ LINK_INTERFACE=		./link_interface.sh
 GFX_LIBS_DIR=		./libs_sources/
 
 GFX_LIBS=		allegro5	\
+			ncurses		\
 			sdl		\
 			sfml		\
 			caca		\
-			ncurses		\
 			lapin		\
 			x
+
+GFX_PROJECT=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))
 
 ###### Add your games here #####
 GAMES_DIR=		./games_sources/
 
 GAMES=			snake
 
+GAME_PROJECT=		$(addprefix $(GAMES_DIR), $(GAMES))
+
+##### General configuration
 COMMON=			common
 
 CORE=			core
 
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
-			$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))	\
-			$(addprefix $(GAMES_DIR), $(GAMES))		\
+			$(GFX_PROJECT)					\
+			$(GAME_PROJECT)					\
 			./$(CORE)/
 
 # Some useful variables
@@ -63,6 +68,16 @@ $(CORE):
 			@$(ECHO) "$(YELLOW)./$(CORE)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(CORE)
 
+gfx:
+			@$(foreach path, $(GFX_PROJECT),		\
+			$(PRINT_DIR)					\
+			$(MAKE) $(ARGS) $(path) re;)
+
+games:
+			@$(foreach path, $(GAME_PROJECT),		\
+			$(PRINT_DIR)					\
+			$(MAKE) $(ARGS) $(path) re;)
+
 clean:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
@@ -88,6 +103,6 @@ link:
 
 # Update every dependency
 update:
-			git pull --recurse-submodules
+			git submodule foreach git pull origin master
 
 .PHONY: all clean fclean re infos $(GAMES) $(GFX_LIBS) $(COMMON) $(CORE)

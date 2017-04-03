@@ -1,6 +1,7 @@
 #include <cassert>
 #include <exception>
 #include <iostream>
+#include <cstring>
 #include "LibLapin.hpp"
 
 namespace arcade
@@ -26,15 +27,17 @@ namespace arcade
 	throw std::exception(); // TODO: Exception
       }
     bunny_set_loop_main_function(&LibLapin::_mainLoop);
-	bunny_loop(m_win, 60, nullptr);
+    bunny_loop(m_win, 60, this);
   }
 
   LibLapin::~LibLapin()
   {
-    bunny_delete_clipable(&m_map->clipable);
-    bunny_delete_clipable(&m_gui->clipable);
+    for (t_bunny_sound *s : m_sound)
+      {
+	bunny_delete_sound(s);
+      }
     bunny_stop(m_win);
-    bunny_free(m_game);
+    bunny_free(m_map);
     bunny_free(m_gui);
   }
 
@@ -72,26 +75,58 @@ namespace arcade
     return (true);
   }
 
-  void LibLapin::loadSounds(std::vector<std::string> const & sounds)
-  {
-    // TODO
-    static_cast<void>(sounds);
-  }
-
   void LibLapin::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
+    for (std::pair<std::string, SoundType> const &p : sounds)
+      {
+	if (p.second == SoundType::MUSIC)
+	  {
+	    t_bunny_music	*cur = bunny_load_music(p.first.c_str());
+
+	    if (!cur)
+	      {
+		std::cerr << "Cannot load music : "<< p.first << std::endl;
+	      }
+	    else
+	      {
+		m_music.push_back(cur);
+		m_sound.push_back(&cur->sound);
+	      }
+	  }
+	else
+	  {
+	    t_bunny_effect	*cur = bunny_load_effect(p.first.c_str());
+
+	    if (!cur)
+	      {
+		std::cerr << "Cannot load sound : "<< p.first << std::endl;
+	      }
+	    else
+	      {
+		m_effect.push_back(cur);
+		m_sound.push_back(&cur->sound);
+	      }
+	  }
+      }
+  }
+
+  void LibLapin::soundControl(Sound const &sound)
+  {
     t_bunny_sound	*cur;
-    // TODO: WAIT FOR INTERFACE UPDATE
-    if (sound.type == SoundType::MUSIC)
-      cur = m_music[];
-    else
-      cur = m_sound[m_];
-    bunny_sound_volume(cur, sound.volume);
+
+    cur = m_sound[sound.id];
     switch (sound.mode)
       {
+      case SoundAction::UNIQUE:
+	bunny_sound_loop(cur, false);
+	break;
       case SoundAction::REPEAT:
 	bunny_sound_loop(cur, true);
-      case SoundAction::UNIQUE:
+	break;
+      case SoundAction::VOLUME:
+	bunny_sound_volume(cur, static_cast<double>(sound.volume));
+	break;
+      case SoundAction::PLAY:
       case SoundAction::RESUME:
 	bunny_sound_play(cur);
 	break;
@@ -154,7 +189,14 @@ namespace arcade
 			      {
 				size_t X = x * m_tileSize + _x;
 				size_t Y = y * m_tileSize + _y;
+				size_t pix = Y * m_mapWidth + X;
 				double a(color.a / 255.0);
+				Color old(pixels[pix]);
+				Color merged(color.r * a + old.r * (1 - a),
+					     color.g * a + old.g * (1 - a),
+					     color.b * a + old.b * (1 - a),
+					     color.a + old.a * (1 - a));
+				pixels[pix] = merged.full;
 			      }
 			  }
 		      }
@@ -167,6 +209,7 @@ namespace arcade
   void LibLapin::updateGUI(IGUI & gui)
   {
     Color *pixels = reinterpret_cast<Color *>(m_gui->pixels);
+    memset(pixels, 0, m_width * m_height * sizeof(Color));
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
@@ -197,7 +240,11 @@ namespace arcade
 
   void LibLapin::display()
   {
-    bunny_loop(m_win, 60, this);
+    if (m_map)
+      bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
+    if (m_gui)
+      bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
+    bunny_display(m_win);
   }
 
   void LibLapin::clear()
@@ -248,13 +295,7 @@ namespace arcade
   t_bunny_response LibLapin::_mainLoop(void *data)
   {
     LibLapin	*lib = static_cast<LibLapin *>(data);
-    t_bunny_window	*win = lib->getWin();
-    t_bunny_pixelarray	*gui = lib->getGui();
-    t_bunny_pixelarray	*map = lib->getMap();
-
-    bunny_blit(&win->buffer, &map->clipable, nullptr);
-    bunny_blit(&win->buffer, &gui->clipable, nullptr);
-    bunny_display(win);
+    (void)lib;
     return (EXIT_ON_SUCCESS);
   }
 

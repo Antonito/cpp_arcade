@@ -44,13 +44,23 @@ namespace arcade
     al_register_event_source(m_event, al_get_timer_event_source(m_timer));
     al_register_event_source(m_event, al_get_keyboard_event_source());
     al_register_event_source(m_event, al_get_display_event_source(m_win));
+    int flags = al_get_new_bitmap_flags();
+    al_set_new_bitmap_flags(flags | ALLEGRO_MEMORY_BITMAP);
+    m_gui = al_create_bitmap(m_width, m_height);
+    if (!m_gui)
+      {
+	std::cerr << "Cannot get bitmap Allegro5" << std::endl;
+	throw std::exception(); // TODO
+      }
+    al_set_new_bitmap_flags(flags);
   }
 
   LibAllegro5::~LibAllegro5()
   {
+    al_destroy_bitmap(m_gui);
     al_destroy_timer(m_timer);
-    al_destroy_event_queue(m_event);
     al_destroy_display(m_win);
+    al_destroy_event_queue(m_event);
   }
 
   bool LibAllegro5::pollEvent(Event & e)
@@ -169,38 +179,44 @@ namespace arcade
 
   void LibAllegro5::updateGUI(IGUI & gui)
   {
-    // TODO
-    for (size_t i = 0; i < gui.size(); ++i)
+    if (al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE))
       {
-	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * m_width;
-	size_t y = comp.getY() * m_height;
-	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getHeight() * m_height;
-	Color color = comp.getBackgroundColor();
-	double a(color.a / 255.0);
-	if (color.a != 0)
+	al_set_target_bitmap(m_gui);
+	for (size_t i = 0; i < gui.size(); ++i)
 	  {
-	    for (size_t _y = 0; _y < height; ++_y)
+	    IComponent const &comp = gui.at(i);
+	    size_t x = comp.getX() * m_width;
+	    size_t y = comp.getY() * m_height;
+	    size_t width = comp.getWidth() * m_width;
+	    size_t height = comp.getHeight() * m_height;
+	    Color color = comp.getBackgroundColor();
+	    double a(color.a / 255.0);
+	    if (color.a != 0)
 	      {
-		for (size_t _x = 0; _x < width; ++_x)
+		for (size_t _y = 0; _y < height; ++_y)
 		  {
-		    size_t pix = (y + _y) * m_width + (x + _x);
-		    Color old(0);//pixels[pix]);
-		    Color merged(color.r * a + old.r * (1 - a),
-				 color.g * a + old.g * (1 - a),
-				 color.b * a + old.b * (1 - a),
-				 color.a + old.a * (1 - a));
-		    // TODO
+		    for (size_t _x = 0; _x < width; ++_x)
+		      {
+			Color old;
+			ALLEGRO_COLOR cur = al_get_pixel(m_gui, x + _x, y + _y);
+			al_unmap_rgba(cur, &old.r, &old.g, &old.b, &old.a);
+			Color merged(color.r * a + old.r * (1 - a),
+				     color.g * a + old.g * (1 - a),
+				     color.b * a + old.b * (1 - a),
+				     color.a + old.a * (1 - a));
+			al_put_pixel(x + _x, y + _y, al_map_rgba(merged.r, merged.g, merged.b, merged.a));
+		      }
 		  }
 	      }
 	  }
+	al_unlock_bitmap(m_gui);
+	al_set_target_backbuffer(m_win);
       }
   }
 
   void LibAllegro5::display()
   {
-    // TODO
+    al_draw_bitmap(m_gui, 0, 0, 0);
   }
   void LibAllegro5::clear()
   {
