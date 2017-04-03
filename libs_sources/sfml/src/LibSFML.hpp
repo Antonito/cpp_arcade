@@ -25,8 +25,8 @@ namespace arcade
     virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
     virtual void soundControl(Sound const &sound);
 
-	// Sprites
-	virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
+    // Sprites
+    virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites);
 
     // Map
     virtual void updateMap(IMap const &map);

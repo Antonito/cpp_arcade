@@ -26,3 +26,9 @@ You can switch to another library at any moment.
 - OpenGL Library
 - NDK++ Library
 - More games
+
+# IMPORTANT
+Diagramme de classe (/2)
+Manuel descriptif du programme (/2)
+Réseau(/6)
+Jeux supplémentaires (/10)
