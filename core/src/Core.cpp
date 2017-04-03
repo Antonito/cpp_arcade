@@ -408,8 +408,10 @@ namespace arcade
 		return (std::move(s));
 	}
 
+#if defined(__linux__)
 	WhereAmI * Core::getWhereAmI() const
 	{
 		return nullptr;
 	}
+#endif
 }

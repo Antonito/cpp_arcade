@@ -64,6 +64,10 @@ private:
   bool isShot;
   t_pos m_pos;
   t_pos m_shoot;
+  size_t m_lastTickPlayer;
+  size_t m_lastTickCenti;
+  size_t m_lastTickShoot;
+  size_t m_curTick;
 };
 }
 

@@ -37,8 +37,9 @@ public:
 
   virtual void process();
 
+#if defined(__linux__)
   virtual WhereAmI *getWhereAmI() const;
-
+#endif
 private:
   bool isDead(t_pos const &) const;
   bool onSnake(t_pos const &) const;
@@ -49,6 +50,8 @@ private:
   std::vector<t_pos> m_pos;
   e_dir m_dir;
   bool m_eat;
+  size_t m_lastTick;
+  size_t m_curTick;
 };
 }
 

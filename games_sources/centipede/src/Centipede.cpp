@@ -22,6 +22,9 @@ Centipede::Centipede()
   isShot = false;
   m_centipedes.push_back(centi);
   placeObstacles();
+  m_lastTickPlayer = 0;
+  m_lastTickCenti = 0;
+  m_lastTickShoot = 0;
   for (size_t y = 0; y < height; ++y)
   {
     for (size_t x = 0; x < width; ++x)
@@ -60,6 +63,9 @@ Centipede::Centipede(Centipede const &other)
   isShot = false;
   m_centipedes.push_back(centi);
   placeObstacles();
+  m_lastTickPlayer = 0;
+  m_lastTickCenti = 0;
+  m_lastTickShoot = 0;
 
   // TODO : also copy layers
 
@@ -181,26 +187,33 @@ void Centipede::splitCentipede(size_t i, size_t j)
   std::cout << "j = " << j << std::endl;
   std::cout << "i = " << i << std::endl;
   std::cout << "size = " << m_centipedes[i].part.size() << std::endl;
+  new_obs.pos.x = m_centipedes[i].part[j].x;
+  new_obs.pos.y = m_centipedes[i].part[j].y;
+  new_obs.life = 5;
+  m_obstacles.push_back(new_obs);
 
+  // Check Start of the tail
   if (j == 0)
   {
     std::cout << "START TAIL" << std::endl;
+    m_centipedes[i].part.erase(m_centipedes[i].part.begin());
+    if (m_centipedes[i].part.size() == 0)
+      m_centipedes.erase(m_centipedes.begin() + i);
   }
   else if (j == m_centipedes[i].part.size() - 1)
   {
     std::cout << "END TAIL" << std::endl;
+    m_centipedes[i].part.pop_back();
+    if (m_centipedes[i].part.size() == 0)
+      m_centipedes.erase(m_centipedes.begin() + i);
   }
   else
   {
     std::vector<t_pos> new_part(m_centipedes[i].part.begin() + j, m_centipedes[i].part.end());
 
-    new_obs.pos.x = m_centipedes[i].part[j].x;
-    new_obs.pos.y = m_centipedes[i].part[j].y;
-    new_obs.life = 5;
-    m_obstacles.push_back(new_obs);
     new_centi.dir = m_centipedes[i].dir;
     new_centi.part = new_part;
-    m_centipedes[i].part.resize(j);
+    m_centipedes[i].part.resize(j - 1);
     m_centipedes.push_back(new_centi);
   }
 }
@@ -260,12 +273,6 @@ bool Centipede::touchTarget()
   size_t i = 0;
   size_t j = 0;
 
-  //Check if the shot go out of map
-  if (m_shoot.y == 0)
-  {
-    return true;
-  }
-
   //Check if the shot touch an Obstacles
   for (t_obstacle &obs : m_obstacles)
   {
@@ -274,22 +281,28 @@ bool Centipede::touchTarget()
       obs.life -= 1;
       return true;
     }
+  }
 
-    // check if the shot touch a Centipede
-    for (t_centipede const &centi : m_centipedes)
+  // check if the shot touch a Centipede
+  for (t_centipede const &centi : m_centipedes)
+  {
+    j = 0;
+    for (t_pos const &pos : centi.part)
     {
-      j = 0;
-      for (t_pos const &pos : centi.part)
+      if (pos.x == m_shoot.x && pos.y == m_shoot.y)
       {
-        if (pos.x == m_shoot.x && pos.y == m_shoot.y)
-        {
-          splitCentipede(i, j);
-          return true;
-        }
-        j++;
+        splitCentipede(i, j);
+        return true;
       }
-      i++;
+      j++;
     }
+    i++;
+  }
+
+  //Check if the shot go out of map
+  if (m_shoot.y == 0)
+  {
+    return true;
   }
 
   return false;
@@ -299,7 +312,7 @@ void Centipede::process()
 {
 
   //TODO: Use std::chrono
-  usleep(100000);
+  m_curTick = this->getCurrentTick();
 
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
@@ -308,24 +321,6 @@ void Centipede::process()
       m_map->at(1, x, y).setColor(Color::Transparent);
     }
   };
-
-  // Make  the centipedes move at each tik
-  moveCentipedes();
-
-  // Missile display
-  if (isShot)
-  {
-    if (touchTarget())
-    {
-      isShot = false;
-    }
-    else
-    {
-      m_map->at(1, m_shoot.x, m_shoot.y).setColor(Color::Yellow);
-      m_shoot.y -= 1;
-    }
-  }
-
   // Obstacles display and check destructed obstacles
   for (std::vector<Centipede::t_obstacle>::iterator it = m_obstacles.begin();
        it != m_obstacles.end();)
@@ -340,14 +335,49 @@ void Centipede::process()
       ++it;
     }
   }
-
   // Centipedes display
   for (t_centipede const &centi : m_centipedes)
   {
     for (t_pos const &pos : centi.part)
       m_map->at(1, pos.x, pos.y).setColor(Color::Blue);
   }
+
+  //Player display
   m_map->at(1, m_pos.x, m_pos.y).setColor(Color::Green);
+
+  //Missile display
+  if (isShot)
+  {
+    m_map->at(1, m_shoot.x, m_shoot.y).setColor(Color::Yellow);
+  }
+
+  // Make  the centipedes move at each tik
+
+  if ((m_curTick - m_lastTickCenti) > 300)
+  {
+    moveCentipedes();
+    m_lastTickCenti = m_curTick;
+  }
+  // Missile display
+  if (isShot && (m_curTick - m_lastTickShoot) > 30)
+  {
+    if (touchTarget())
+    {
+      isShot = false;
+    }
+    else
+    {
+      m_shoot.y -= 1;
+    }
+    m_lastTickShoot = m_curTick;
+  }
+
+  // Player display
+  if ((m_curTick - m_lastTickPlayer) > 60)
+  {
+
+    m_lastTickPlayer = m_curTick;
+  }
 }
 
 WhereAmI *Centipede::getWhereAmI() const

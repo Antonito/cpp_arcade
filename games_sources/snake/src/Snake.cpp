@@ -1,5 +1,9 @@
 #include <iostream>
+#if defined(_WIN32)
+#include <Windows.h>
+#else
 #include <unistd.h>
+#endif
 #include "Snake.hpp"
 
 namespace arcade
@@ -22,7 +26,8 @@ Snake::Snake()
       m_map->at(0, x, y).setColor(Color::White);
     }
   };
-
+  m_lastTick = 0;
+  m_curTick = 0;
   m_map->addLayer();
   m_dir = LEFT;
   placeFood();
@@ -172,76 +177,78 @@ void Snake::process()
 {
   t_pos next;
 
-  usleep(100000);
-  didEat();
-  if (m_eat)
-    placeFood();
-  switch (m_dir)
+  m_curTick = this->getCurrentTick();
+  if ((m_curTick - m_lastTick) > 60)
   {
-  case UP:
-    next.x = m_pos.front().x;
-    next.y = m_pos.front().y - 1;
-    if (!m_eat)
-      m_pos.pop_back();
-    if (isDead(next))
-      m_state = MENU;
-    else
-      m_pos.insert(m_pos.begin(), next);
-    break;
-  case DOWN:
-    next.x = m_pos.front().x;
-    next.y = m_pos.front().y + 1;
-    if (!m_eat)
-      m_pos.pop_back();
-    if (isDead(next))
-      m_state = MENU;
-    else
-      m_pos.insert(m_pos.begin(), next);
-    break;
-  case LEFT:
-    next.x = m_pos.front().x - 1;
-    next.y = m_pos.front().y;
-    if (!m_eat)
-      m_pos.pop_back();
-    if (isDead(next))
-      m_state = MENU;
-    else
-      m_pos.insert(m_pos.begin(), next);
-    break;
-  case RIGHT:
-    next.x = m_pos.front().x + 1;
-    next.y = m_pos.front().y;
-    if (!m_eat)
-      m_pos.pop_back();
-    if (isDead(next))
-      m_state = MENU;
-    else
-      m_pos.insert(m_pos.begin(), next);
-    break;
-  default:
-    break;
-  }
-  for (size_t y = 0; y < m_map->getHeight(); ++y)
-  {
-    for (size_t x = 0; x < m_map->getWidth(); ++x)
+    didEat();
+    if (m_eat)
+      placeFood();
+    switch (m_dir)
     {
-      m_map->at(1, x, y).setColor(Color::Transparent);
+    case UP:
+      next.x = m_pos.front().x;
+      next.y = m_pos.front().y - 1;
+      if (!m_eat)
+        m_pos.pop_back();
+      if (isDead(next))
+        m_state = MENU;
+      else
+        m_pos.insert(m_pos.begin(), next);
+      break;
+    case DOWN:
+      next.x = m_pos.front().x;
+      next.y = m_pos.front().y + 1;
+      if (!m_eat)
+        m_pos.pop_back();
+      if (isDead(next))
+        m_state = MENU;
+      else
+        m_pos.insert(m_pos.begin(), next);
+      break;
+    case LEFT:
+      next.x = m_pos.front().x - 1;
+      next.y = m_pos.front().y;
+      if (!m_eat)
+        m_pos.pop_back();
+      if (isDead(next))
+        m_state = MENU;
+      else
+        m_pos.insert(m_pos.begin(), next);
+      break;
+    case RIGHT:
+      next.x = m_pos.front().x + 1;
+      next.y = m_pos.front().y;
+      if (!m_eat)
+        m_pos.pop_back();
+      if (isDead(next))
+        m_state = MENU;
+      else
+        m_pos.insert(m_pos.begin(), next);
+      break;
+    default:
+      break;
     }
-  };
+    for (size_t y = 0; y < m_map->getHeight(); ++y)
+    {
+      for (size_t x = 0; x < m_map->getWidth(); ++x)
+      {
+        m_map->at(1, x, y).setColor(Color::Transparent);
+      }
+    };
 
-  m_map->at(1, m_food.x, m_food.y).setColor(Color::Green);
-  for (t_pos const &p : m_pos)
-  {
-#ifdef DEBUG
-    std::cout << " Snake : x = " << p.x << ", y = " << p.y << std::endl;
-#endif
-    if (p.x == m_pos.front().x && p.y == m_pos.front().y)
-      m_map->at(1, p.x, p.y).setColor(Color::Red);
-    else
-      m_map->at(1, p.x, p.y).setColor(Color::Blue);
+    m_map->at(1, m_food.x, m_food.y).setColor(Color::Green);
+    for (t_pos const &p : m_pos)
+    {
+      if (p.x == m_pos.front().x && p.y == m_pos.front().y)
+        m_map->at(1, p.x, p.y).setColor(Color::Red);
+      else
+        m_map->at(1, p.x, p.y).setColor(Color::Blue);
+    }
+    m_lastTick = m_curTick;
   }
 }
 
+#if defined(__linux__)
 WhereAmI *Snake::getWhereAmI() const
 {
   WhereAmI *w = new WhereAmI;
@@ -250,4 +257,5 @@ WhereAmI *Snake::getWhereAmI() const
   w->lenght = 0;
   return (w);
 }
+#endif
 }
