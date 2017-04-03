@@ -1,7 +1,7 @@
 #include <cassert>
 #include <exception>
 #include <iostream>
-#include <algorithm>
+#include <cstring>
 #include "LibLapin.hpp"
 
 namespace arcade
@@ -36,8 +36,6 @@ namespace arcade
       {
 	bunny_delete_sound(s);
       }
-    bunny_delete_clipable(&m_map->clipable);
-    bunny_delete_clipable(&m_gui->clipable);
     bunny_stop(m_win);
     bunny_free(m_map);
     bunny_free(m_gui);
@@ -211,6 +209,7 @@ namespace arcade
   void LibLapin::updateGUI(IGUI & gui)
   {
     Color *pixels = reinterpret_cast<Color *>(m_gui->pixels);
+    memset(pixels, 0, m_width * m_height * sizeof(Color));
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
@@ -243,8 +242,8 @@ namespace arcade
   {
     if (m_map)
       bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
-    //if (m_gui)
-    //bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
+    if (m_gui)
+      bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
     bunny_display(m_win);
   }
 
@@ -296,19 +295,7 @@ namespace arcade
   t_bunny_response LibLapin::_mainLoop(void *data)
   {
     LibLapin	*lib = static_cast<LibLapin *>(data);
-    t_bunny_window	*win = lib->getWin();
-    t_bunny_pixelarray	*gui = lib->getGui();
-    t_bunny_pixelarray	*map = lib->getMap();
-
-    return (EXIT_ON_SUCCESS);
-    if (win)
-      {
-	if (map)
-	  bunny_blit(&win->buffer, &map->clipable, nullptr);
-	if (gui)
-	  bunny_blit(&win->buffer, &gui->clipable, nullptr);
-	bunny_display(win);
-      }
+    (void)lib;
     return (EXIT_ON_SUCCESS);
   }
 
