@@ -27,7 +27,7 @@ namespace arcade
 	throw std::exception(); // TODO: Exception
       }
     bunny_set_loop_main_function(&LibLapin::_mainLoop);
-	bunny_loop(m_win, 60, nullptr);
+    bunny_loop(m_win, 60, this);
   }
 
   LibLapin::~LibLapin()

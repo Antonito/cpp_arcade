@@ -258,6 +258,7 @@ bool Centipede::touchTarget()
   {
     if (obs.pos.x == m_shoot.x && obs.pos.y == m_shoot.y)
     {
+      obs.life -= 1;
       return true;
     }
 
