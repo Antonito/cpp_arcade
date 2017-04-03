@@ -241,7 +241,12 @@ namespace arcade
 
   void LibLapin::display()
   {
-    bunny_loop(m_win, 60, this);
+    if (map)
+      bunny_blit(&win->buffer, &map->clipable, nullptr);
+    if (gui)
+      bunny_blit(&win->buffer, &gui->clipable, nullptr);
+    bunny_display(win);
+    //bunny_loop(m_win, 60, this);
   }
 
   void LibLapin::clear()
@@ -296,6 +301,7 @@ namespace arcade
     t_bunny_pixelarray	*gui = lib->getGui();
     t_bunny_pixelarray	*map = lib->getMap();
 
+    return (EXIT_ON_SUCCESS);
     if (win)
       {
 	if (map)
