@@ -27,7 +27,7 @@ namespace arcade
 	throw std::exception(); // TODO: Exception
       }
     bunny_set_loop_main_function(&LibLapin::_mainLoop);
-	bunny_loop(m_win, 60, nullptr);
+    bunny_loop(m_win, 60, this);
   }
 
   LibLapin::~LibLapin()
@@ -241,8 +241,6 @@ namespace arcade
 
   void LibLapin::display()
   {
-    bunny_blit(&m_win->buffer, &m_map->clipable, 0);
-    bunny_blit(&m_win->buffer, &m_gui->clipable, 0);
     bunny_loop(m_win, 60, this);
   }
 
@@ -298,9 +296,14 @@ namespace arcade
     t_bunny_pixelarray	*gui = lib->getGui();
     t_bunny_pixelarray	*map = lib->getMap();
 
-    bunny_blit(&win->buffer, &map->clipable, nullptr);
-    bunny_blit(&win->buffer, &gui->clipable, nullptr);
-    bunny_display(win);
+    if (win)
+      {
+	if (map)
+	  bunny_blit(&win->buffer, &map->clipable, nullptr);
+	if (gui)
+	  bunny_blit(&win->buffer, &gui->clipable, nullptr);
+	bunny_display(win);
+      }
     return (EXIT_ON_SUCCESS);
   }
 
