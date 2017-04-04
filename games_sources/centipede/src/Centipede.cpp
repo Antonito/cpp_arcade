@@ -213,7 +213,7 @@ void Centipede::splitCentipede(size_t i, size_t j)
 
     new_centi.dir = m_centipedes[i].dir;
     new_centi.part = new_part;
-    m_centipedes[i].part.resize(j - 1);
+    m_centipedes[i].part.resize(j);
     m_centipedes.push_back(new_centi);
   }
 }
