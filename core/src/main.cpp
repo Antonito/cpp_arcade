@@ -4,9 +4,9 @@
 #include "Core.hpp"
 #include "Logger.hpp"
 
-int		main()
+int main()
 {
-	// Test of the dynamic library (.so or .dll)
+// Test of the dynamic library (.so or .dll)
 #if 0
 	GenLibrary lib("./toto.dll");
 
@@ -14,7 +14,7 @@ int		main()
 	std::cout << func("Is it working ? Ret: ") << std::endl;
 #endif
 
-	// Test of the network
+// Test of the network
 #if 0
 #if 1
 	arcade::Network::TCPSocket	connection(12345, "127.0.0.1", true, arcade::Network::ASocket::BLOCKING);

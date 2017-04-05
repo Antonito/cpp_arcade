@@ -55,6 +55,8 @@ namespace arcade
 		SDL_Window *m_win;
 		SDL_Surface *m_winSurface;
 
+                std::vector<std::vector<SDL_Surface *>> m_sprites;
+
 		SDL_Surface *m_map;
 		size_t m_mapWidth;
 		size_t m_mapHeight;

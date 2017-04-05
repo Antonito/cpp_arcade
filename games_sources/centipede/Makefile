@@ -1,31 +1,24 @@
 # Makefile dependencies directory
 MK_DIR=		./mk/
-MK_COMMON_DIR=	./../mk/
+MK_COMMON_DIR=	./../../mk/
 
 include $(MK_COMMON_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_COMMON_DIR)defs.mk
 
 # Project's directories
 
-SRC_DIR=	./src/
+SRC_DIR=		./src/
 
 DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Color.cpp		\
-		Component.cpp		\
-		GUI.cpp			\
-		Event.cpp		\
-		AGame.cpp		\
-		Layer.cpp		\
-		Map.cpp			\
-		Sprite.cpp		\
-		SpriteRef.cpp		\
-		Tile.cpp
+SRC_FILES=	Centipede.cpp	\
+		EntryPoint.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)
+INC_DIR=	$(DIR_LIST)					\
+		$(PROJECT_DIR)/common/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

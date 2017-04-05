@@ -68,11 +68,13 @@ namespace arcade
 
   void SpriteRef::setId(int id)
   { 
-	m_id = id % SpriteRef::m_spriteNbs.size();
+	//m_id = id % SpriteRef::m_spriteNbs.size();
+    m_id = id;
   }
 
   void SpriteRef::setPos(size_t pos)
   {
-    m_pos = pos % SpriteRef::m_spriteNbs[m_id];
+    //m_pos = pos % SpriteRef::m_spriteNbs[m_id];
+    m_pos = pos;
   }
 }
