@@ -3,24 +3,15 @@
 
 #include <cstdlib>
 #include "AGame.hpp"
+#include "Player.hpp"
+#include "Pos.hpp"
+#include "Powerup.hpp"
+#include "Shoot.hpp"
 
 namespace arcade
 {
 class Snake : public AGame
 {
-  struct t_pos
-  {
-    ssize_t x;
-    ssize_t y;
-  };
-
-  enum e_dir
-  {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-  };
 
 public:
   Snake();
@@ -41,15 +32,11 @@ public:
   virtual WhereAmI *getWhereAmI() const;
 #endif
 private:
-  bool isDead(t_pos const &) const;
-  bool onSnake(t_pos const &) const;
-  void didEat();
-  void placeFood();
+  Pos placeFood();
 
-  t_pos m_food;
-  std::vector<t_pos> m_pos;
-  e_dir m_dir;
-  bool m_eat;
+  Powerup m_food;
+  Player m_player;
+  Dir m_dir;
   size_t m_lastTick;
   size_t m_curTick;
 };

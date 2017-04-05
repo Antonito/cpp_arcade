@@ -10,7 +10,7 @@ class Player : public AEntity
 
 public:
   Player(){};
-  Player(Pos const &pos, Dir dir);
+  Player(Pos const &pos, Dir dir, size_t tail);
   Player(Player const &other) = default;
   virtual ~Player();
   Player &operator=(Player const &other) = default;
@@ -19,10 +19,12 @@ public:
   virtual void display(Map &map) const;
 
   Dir getDir() const;
+  bool touchTail(Pos const &pos) const;
 
 private:
   bool eat(Map &map);
   Dir m_dir;
+  std::vector<Pos> m_tail;
 };
 }
 

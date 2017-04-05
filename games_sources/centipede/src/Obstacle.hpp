@@ -10,21 +10,24 @@ namespace arcade
 class Obstacle
 {
 
-      public:
-	Obstacle(bool destructible, Pos &pos, ssize_t pv);
-	Obstacle(Obstacle const &other);
-	~Obstacle();
-	Obstacle &operator=(Obstacle const &other);
-	void hit(size_t damage = 1);
-	void place(Map &map);
-	void move();
-	void destroy(Map &map);
-	ssize_t getPv() const;
+    public:
+      Obstacle(bool destructible, Pos &pos, ssize_t pv);
+      Obstacle(Obstacle const &other);
+      ~Obstacle();
+      Obstacle &operator=(Obstacle const &other);
+      void hit(size_t damage = 1);
+      void place(Map &map);
+      void move();
+      void destroy(Map &map);
 
-      private:
-	Pos m_pos;
-	ssize_t m_pv;
-	bool m_destructible;
+      ssize_t getPv() const;
+      Pos getPos() const;
+      Dir getDir() const;
+
+    private:
+      Pos m_pos;
+      ssize_t m_pv;
+      bool m_destructible;
 };
 }
 

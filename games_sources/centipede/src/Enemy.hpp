@@ -1,27 +1,33 @@
-#ifndef ENENY_HPP_
-#define ENENY_HPP_
+#ifndef ENEMY_HPP_
+#define ENEMY_HPP_
 
-// include Pos
+#include "AEntity.hpp"
+#include "Obstacle.hpp"
 
 namespace arcade
 {
-class Enemy
+class Enemy : public AEntity
 {
 
 public:
-  Enemy(Pos &pos, Dir dir);
-  Enemy(Enemy const &other);
-  ~Enemy();
-  Enemy &operator=(Enemy const &other);
-  void updateDir(Dir dir);
-  void updatePos(Map &map);
-  void move(Map &map);
-  Shoot shoot() const;
+  Enemy(){};
+  Enemy(Pos &pos, Dir dir, size_t tail);
+  Enemy(Enemy const &other) = default;
+  virtual ~Enemy();
+  Enemy &operator=(Enemy const &other) = default;
+  virtual bool move(Map &map);
+  virtual bool hit(Shoot const &shoot);
+  virtual void display(Map &map) const;
+
+  void rotate(Map &map);
+  bool touchObstacle(Map &Map, std::vector<Obstacle> const &obtacles);
+  Dir getDir() const;
+  void setDir(Dir dir);
 
 private:
-  Pos m_pos;
   Dir m_dir;
+  std::vector<Pos> m_tail;
 };
 }
 
-#endif // !ENENY_HPP_
+#endif // !ENEMY_HPP_

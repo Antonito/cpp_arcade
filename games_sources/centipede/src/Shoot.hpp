@@ -1,24 +1,29 @@
 #ifndef SHOOT_HPP_
 #define SHOOT_HPP_
 
-// include Pos
+#include "AEmtity.hpp"
 
 namespace arcade
 {
-class Shoot
+class Shoot : public AEntity
 {
 
 public:
-  Shoot(Pos &);
-  Shoot(Shoot const &other);
-  ~Shoot();
-  Shoot &operator=(Shoot const &other);
-  void place(Map &map);
-  void move(Map &map);
+  Shoot(){};
+  Shoot(Pos const &pos, Dir);
+  Shoot(Shoot const &other) = default;
+  virtual ~Shoot();
+  Shoot &operator=(Shoot const &other) = default;
+  virtual bool move(Map &map, Dir dir);
+  virtual bool hit(Shoot const &shoot);
+  virtual void display(Map &map);
+
+  Dir getDir() const;
+  bool isShot() const;
 
 private:
-  Pos m_pos;
   Dir m_dir;
+  bool m_shot;
 };
 }
 
