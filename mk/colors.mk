@@ -1,4 +1,4 @@
-COLOR_SUPPORTED=	$(shell tput colors; echo $$?)
+COLOR_SUPPORTED=	1
 
 ifeq ($(COLOR_SUPPORTED), 0)
 # Colors definitions
