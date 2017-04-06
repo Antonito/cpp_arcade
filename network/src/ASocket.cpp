@@ -205,10 +205,13 @@ namespace arcade
 	{
 	  throw Network::SockError("Cannot set socket type");
 	}
-      if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable,
-                     sizeof(enable)) < 0)
+      if (m_port != 0)
 	{
-	  throw Network::SockError("Cannot set socket options");
+	  if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable,
+			 sizeof(enable)) < 0)
+	    {
+	      throw Network::SockError("Cannot set socket options");
+	    }
 	}
     }
 

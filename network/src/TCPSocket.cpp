@@ -1,5 +1,6 @@
 #include <cerrno>
 #include <cassert>
+#include <iostream> // TODO: Rm
 #include "TCPSocket.hpp"
 #include "SockError.hpp"
 
@@ -190,6 +191,18 @@ namespace arcade
                sizeof(m_addr)) == -1)
 	{
 	  throw Network::SockError("Cannot bind to socket");
+	}
+      if (m_port == 0)
+	{
+	  sockaddr_in_t newAddr = {};
+	  socklen_t len = sizeof(sockaddr_in_t);
+
+	  // Get the port selected by the kernel
+	  if (getsockname(m_socket, reinterpret_cast<sockaddr_t *>(&newAddr), &len) == -1)
+	    {
+	      throw Network::SockError("Cannot get port selected by the kernel");
+	    }
+	  m_port = ntohs(newAddr.sin_port);
 	}
       if (listen(m_socket, m_maxClients) == -1)
 	{

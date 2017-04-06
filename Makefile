@@ -30,11 +30,17 @@ COMMON=			common
 
 CORE=			core
 
+NETWORK=		network
+
+SERVER=			server
+
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
+			./$(NETWORK)/					\
 			$(GFX_PROJECT)					\
 			$(GAME_PROJECT)					\
-			./$(CORE)/
+			./$(CORE)/					\
+			./$(SERVER)/
 
 # Some useful variables
 DEBUG=			no
@@ -65,9 +71,17 @@ $(COMMON):
 			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(COMMON)
 
+$(NETWORK):
+			@$(ECHO) "$(YELLOW)./$(NETWORK)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(NETWORK)
+
 $(CORE):
 			@$(ECHO) "$(YELLOW)./$(CORE)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(CORE)
+
+$(SERVER):
+			@$(ECHO) "$(YELLOW)./$(SERVER)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(SERVER)
 
 gfx:
 			@$(foreach path, $(GFX_PROJECT),		\
