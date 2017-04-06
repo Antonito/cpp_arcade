@@ -48,7 +48,7 @@ int main()
 	arcade::Core core;
 	Nope::Log::Logger::start();
 #if defined(DEBUG)
-	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
+	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 #else
 	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 #endif

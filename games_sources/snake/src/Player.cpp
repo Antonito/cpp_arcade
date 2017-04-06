@@ -41,11 +41,13 @@ bool Player::hit(Shoot const &shoot)
 
 void Player::display(Map &map) const
 {
-    map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
+  map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
+  map.at(1, m_pos.getX(), m_pos.getY()).setSprite(4);
 
     for (Pos const &p : m_tail)
     {
-        map.at(1, p.getX(), p.getY()).setColor(Color::Red);
+      map.at(1, p.getX(), p.getY()).setColor(Color::Red);
+      map.at(1, p.getX(), p.getY()).setSprite(5);
     }
 }
 

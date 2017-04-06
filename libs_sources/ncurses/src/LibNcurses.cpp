@@ -123,18 +123,9 @@ namespace arcade
 		else
 		  {
 		    Color color = tile.getColor();
-		    if (color.rgba[3] != 0) // TODO: color.a ?
+		    if (color.a != 0) // TODO: color.a ?
 		      {
-			for (size_t _y = 0; _y < m_tileSize; ++_y)
-			  {
-			    for (size_t _x = 0; _x < m_tileSize; ++_x)
-			      {
-				size_t X = x * m_tileSize + _x;
-				size_t Y = y * m_tileSize + _y;
-				double a(color.a / 255.0);
-				// TODO
-			      }
-			  }
+			  
 		      }
 		  }
 	      }

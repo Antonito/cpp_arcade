@@ -31,6 +31,7 @@ namespace arcade
 
     // Create the main menu GUI
     Component comp;
+    Component text;
 
     comp.setBackgroundColor(Color::White);
     comp.setX(0.0);
@@ -46,6 +47,14 @@ namespace arcade
     comp.setWidth(0.4);
     comp.setHeight(0.1);
     m_gui->push(comp);
+
+    text.setBackgroundColor(Color::Transparent);
+    text.setX(0.35);
+    text.setY(0.13);
+    text.setWidth(0.3);
+    text.setHeight(0.04);
+    text.setText("The arcade");
+    m_gui->push(text);
 
     comp.setWidth(0.35);
     comp.setHeight(0.6);
@@ -401,6 +410,7 @@ namespace arcade
         {
           m_game.release();
           m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
+          this->loadGame();
         }
       }
     }

@@ -1,9 +1,12 @@
+#include <iostream>
 #include "Tile.hpp"
 
 namespace arcade
 {
   Tile::Tile(TileType type, Color color) : m_type(type), m_color(color)
   {
+    m_sprite.setId(0);
+    m_sprite.setPos(0);
   }
 
   Tile::Tile(Tile const &other) : m_type(other.m_type),

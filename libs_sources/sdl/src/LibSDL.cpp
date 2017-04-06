@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "LibSDL.hpp"
 
 namespace arcade
@@ -29,12 +30,22 @@ namespace arcade
       std::cerr << "Error while creating SDL2 Window (2): " << SDL_GetError() << std::endl;
       throw std::exception(); // TODO: create a good exception
     }
+
+    if (TTF_Init() == -1)
+    {
+      std::cerr << "Error while initializing SDL ttf" << std::endl;
+      throw std::exception();
+    }
+    
+    m_font = TTF_OpenFont("assets/fonts/arial.ttf", 30);
   }
 
   LibSDL::~LibSDL()
   {
     SDL_DestroyWindow(m_win);
     SDL_Quit();
+    TTF_CloseFont(m_font);
+    TTF_Quit();
   }
 
   bool LibSDL::pollEvent(Event & e)
@@ -217,6 +228,7 @@ namespace arcade
       size_t y = comp.getY() * m_gui->h;
       size_t width = comp.getWidth() * m_gui->w;
       size_t height = comp.getHeight() * m_gui->h;
+      std::string str = comp.getText();
 
       Color color = comp.getBackgroundColor();
       double a(color.a / 255.0);
@@ -239,6 +251,21 @@ namespace arcade
           }
         }
       }
+
+      if (str.length() > 0)
+      {
+        SDL_Color c = { 255, 255, 255 };
+        SDL_Surface *text = TTF_RenderText_Blended(m_font, str.c_str(), c);
+        SDL_Rect pos;
+
+        if (text == nullptr)
+          continue;
+
+        pos.x = x;
+        pos.y = y;
+        SDL_BlitSurface(text, NULL, m_gui, &pos);
+        SDL_FreeSurface(text);
+      }
     }
   }
 
@@ -256,6 +283,18 @@ namespace arcade
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
     std::cout << "Sprites.size == " << sprites.size() << std::endl;
     std::cout << "s.size == " << s.size() << std::endl;
+
+    for (std::vector<SDL_Surface *> &s : m_sprites)
+    {
+      for (SDL_Surface *_s : s)
+      {
+        if (_s)
+        {
+          SDL_FreeSurface(_s);
+        }
+      }
+    }
+    m_sprites.clear();
 
     for (std::unique_ptr<ISprite> const &sprite : s)
     {
