@@ -6,9 +6,10 @@
 namespace arcade
 {
   GameServer::GameServer(int16_t port, uint32_t maxClients) :
-    m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING)
+    m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
+    m_running(false), m_mutex()
   {
-    // TODO : Port 0
+    m_sock.openConnection();
     std::cout << "Running server on port " <<  m_sock.getPort() << std::endl;
 
     // Check the max number of file descriptors that select() can handle
@@ -25,6 +26,13 @@ namespace arcade
 
   void	GameServer::handleIO(fd_set const &readfds)
   {
+    if (FD_ISSET(m_sock.getSocket(), &readfds))
+      {
+	// New Connection
+#if defined(DEBUG)
+	std::cout << "New connection" << std::endl;
+#endif
+      }
     for (GameClient const &client : m_clients)
       {
 	sock_t	cur;
@@ -39,17 +47,18 @@ namespace arcade
 
   bool GameServer::run()
   {
-    assert(m_running == false);
+    assert(m_running == false && m_thread.joinable() == false);
     m_running = true;
-    // TODO: Start thread
+    m_mutex.lock();
+    m_thread = std::thread(&GameServer::_server, this);
     return (true);
   }
 
   void GameServer::stop()
   {
-    assert(m_running == true);
+    assert(m_running == true && m_thread.joinable() == true);
     m_running = false;
-    // TODO: Wait end of thread
+    m_thread.join();
   }
 
   void	GameServer::_server()
@@ -67,6 +76,7 @@ namespace arcade
 	FD_ZERO(&readfds);
 
 	// Loop over all clients
+	FD_SET(m_sock.getSocket(), &readfds);
 	for (GameClient const &client : m_clients)
 	  {
 	    sock_t cur;
@@ -77,9 +87,9 @@ namespace arcade
 	      maxSock = cur;
 	  }
 
-	// No Timeout
+	// Timeout of 5sec
 	tv.tv_usec = 0;
-	tv.tv_sec = 0;
+	tv.tv_sec = 5;
 
 	ret = select(maxSock + 1, &readfds, NULL, NULL, &tv);
 	if (ret == -1)
@@ -87,21 +97,23 @@ namespace arcade
 	    // Error
 	    std::cerr << "SelectFailed: " << errno << std::endl;
 	  }
-	else if (ret == 0)
-	  {
-	    // Connection
-#if defined(DEBUG)
-	    std::cout << "New client requesting connection" << std::endl;
-#endif
-	  }
-	else
+	else if (ret > 0)
 	  {
 	    // Handle I/O
 #if defined(DEBUG)
 	    std::cout << "Handling I/O operation" << std::endl;
 #endif
+	    handleIO(readfds);
+	  }
+	else
+	  {
+	    // Timeout
+#if defined(DEBUG)
+	    std::cout << "Timed out" << std::endl;
+#endif
 	  }
       }
+    m_mutex.unlock();
 #if defined(DEBUG)
     std::cout << "Stopped server loop" << std::endl;
 #endif
@@ -121,5 +133,11 @@ namespace arcade
   bool  GameServer::isRunning() const
   {
     return (m_running);
+  }
+
+  void GameServer::wait()
+  {
+    m_mutex.lock();
+    m_mutex.unlock();
   }
 }

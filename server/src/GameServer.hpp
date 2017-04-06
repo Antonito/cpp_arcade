@@ -1,7 +1,9 @@
 #ifndef GAMESERVER_HPP_
 #define GAMESERVER_HPP_
 
+#include <thread>
 #include <vector>
+#include <mutex>
 #include <atomic>
 #include "IServer.hpp"
 #include "TCPSocket.hpp"
@@ -22,13 +24,16 @@ namespace arcade
     virtual bool	removeClient(Network::IClient &client);
 
     bool		isRunning() const;
+    void		wait();
   private:
     void		_server();
     void		handleIO(fd_set const &readfds);
 
-    Network::TCPSocket		m_sock;
-    std::vector<GameClient>	m_clients;
-    std::atomic<bool>		m_running;
+    Network::TCPSocket			m_sock;
+    std::vector<GameClient>		m_clients;
+    std::atomic<bool>			m_running;
+    std::thread				m_thread;
+    std::mutex				m_mutex;
   };
 }
 
