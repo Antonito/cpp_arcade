@@ -8,8 +8,16 @@ namespace arcade
     class IClient
     {
     public:
+      enum ClientAction
+	{
+	  SUCCESS,
+	  FAILURE,
+	  DISCONNECT
+	};
+
       virtual ~IClient(){};
       virtual bool	disconnect() = 0;
+      virtual IClient::ClientAction read() = 0;
     };
   }
 }
