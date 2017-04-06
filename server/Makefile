@@ -14,16 +14,9 @@ DIR_LIST=	$(SRC_DIR)		\
 
 # Project's files
 
-SRC_FILES=	main.cpp		\
-		GenLibrary.cpp		\
-		Core.cpp
+SRC_FILES=	main.cpp
 
-LOGGER_FILES=	Logger.cpp		\
-		LogMessage.cpp		\
-		LogSink.cpp
-
-SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))		\
-		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))
+SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR+=	$(DIR_LIST)
 
