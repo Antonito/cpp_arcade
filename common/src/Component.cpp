@@ -78,6 +78,11 @@ namespace arcade
 		m_text = text;
 	}
 
+	Color Component::getTextColor() const
+	{
+	  return (Color());
+	}
+
 	void Component::setClicked()
 	{
 		this->setClicked(true);

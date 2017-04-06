@@ -24,7 +24,7 @@ std::vector<NetworkPacket> &&AGame::getNetworkToSend()
 	return (std::move(m_toSend));
 }
 
-std::vector<int> &&AGame::getSoundsToPlay()
+std::vector<Sound> AGame::getSoundsToPlay()
 {
 	return (std::move(m_soundsToPlay));
 }
