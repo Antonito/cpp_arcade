@@ -118,7 +118,7 @@ namespace arcade
 
   GameState Core::gameLoop()
   {
-    std::vector<int> sounds;
+    std::vector<Sound> sounds;
     Event ev;
 
     Nope::Log::Info << "Launching a game";

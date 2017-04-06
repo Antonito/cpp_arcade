@@ -36,7 +36,7 @@ namespace arcade
 
 		// Sound
 		virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
-		virtual std::vector<int>         &&getSoundsToPlay();
+		virtual std::vector<Sound>         getSoundsToPlay();
 
 		// Map
 		virtual IMap const &getCurrentMap() const;
@@ -60,7 +60,7 @@ namespace arcade
 		std::vector<NetworkPacket> m_toSend;
 
 		// Sounds to play buffer
-		std::vector<int> m_soundsToPlay;
+		std::vector<Sound> m_soundsToPlay;
 
 		// Game map
 		std::unique_ptr<Map> m_map;

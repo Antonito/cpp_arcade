@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include <iostream>
 #include <sys/select.h>
 #include "GameServer.hpp"
@@ -16,6 +17,7 @@ namespace arcade
     if (maxClients > FD_SETSIZE)
       {
 	std::cout << "[WARN] Too many possible clients" << std::endl;
+	maxClients = FD_SETSIZE;
       }
   }
 
@@ -24,23 +26,37 @@ namespace arcade
     std::cout << "Stopping server..." << std::endl;
   }
 
-  void	GameServer::handleIO(fd_set const &readfds)
+  void	GameServer::handleIO(int max, fd_set const &readfds)
   {
+    int	i = 0;
     if (FD_ISSET(m_sock.getSocket(), &readfds))
       {
 	// New Connection
 #if defined(DEBUG)
 	std::cout << "New connection" << std::endl;
 #endif
+	addClient();
+	++i;
       }
-    for (GameClient const &client : m_clients)
+    for (std::unique_ptr<GameClient> const &client : m_clients)
       {
 	sock_t	cur;
 
-	cur = client.getSock();
+	if (i >= max)
+	  break;
+	cur = client->getSock();
 	if (FD_ISSET(cur, &readfds))
 	  {
+	    GameClient::ClientAction action;
+
 	    // There's data to read
+	    action = client->read();
+	    if (action == GameClient::ClientAction::DISCONNECT)
+	      {
+		// The client asked for a disconnection
+		removeClient(*client);
+	      }
+	    ++i;
 	  }
       }
   }
@@ -77,11 +93,12 @@ namespace arcade
 
 	// Loop over all clients
 	FD_SET(m_sock.getSocket(), &readfds);
-	for (GameClient const &client : m_clients)
+	maxSock = m_sock.getSocket();
+	for (std::unique_ptr<GameClient> const &client : m_clients)
 	  {
 	    sock_t cur;
 
-	    cur = client.getSock();
+	    cur = client->getSock();
 	    FD_SET(cur, &readfds);
 	    if (cur > maxSock)
 	      maxSock = cur;
@@ -103,13 +120,13 @@ namespace arcade
 #if defined(DEBUG)
 	    std::cout << "Handling I/O operation" << std::endl;
 #endif
-	    handleIO(readfds);
+	    handleIO(ret, readfds);
 	  }
 	else
 	  {
 	    // Timeout
 #if defined(DEBUG)
-	    std::cout << "Timed out" << std::endl;
+	    std::cout << "Timed out [Connected: " << m_clients.size()<< "]" << std::endl;
 #endif
 	  }
       }
@@ -121,13 +138,31 @@ namespace arcade
 
   bool GameServer::addClient()
   {
+    sockaddr_in_t	in = {};
+    socklen_t		len = sizeof(in);
+    int			sock;
+
+    sock = accept(m_sock.getSocket(), reinterpret_cast<sockaddr_t *>(&in), &len);
+    if (sock != -1)
+      {
+	m_clients.push_back(std::make_unique<GameClient>(sock));
+	return (true);
+      }
     return (false);
   }
 
   bool GameServer::removeClient(Network::IClient &client)
   {
-    client.disconnect();
-    return (false);
+    GameClient &gclient = dynamic_cast<GameClient &>(client);
+
+    gclient.disconnect();
+    m_clients.erase(std::remove_if(m_clients.begin(), m_clients.end(),
+				   [&](std::unique_ptr<GameClient> const &e)
+				   {
+				     return (*e == gclient);
+				   }
+				   ));
+    return (true);
   }
 
   bool  GameServer::isRunning() const

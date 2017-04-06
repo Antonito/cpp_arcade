@@ -27,13 +27,13 @@ namespace arcade
     void		wait();
   private:
     void		_server();
-    void		handleIO(fd_set const &readfds);
+    void		handleIO(int sock, fd_set const &readfds);
 
-    Network::TCPSocket			m_sock;
-    std::vector<GameClient>		m_clients;
-    std::atomic<bool>			m_running;
-    std::thread				m_thread;
-    std::mutex				m_mutex;
+    Network::TCPSocket				m_sock;
+    std::vector<std::unique_ptr<GameClient>>	m_clients;
+    std::atomic<bool>				m_running;
+    std::thread					m_thread;
+    std::mutex					m_mutex;
   };
 }
 
