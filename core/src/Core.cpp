@@ -312,8 +312,7 @@ namespace arcade
   {
     std::cout << "Loading GAME" << std::endl;
     m_lib->loadSounds(m_game->getSoundsToLoad());
-    std::vector<std::unique_ptr<ISprite>> s(std::move(m_game->getSpritesToLoad()));
-    m_lib->loadSprites(std::move(s));
+    m_lib->loadSprites(m_game->getSpritesToLoad());
     m_gameState = INGAME;
   }
 
@@ -380,6 +379,7 @@ namespace arcade
         std::cout << "Using lib " << m_currentLibId << std::endl;
         m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
         std::cout << "Done." << std::endl;
+        this->loadGame();
       }
 
       return;

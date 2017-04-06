@@ -139,27 +139,28 @@ namespace arcade
     // Move the given vector
     std::vector<std::unique_ptr<ISprite>> sp(std::move(sprites));
 
+    // Remove all the current sprites 
+    m_sprites.clear();
+
     // Loop on every sprites
     for (std::unique_ptr<ISprite> const &s : sp)
     {
       // Current sprite (with multiple slot for animation)
-      std::vector<sf::Texture> sprite;
+      m_sprites.emplace_back();
+      std::vector<sf::Texture> &sprite = m_sprites.back();
 
       // Loop on every frame
       for (size_t i = 0; i < s->spritesCount(); ++i)
       {
-        sf::Texture tex;
+        sprite.emplace_back();
+        sf::Texture &tex = sprite.back();
 
         // Load the current image
         if (!tex.loadFromFile(s->getGraphicPath(i)))
         {
           throw std::exception();
         }
-        // Add it to the sprite
-        sprite.push_back(std::move(tex));
       }
-      // Add it to the sprite list  
-      m_sprites.push_back(std::move(sprite));
     }
   }
 
