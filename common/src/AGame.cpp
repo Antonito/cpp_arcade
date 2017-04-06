@@ -78,6 +78,10 @@ void AGame::Play(void)
 {
 	CommandType type;
 	std::vector<Event> events;
+        Event ev;
+
+        ev.type = ET_KEYBOARD;
+        ev.action = AT_PRESSED;
 
 	while (m_state == INGAME)
 	{
@@ -103,21 +107,26 @@ void AGame::Play(void)
 			break;
 		}
 		case CommandType::GO_UP:
-			events.push_back({ET_KEYBOARD, AT_PRESSED, .kb_key = KB_ARROW_UP});
+                  ev.kb_key = KB_ARROW_UP;
+			events.push_back(ev);
 			break;
 		case CommandType::GO_DOWN:
-			events.push_back({ET_KEYBOARD, AT_PRESSED, .kb_key = KB_ARROW_DOWN});
+                  ev.kb_key = KB_ARROW_DOWN;
+			events.push_back(ev);
 			break;
 		case CommandType::GO_LEFT:
-			events.push_back({ET_KEYBOARD, AT_PRESSED, .kb_key = KB_ARROW_LEFT});
+                  ev.kb_key = KB_ARROW_LEFT;
+			events.push_back(ev);
 			break;
 		case CommandType::GO_RIGHT:
-			events.push_back({ET_KEYBOARD, AT_PRESSED, .kb_key = KB_ARROW_RIGHT});
+                  ev.kb_key = KB_ARROW_RIGHT;
+			events.push_back(ev);
 			break;
 		case CommandType::GO_FORWARD:
 			break;
 		case CommandType::SHOOT:
-			events.push_back({ET_KEYBOARD, AT_PRESSED, .kb_key = KB_SPACE});
+                  ev.kb_key = KB_SPACE;
+			events.push_back(ev);
 			break;
 		case CommandType::PLAY:
 			break;

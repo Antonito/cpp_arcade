@@ -25,6 +25,7 @@ public:
 
 private:
   bool m_taken;
+  size_t m_sprite;
 };
 }
 

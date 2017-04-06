@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include "Sprite.hpp"
 #include "Centipede.hpp"
 
 namespace arcade
@@ -152,11 +153,15 @@ std::vector<std::pair<std::string, SoundType>> Centipede::getSoundsToLoad() cons
   return (std::vector<std::pair<std::string, SoundType>>());
 }
 
-std::vector<std::unique_ptr<ISprite>> &&Centipede::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Centipede::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
-  return (std::move(s));
+  //s.push_back(std::unique_ptr<ISprite>(new Sprite("assets/centipede/", "player", 1, ".png", "O")));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "player", 1, ".png", "A"));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "shoot", 2, ".png", "oo"));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "block", 1, ".png", "#"));
+  return (s);
 }
 
 bool Centipede::touchObstacle(t_centipede const &centi, t_pos &next)
@@ -213,7 +218,7 @@ void Centipede::splitCentipede(size_t i, size_t j)
 
     new_centi.dir = m_centipedes[i].dir;
     new_centi.part = new_part;
-    m_centipedes[i].part.resize(j);
+    m_centipedes[i].part.resize(j - 1);
     m_centipedes.push_back(new_centi);
   }
 }
@@ -318,7 +323,9 @@ void Centipede::process()
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)
     {
+      m_map->at(0, x, y).setColor(Color(20, 20, 20));
       m_map->at(1, x, y).setColor(Color::Transparent);
+      m_map->at(1, x, y).removeSprite();
     }
   };
   // Obstacles display and check destructed obstacles
@@ -332,6 +339,7 @@ void Centipede::process()
     else
     {
       m_map->at(1, it->pos.x, it->pos.y).setColor(Color::Red);
+      m_map->at(1, it->pos.x, it->pos.y).setSprite(2);
       ++it;
     }
   }
@@ -343,12 +351,16 @@ void Centipede::process()
   }
 
   //Player display
-  m_map->at(1, m_pos.x, m_pos.y).setColor(Color::Green);
+  //m_map->at(1, m_pos.x, m_pos.y).setColor(Color::Green);
+  m_map->at(1, m_pos.x, m_pos.y).setSprite(0);
+  //m_map->at(1, m_pos.x, m_pos.y).setSpritePos(0);
+  //m_map->at(1, m_pos.x, m_pos.y).removeSprite();
 
   //Missile display
   if (isShot)
   {
     m_map->at(1, m_shoot.x, m_shoot.y).setColor(Color::Yellow);
+    m_map->at(1, m_shoot.x, m_shoot.y).setSprite(1);
   }
 
   // Make  the centipedes move at each tik

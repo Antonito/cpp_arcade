@@ -49,7 +49,7 @@ namespace arcade
     static std::map<sf::Keyboard::Key, KeyboardKey> m_kb_keys;
     static std::map<sf::Mouse::Button, MouseKey> m_mouse_keys;
 
-    static constexpr size_t m_tileSize = 24;
+    static constexpr size_t m_maxTileSize = 24;
 
     std::unique_ptr<sf::RenderWindow> m_win;
     std::vector<std::unique_ptr<sf::Music>> m_music;
@@ -57,13 +57,9 @@ namespace arcade
     std::vector<std::unique_ptr<sf::Sound>> m_sound;
     sf::Vector2i m_mousePos;
 
-    std::unique_ptr<uint32_t[]> m_guiPix;
-    std::unique_ptr<sf::Texture> m_gui;
-    std::unique_ptr<sf::Sprite> m_guiSprite;
+    std::vector<std::vector<sf::Texture>> m_sprites;
 
-    std::unique_ptr<uint32_t[]> m_mapPix;
-    std::unique_ptr<sf::Texture> m_map;
-    std::unique_ptr<sf::Sprite> m_mapSprite;
+    sf::Font m_font;
 
     size_t m_mapWidth;
     size_t m_mapHeight;

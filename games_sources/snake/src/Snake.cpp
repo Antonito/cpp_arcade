@@ -5,6 +5,7 @@
 #include <unistd.h>
 #endif
 #include "Snake.hpp"
+#include "Sprite.hpp"
 
 namespace arcade
 {
@@ -18,7 +19,8 @@ Snake::Snake()
     {
         for (size_t x = 0; x < width; ++x)
         {
-            m_map->at(0, x, y).setColor(Color::White);
+          m_map->at(0, x, y).setColor(Color(20, 20, 20));
+          m_map->at(0, x, y).removeSprite();
         }
     };
     m_map->addLayer();
@@ -50,7 +52,7 @@ Snake::Snake(Snake const &other)
     {
         for (size_t x = 0; x < width; ++x)
         {
-            m_map->at(0, x, y).setColor(Color::White);
+            m_map->at(0, x, y).setColor(Color(20, 20, 20));
         }
     };
 
@@ -116,11 +118,17 @@ std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
     return (std::vector<std::pair<std::string, SoundType>>());
 }
 
-std::vector<std::unique_ptr<ISprite>> &&Snake::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
 {
-    std::vector<std::unique_ptr<ISprite>> s;
+  std::vector<std::unique_ptr<ISprite>> s;
 
-    return (std::move(s));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "cherry", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "strawberry", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "peach", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "apple", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "head", 1, ".png", "O"));
+  s.push_back(std::make_unique<Sprite>("./assets/snake/", "body", 1, ".png", "o"));
+  return (s);
 }
 
 Pos Snake::placeFood()
@@ -145,7 +153,8 @@ void Snake::process()
         {
             for (size_t x = 0; x < m_map->getWidth(); ++x)
             {
-                m_map->at(1, x, y).setColor(Color::Transparent);
+              m_map->at(1, x, y).setColor(Color::Transparent);
+              m_map->at(1, x, y).removeSprite();
             }
         };
 

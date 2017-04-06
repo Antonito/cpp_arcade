@@ -2,6 +2,7 @@
 #include <exception>
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 #include "LibLapin.hpp"
 
 namespace arcade
@@ -20,8 +21,9 @@ LibLapin::LibLapin(size_t width, size_t height) : m_width(width), m_height(heigh
               << std::endl;
     throw std::exception(); // TODO: Exception
   }
+  m_render = bunny_new_pixelarray(width, height);
   m_gui = bunny_new_pixelarray(width, height);
-  if (!m_gui)
+  if (!m_render || !m_gui)
   {
     std::cerr << "Cannot create pixelarray" << std::endl;
     throw std::exception(); // TODO: Exception
@@ -189,7 +191,7 @@ void LibLapin::updateMap(IMap const &map)
               {
                 size_t X = x * m_tileSize + _x;
                 size_t Y = y * m_tileSize + _y;
-                size_t pix = Y * m_mapWidth + X;
+                size_t pix = Y * (m_mapWidth * m_tileSize) + X;
                 double a(color.a / 255.0);
                 Color old(pixels[pix]);
                 Color merged(color.r * a + old.r * (1 - a),
@@ -223,29 +225,43 @@ void LibLapin::updateGUI(IGUI &gui)
     {
       for (size_t _y = 0; _y < height; ++_y)
       {
-        for (size_t _x = 0; _x < width; ++_x)
-        {
-          size_t pix = (y + _y) * m_width + (x + _x);
-          Color old(pixels[pix]);
-          Color merged(color.r * a + old.r * (1 - a),
-                       color.g * a + old.g * (1 - a),
-                       color.b * a + old.b * (1 - a),
-                       color.a + old.a * (1 - a));
-          pixels[pix] = merged.full;
-        }
+	IComponent const &comp = gui.at(i);
+	size_t x = comp.getX() * m_width;
+	size_t y = comp.getY() * m_height;
+	size_t width = comp.getWidth() * m_width;
+	size_t height = comp.getHeight() * m_height;
+	Color color = comp.getBackgroundColor();
+	double a(color.a / 255.0);
+	if (color.a != 0)
+	  {
+	    for (size_t _y = 0; _y < height; ++_y)
+	      {
+		for (size_t _x = 0; _x < width; ++_x)
+		  {
+		    size_t pix = (y + _y) * m_width + (x + _x);
+		    Color old(pixels[pix]);
+		    Color merged(color.r * a + old.r * (1 - a),
+				 color.g * a + old.g * (1 - a),
+				 color.b * a + old.b * (1 - a),
+				 color.a + old.a * (1 - a));
+		    pixels[pix] = merged.full;
+		  }
+	      }
+	  }
       }
     }
   }
 }
 
-void LibLapin::display()
-{
-  if (m_map)
-    bunny_blit(&m_win->buffer, &m_map->clipable, nullptr);
-  if (m_gui)
-    bunny_blit(&m_win->buffer, &m_gui->clipable, nullptr);
-  bunny_display(m_win);
-}
+  void LibLapin::display()
+  {
+    if (m_map)
+      _blit(m_render, m_map);
+    if (m_gui)
+      _blit(m_render, m_gui);
+    bunny_blit(&m_win->buffer, &m_render->clipable, NULL);
+    bunny_display(m_win);
+  }
 
 void LibLapin::clear()
 {
@@ -390,9 +406,33 @@ t_bunny_response LibLapin::_closeHandler(t_bunny_window const *win, void *dat)
 {
   Event *e = static_cast<Event *>(dat);
 
-  assert(e);
-  static_cast<void>(win);
-  e->type = EventType::ET_QUIT;
-  return (EXIT_ON_SUCCESS);
-}
+    assert(e);
+    static_cast<void>(win);
+    e->type = EventType::ET_QUIT;
+    return (EXIT_ON_SUCCESS);
+  }
+
+  void LibLapin::_blit(t_bunny_pixelarray* dest, t_bunny_pixelarray const * src)
+  {
+    size_t width = std::min(dest->clipable.clip_width, src->clipable.clip_width);
+    size_t height = std::min(dest->clipable.clip_height, src->clipable.clip_height);
+    Color *dest_pixels = static_cast<Color *>(dest->pixels);
+    Color *src_pixels = static_cast<Color *>(src->pixels);
+
+    for (size_t y = 0; y < height; ++y)
+    {
+      for (size_t x = 0; x < width; ++x)
+      {
+        Color old = dest_pixels[y * dest->clipable.clip_width + x];
+        Color color = src_pixels[y * src->clipable.clip_width + x];
+        double a = color.a / 255.0;
+
+        Color merged(color.r * a + old.r * (1 - a),
+          color.g * a + old.g * (1 - a),
+          color.b * a + old.b * (1 - a),
+          color.a + old.a * (1 - a));
+        dest_pixels[y * dest->clipable.clip_width + x] = merged.full;
+      }
+    }
+  }
 }

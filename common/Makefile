@@ -19,6 +19,7 @@ SRC_FILES=	Color.cpp		\
 		AGame.cpp		\
 		Layer.cpp		\
 		Map.cpp			\
+		Sprite.cpp		\
 		SpriteRef.cpp		\
 		Tile.cpp
 
