@@ -68,6 +68,28 @@ bool Player::touchTail(Pos const &pos) const
     return false;
 }
 
+WhereAmI * Player::getWhereAmI() const
+{
+  union {
+    WhereAmI *w;
+    uint8_t *c;
+  };
+
+  size_t size = sizeof(WhereAmI) + m_tail.size() * sizeof(Position);
+
+  c = new uint8_t[size];
+
+  w->type = CommandType::WHERE_AM_I;
+  w->lenght = m_tail.size();
+
+  for (size_t i = 0; i < m_tail.size(); ++i)
+  {
+    w->position[i].x = m_tail[i].getX();
+    w->position[i].y = m_tail[i].getY();
+  }
+  return (w);
+}
+
 Dir Player::getDir() const
 {
     return (m_dir);

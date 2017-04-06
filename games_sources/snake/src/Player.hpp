@@ -3,6 +3,8 @@
 
 #include "AEntity.hpp"
 #include "Shoot.hpp"
+#include "Protocol.hpp"
+
 namespace arcade
 {
 class Player : public AEntity
@@ -20,6 +22,8 @@ public:
 
   Dir getDir() const;
   bool touchTail(Pos const &pos) const;
+
+  WhereAmI *getWhereAmI() const;
 
 private:
   bool eat(Map &map);

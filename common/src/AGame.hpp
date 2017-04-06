@@ -1,6 +1,10 @@
 #ifndef AGAME_HPP_
 #define AGAME_HPP_
 
+#ifndef __linux__
+# define __linux__
+#endif
+
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -72,6 +76,9 @@ namespace arcade
 		typedef std::chrono::high_resolution_clock m_clock_t;
 
 		std::chrono::time_point<m_clock_t> m_startTick;
+
+                bool m_mouliMode;
+                mutable size_t m_fakeTick;
 	};
 }
 

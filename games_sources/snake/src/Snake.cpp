@@ -171,11 +171,14 @@ void Snake::process()
 #if defined(__linux__)
 WhereAmI *Snake::getWhereAmI() const
 {
-    WhereAmI *w = new WhereAmI;
-
-    w->type = CommandType::WHERE_AM_I;
-    w->lenght = 0;
-    return (w);
+    return (m_player.getWhereAmI());
 }
 #endif
+}
+
+extern "C" void Play(void)
+{
+  arcade::Snake game;
+
+  game.Play();
 }

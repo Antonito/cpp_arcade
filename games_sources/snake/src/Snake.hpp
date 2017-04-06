@@ -42,4 +42,6 @@ private:
 };
 }
 
+extern "C" void Play(void);
+
 #endif // !SNAKE_HPP_
