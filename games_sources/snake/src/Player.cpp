@@ -21,6 +21,7 @@ bool Player::move(Map &map, Dir dir)
 {
     Pos tmpPos;
 
+    m_dir = dir;
     tmpPos = m_pos;
     m_pos.move(dir);
     if (m_pos.inMap(map))
@@ -39,15 +40,33 @@ bool Player::hit(Shoot const &shoot)
     return false;
 }
 
-void Player::display(Map &map) const
+void Player::display(Map &map, double ratio) const
 {
+  Pos next = m_pos;
+  size_t i = 0;
+
+  next.move(m_dir);
   map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
   map.at(1, m_pos.getX(), m_pos.getY()).setSprite(4);
+  map.at(1, m_pos.getX(), m_pos.getY()).setShiftX((next.getX() - m_pos.getX()) * ratio);
+  map.at(1, m_pos.getX(), m_pos.getY()).setShiftY((next.getY() - m_pos.getY()) * ratio);
+
+  if (m_tail.size() > 0)
+  {
+    map.at(1, m_tail[0].getX(), m_tail[0].getY()).setShiftX((m_pos.getX() - m_tail[0].getX()) * ratio);
+    map.at(1, m_tail[0].getX(), m_tail[0].getY()).setShiftY((m_pos.getY() - m_tail[0].getY()) * ratio);
+  }
 
     for (Pos const &p : m_tail)
     {
       map.at(1, p.getX(), p.getY()).setColor(Color::Red);
       map.at(1, p.getX(), p.getY()).setSprite(5);
+      if (i > 0)
+      {
+        map.at(1, p.getX(), p.getY()).setShiftX((m_tail[i - 1].getX() - p.getX()) * ratio);
+        map.at(1, p.getX(), p.getY()).setShiftY((m_tail[i - 1].getY() - p.getY()) * ratio);
+      }
+      ++i;
     }
 }
 

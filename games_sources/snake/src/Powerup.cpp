@@ -26,7 +26,7 @@ bool Powerup::hit(Shoot const &shoot)
     return false;
 }
 
-void Powerup::display(Map &map) const
+void Powerup::display(Map &map, double) const
 {
   map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Green);
   map.at(1, m_pos.getX(), m_pos.getY()).setSprite(m_sprite);

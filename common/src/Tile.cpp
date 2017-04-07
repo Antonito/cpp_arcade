@@ -3,14 +3,22 @@
 
 namespace arcade
 {
-  Tile::Tile(TileType type, Color color) : m_type(type), m_color(color)
+  Tile::Tile(TileType type, Color color) :
+    m_type(type),
+    m_color(color),
+    m_shiftX(0.0),
+    m_shiftY(0.0)
   {
     m_sprite.setId(0);
     m_sprite.setPos(0);
   }
 
-  Tile::Tile(Tile const &other) : m_type(other.m_type),
-    m_color(other.m_color), m_sprite(other.m_sprite)
+  Tile::Tile(Tile const &other) :
+    m_type(other.m_type),
+    m_color(other.m_color),
+    m_sprite(other.m_sprite),
+    m_shiftX(other.m_shiftX),
+    m_shiftY(other.m_shiftY)
   {
   }
 
@@ -25,6 +33,8 @@ namespace arcade
       m_type = other.m_type;
       m_color = other.m_color;
       m_sprite = other.m_sprite;
+      m_shiftX = other.m_shiftX;
+      m_shiftY = other.m_shiftY;
     }
     return (*this);
   }

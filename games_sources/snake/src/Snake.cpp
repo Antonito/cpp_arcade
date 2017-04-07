@@ -158,6 +158,7 @@ void Snake::process()
     m_curTick = this->getCurrentTick();
     if ((m_curTick - m_lastTick) > 60)
     {
+      // Clear the layer
         for (size_t y = 0; y < m_map->getHeight(); ++y)
         {
             for (size_t x = 0; x < m_map->getWidth(); ++x)
@@ -167,19 +168,29 @@ void Snake::process()
             }
         };
 
+        // Display the food
         m_food.display(*m_map);
-        m_player.display(*m_map);
+
+        // Check if food is being eaten
         if (m_player.getPos() == m_food.getPos())
         {
           m_food.replace(*m_map, placeFood());
           m_score++;
         }
+        // Move the player if possible
         if (m_player.move(*m_map, m_dir) || m_player.touchTail(m_player.getPos()))
             m_state = MENU;
+
+        // Update the current tick
         m_lastTick = m_curTick;
+
+        // Update the displayed score
         ss << m_score;
         m_gui->at(1).setText(ss.str());
     }
+    // Display the player and update it everytime for smooth movement
+    if (m_state == INGAME)
+      m_player.display(*m_map, (m_curTick - m_lastTick) / 60.0);
 }
 
 #if defined(__linux__)
