@@ -2,32 +2,27 @@
 #define OBSTACLE_HPP_
 
 #include <cstdlib>
-#include "AGame.hpp"
-// include Pos
+#include "AEntity.hpp"
 
 namespace arcade
 {
-class Obstacle
+class Obstacle : public AEntity
 {
 
-    public:
-      Obstacle(bool destructible, Pos &pos, ssize_t pv);
-      Obstacle(Obstacle const &other);
-      ~Obstacle();
-      Obstacle &operator=(Obstacle const &other);
-      void hit(size_t damage = 1);
-      void place(Map &map);
-      void move();
-      void destroy(Map &map);
+public:
+  Obstacle(Map &map, bool destructible, Pos const &pos, ssize_t pv);
+  Obstacle(Obstacle const &other) = default;
+  virtual ~Obstacle();
+  Obstacle &operator=(Obstacle const &other) = default;
+  virtual bool move(Map &map, Dir dir);
+  virtual bool hit(Shoot const &shoot);
+  virtual void display(Map &map) const;
 
-      ssize_t getPv() const;
-      Pos getPos() const;
-      Dir getDir() const;
+  ssize_t getPv() const;
 
-    private:
-      Pos m_pos;
-      ssize_t m_pv;
-      bool m_destructible;
+private:
+  ssize_t m_pv;
+  bool m_destructible;
 };
 }
 

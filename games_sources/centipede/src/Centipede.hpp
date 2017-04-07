@@ -3,37 +3,18 @@
 
 #include <cstdlib>
 #include "AGame.hpp"
+#include "Pos.hpp"
+#include "Shoot.hpp"
+#include "Obstacle.hpp"
+#include "Enemy.hpp"
+#include "Player.hpp"
+#include "Pos.hpp"
 
 namespace arcade
 {
 
 class Centipede : public AGame
 {
-  enum e_dir
-  {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-  };
-
-  struct t_pos
-  {
-    ssize_t x;
-    ssize_t y;
-  };
-
-  struct t_centipede
-  {
-    std::vector<t_pos> part;
-    e_dir dir;
-  };
-
-  struct t_obstacle
-  {
-    t_pos pos;
-    ssize_t life;
-  };
 
 public:
   Centipede();
@@ -53,17 +34,14 @@ public:
   virtual WhereAmI *getWhereAmI() const;
 
 private:
-  bool touchObstacle(t_centipede const &, t_pos &);
-  bool touchTarget();
-  void moveCentipedes();
   void placeObstacles();
-  void splitCentipede(size_t, size_t);
 
-  std::vector<t_obstacle> m_obstacles;
-  std::vector<t_centipede> m_centipedes;
+  std::vector<Obstacle> m_obstacles;
+  std::vector<Enemy> m_centipedes;
+  Player m_player;
+  Shoot m_shoot;
   bool isShot;
-  t_pos m_pos;
-  t_pos m_shoot;
+
   size_t m_lastTickPlayer;
   size_t m_lastTickCenti;
   size_t m_lastTickShoot;

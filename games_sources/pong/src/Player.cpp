@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Player.hpp"
-#include "Shoot.hpp"
 
 namespace arcade
 {
@@ -14,25 +13,9 @@ Player::~Player()
 {
 }
 
-bool Player::move(Map &map, Dir dir)
+void Player::move(Map &map, Dir dir)
 {
     m_pos.move(dir);
-    return true;
-}
-
-bool Player::hit(Shoot const &shoot)
-{
-    return false;
-}
-
-Shoot Player::shoot(Map &map) const
-{
-    Pos shoot_pos;
-
-    shoot_pos = m_pos;
-    shoot_pos.move(m_dir);
-
-    return (Shoot(shoot_pos, m_dir, map));
 }
 
 void Player::display(Map &map) const
@@ -43,5 +26,10 @@ void Player::display(Map &map) const
 Dir Player::getDir() const
 {
     return (m_dir);
+}
+
+Pos const &Player::getPos() const
+{
+    return (m_pos);
 }
 }

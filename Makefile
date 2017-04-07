@@ -21,7 +21,8 @@ GFX_PROJECT=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))
 GAMES_DIR=		./games_sources/
 
 GAMES=			snake		\
-			centipede
+			centipede	\
+			pong
 
 GAME_PROJECT=		$(addprefix $(GAMES_DIR), $(GAMES))
 

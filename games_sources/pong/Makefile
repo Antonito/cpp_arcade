@@ -12,13 +12,9 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Centipede.cpp	\
-		AEntity.cpp	\
-		Enemy.cpp	\
-		Obstacle.cpp	\
+SRC_FILES=	Pong.cpp	\
 		Player.cpp	\
 		Pos.cpp		\
-		Shoot.cpp	\
 		EntryPoint.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
