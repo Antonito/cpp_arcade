@@ -6,20 +6,28 @@ include $(MK_COMMON_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_COMMON_DIR)defs.mk
 
 # Project's directories
 
-SRC_DIR=		./src/
+SRC_DIR=	./src/
 
 DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Snake.cpp	\
-		EntryPoint.cpp
+SRC_FILES=	AEntity.cpp		\
+		AGame.cpp		\
+		AMovable.cpp		\
+		Component.cpp		\
+		GUI.cpp			\
+		Layer.cpp		\
+		Map.cpp			\
+		Position.cpp		\
+		Sprite.cpp		\
+		SpriteRef.cpp		\
+		Tile.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)					\
-		$(PROJECT_DIR)/common/src/			\
-		$(PROJECT_DIR)/games_sources/games_common/src/
+INC_DIR=	$(DIR_LIST)		\
+		$(PROJECT_DIR)/common/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

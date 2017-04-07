@@ -25,7 +25,10 @@ LOGGER_FILES=	Logger.cpp		\
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))		\
 		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))
 
-INC_DIR+=	$(DIR_LIST)
+INC_DIR=	$(DIR_LIST)					\
+		$(PROJECT_DIR)/common/src/			\
+		$(PROJECT_DIR)/network/src/			\
+		$(PROJECT_DIR)/games_sources/games_common/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

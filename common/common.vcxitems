@@ -14,6 +14,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\AEntity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\AMovable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\Position.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AGame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AGfxLib.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Color.cpp" />
@@ -28,6 +31,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\AEntity.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\AMovable.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\IShooter.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\games_sources\common\src\Position.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\AGame.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\AGfxLib.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Color.hpp" />

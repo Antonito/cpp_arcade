@@ -3,7 +3,7 @@
 #include <cstring>
 #include "LibAllegro5.hpp"
 #include "ITile.hpp"
-#include "Map.hpp"
+#include "IMap.hpp"
 
 namespace arcade
 {

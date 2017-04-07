@@ -12,19 +12,13 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Centipede.cpp	\
-		AEntity.cpp	\
-		Enemy.cpp	\
-		Obstacle.cpp	\
-		Player.cpp	\
-		Pos.cpp		\
-		Shoot.cpp	\
-		EntryPoint.cpp
+SRC_FILES=
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR=	$(DIR_LIST)					\
-		$(PROJECT_DIR)/common/src/
+		$(PROJECT_DIR)/common/src/			\
+		$(PROJECT_DIR)/games_sources/games_common/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk
