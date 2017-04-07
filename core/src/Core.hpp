@@ -59,6 +59,15 @@ namespace arcade
 #if defined(__linux__)
 		virtual WhereAmI *getWhereAmI() const;
 #endif
+
+                // Main menu
+                size_t m_firstLibIndex;
+                size_t m_firstGameIndex;
+
+                size_t m_selectedLibId;
+                size_t m_selectedGameId;
+
+                bool m_menuLib;
 	};
 }
 

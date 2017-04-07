@@ -23,7 +23,11 @@
 
 namespace arcade
 {
-  Core::Core() : m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING)
+  Core::Core() :
+    m_currentGameId(0), 
+    m_currentLibId(0), 
+    m_gameState(LOADING),
+    m_selectedGameId(0)
   {
     m_state = INGAME;
 
@@ -38,6 +42,8 @@ namespace arcade
     m_gui->push(Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
     m_gui->push(Component(0.1, 0.3, 0.35, 0.6, dark));
     m_gui->push(Component(0.55, 0.3, 0.35, 0.6, dark));
+
+    m_firstLibIndex = m_gui->size();
 
 #ifdef DEBUG
     Nope::Log::Debug << "Core constructed";
@@ -238,13 +244,14 @@ namespace arcade
           }
           
           m_gui->push(Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
-            0.3, 0.08, Color::Transparent, std::string(ent->d_name)));
+            0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
 
           // If same file inode
           if (search.st_ino == file.st_ino)
           {
             found = true;
             m_currentLibId = m_libList.size() - 1;
+            m_selectedLibId = m_currentLibId;
           }
         }
       }
@@ -268,6 +275,8 @@ namespace arcade
       throw std::exception(); // TODO: there is no graphic library
     }
 
+    m_firstGameIndex = m_gui->size();
+
     // Open "games/" directory
     if ((dir = opendir("games")) != NULL)
     {
@@ -287,7 +296,7 @@ namespace arcade
           m_gameList.emplace_back(std::string("games/") + ent->d_name);
 
           m_gui->push(Component(0.57, 0.35 + 0.07 * (m_gameList.size() - 1),
-            0.3, 0.08, Color::Transparent, std::string(ent->d_name)));
+            0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
         }
       }
       // Close the dir after using it because we are well educated people
@@ -428,6 +437,21 @@ namespace arcade
 
   void Core::process()
   {
+    for (size_t i = 0; i < m_libList.size(); ++i)
+    {
+      if (i == m_selectedLibId)
+        m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color(80, 80, 80));
+      else
+        m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color::Transparent);
+    }
+
+    for (size_t i = 0; i < m_gameList.size(); ++i)
+    {
+      if (i == m_selectedGameId)
+        m_gui->at(m_firstGameIndex + i).setBackgroundColor(Color(80, 80, 80));
+      else
+        m_gui->at(m_firstGameIndex + i).setBackgroundColor(Color::Transparent);
+    }
   }
 
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
