@@ -39,6 +39,7 @@ private:
   Dir m_dir;
   size_t m_lastTick;
   size_t m_curTick;
+  size_t m_score;
 };
 }
 

@@ -4,6 +4,7 @@
 #else
 #include <unistd.h>
 #endif
+#include <sstream>
 #include "Snake.hpp"
 #include "Sprite.hpp"
 
@@ -31,6 +32,7 @@ Snake::Snake()
     m_food = Powerup(placeFood(), *m_map);
     m_lastTick = 0;
     m_curTick = 0;
+    m_score = 0;
 
     Component comp;
 
@@ -39,6 +41,12 @@ Snake::Snake()
     comp.setWidth(0.15);
     comp.setHeight(0.05);
     comp.setBackgroundColor(Color(0, 0, 0, 170));
+    m_gui->push(std::move(comp));
+
+    comp.setX(0.07);
+    comp.setY(0.05);
+    comp.setBackgroundColor(Color::Transparent);
+    comp.setText("0");
     m_gui->push(std::move(comp));
 }
 
@@ -145,6 +153,7 @@ Pos Snake::placeFood()
 void Snake::process()
 {
     Pos next;
+    std::stringstream ss;
 
     m_curTick = this->getCurrentTick();
     if ((m_curTick - m_lastTick) > 60)
@@ -161,10 +170,15 @@ void Snake::process()
         m_food.display(*m_map);
         m_player.display(*m_map);
         if (m_player.getPos() == m_food.getPos())
-            m_food.replace(*m_map, placeFood());
+        {
+          m_food.replace(*m_map, placeFood());
+          m_score++;
+        }
         if (m_player.move(*m_map, m_dir) || m_player.touchTail(m_player.getPos()))
             m_state = MENU;
         m_lastTick = m_curTick;
+        ss << m_score;
+        m_gui->at(1).setText(ss.str());
     }
 }
 
