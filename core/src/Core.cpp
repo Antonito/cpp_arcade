@@ -31,41 +31,13 @@ namespace arcade
     m_gui = std::make_unique<GUI>();
 
     // Create the main menu GUI
-    Component comp;
-    Component text;
+    Color dark(0, 0, 0, 80);
 
-    comp.setBackgroundColor(Color::White);
-    comp.setX(0.0);
-    comp.setY(0.0);
-    comp.setWidth(1.0);
-    comp.setHeight(1.0);
-    m_gui->push(comp);
-
-    comp.setBackgroundColor(Color(0, 0, 0, 170));
-
-    comp.setX(0.3);
-    comp.setY(0.1);
-    comp.setWidth(0.4);
-    comp.setHeight(0.1);
-    m_gui->push(comp);
-
-    text.setBackgroundColor(Color::Transparent);
-    text.setX(0.35);
-    text.setY(0.13);
-    text.setWidth(0.3);
-    text.setHeight(0.04);
-    text.setText("The arcade");
-    m_gui->push(text);
-
-    comp.setWidth(0.35);
-    comp.setHeight(0.6);
-
-    comp.setX(0.1);
-    comp.setY(0.3);
-    m_gui->push(comp);
-
-    comp.setX(0.55);
-    m_gui->push(comp);
+    m_gui->push(Component(0, 0, 1, 1, Color(20, 20, 20)));
+    m_gui->push(Component(0.3, 0.1, 0.4, 0.1, dark));
+    m_gui->push(Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
+    m_gui->push(Component(0.1, 0.3, 0.35, 0.6, dark));
+    m_gui->push(Component(0.55, 0.3, 0.35, 0.6, dark));
 
 #ifdef DEBUG
     Nope::Log::Debug << "Core constructed";
@@ -265,6 +237,9 @@ namespace arcade
             throw std::exception();
           }
           
+          m_gui->push(Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
+            0.3, 0.08, Color::Transparent, std::string(ent->d_name)));
+
           // If same file inode
           if (search.st_ino == file.st_ino)
           {
@@ -310,6 +285,9 @@ namespace arcade
         {
           Nope::Log::Info << "Adding library '" << ent->d_name << "'";
           m_gameList.emplace_back(std::string("games/") + ent->d_name);
+
+          m_gui->push(Component(0.57, 0.35 + 0.07 * (m_gameList.size() - 1),
+            0.3, 0.08, Color::Transparent, std::string(ent->d_name)));
         }
       }
       // Close the dir after using it because we are well educated people
