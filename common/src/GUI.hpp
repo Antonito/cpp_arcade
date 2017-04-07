@@ -18,8 +18,8 @@ namespace arcade
 
 		virtual std::size_t size() const;
 
-		virtual IComponent &at(std::size_t n);
-		virtual IComponent const &at(std::size_t n) const;
+		virtual Component &at(std::size_t n);
+		virtual Component const &at(std::size_t n) const;
 
 		void push(Component const &component);
 		void push(Component &&component);
