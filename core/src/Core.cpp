@@ -35,13 +35,13 @@ namespace arcade
     m_gui = std::make_unique<GUI>();
 
     // Create the main menu GUI
-    Color dark(0, 0, 0, 80);
+    Color dark(10, 10, 10);
 
     m_gui->push(Component(0, 0, 1, 1, Color(20, 20, 20)));
     m_gui->push(Component(0.3, 0.1, 0.4, 0.1, dark));
     m_gui->push(Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
-    m_gui->push(Component(0.1, 0.3, 0.35, 0.6, dark));
-    m_gui->push(Component(0.55, 0.3, 0.35, 0.6, dark));
+    m_gui->push(Component(0.1, 0.3, 0.35, 0.6));
+    m_gui->push(Component(0.55, 0.3, 0.35, 0.6));
 
     m_firstLibIndex = m_gui->size();
 
@@ -373,58 +373,6 @@ namespace arcade
       case KB_ESCAPE:
         m_gameState = QUIT;
         break;
-      case KB_ARROW_UP:
-        if (m_menuLib)
-        {
-          if (m_selectedLibId == 0)
-          {
-            m_selectedLibId = m_libList.size();
-          }
-          m_selectedLibId--;
-        }
-        else
-        {
-          if (m_selectedGameId == 0)
-          {
-            m_selectedGameId = m_gameList.size();
-          }
-          m_selectedGameId--;
-        }
-        break;
-      case KB_ARROW_DOWN:
-        if (m_menuLib)
-        {
-          m_selectedLibId++;
-          if (m_selectedLibId == m_libList.size())
-          {
-            m_selectedLibId = 0;
-          }
-        }
-        else
-        {
-          m_selectedGameId++;
-          if (m_selectedGameId == m_gameList.size())
-          {
-            m_selectedGameId = 0;
-          }
-        }
-        break;
-      case KB_ARROW_LEFT:
-        m_menuLib = true;
-        break;
-      case KB_ARROW_RIGHT:
-        m_menuLib = false;
-        break;
-      case KB_ENTER:
-        if (m_menuLib)
-        {
-          m_currentLibId = m_selectedLibId;
-        }
-        else
-        {
-          m_currentGameId = m_currentGameId;
-        }
-        break;
       default:
         m_eventBuffer.push_back(e);
         break;
@@ -467,16 +415,73 @@ namespace arcade
       else if (e.type == EventType::ET_KEYBOARD &&
         e.action == ActionType::AT_PRESSED)
       {
-        if (e.kb_key == KeyboardKey::KB_ESCAPE)
+        switch (e.kb_key)
+        {
+        case KB_ESCAPE:
         {
           m_state = QUIT;
           m_game.release();
         }
-        else if (e.kb_key == KeyboardKey::KB_SPACE)
-        {
-          m_game.release();
-          m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
-          this->loadGame();
+        break;
+        case KB_ARROW_UP:
+          if (m_menuLib)
+          {
+            if (m_selectedLibId == 0)
+            {
+              m_selectedLibId = m_libList.size();
+            }
+            m_selectedLibId--;
+          }
+          else
+          {
+            if (m_selectedGameId == 0)
+            {
+              m_selectedGameId = m_gameList.size();
+            }
+            m_selectedGameId--;
+          }
+          break;
+        case KB_ARROW_DOWN:
+          if (m_menuLib)
+          {
+            m_selectedLibId++;
+            if (m_selectedLibId == m_libList.size())
+            {
+              m_selectedLibId = 0;
+            }
+          }
+          else
+          {
+            m_selectedGameId++;
+            if (m_selectedGameId == m_gameList.size())
+            {
+              m_selectedGameId = 0;
+            }
+          }
+          break;
+        case KB_ARROW_LEFT:
+          m_menuLib = true;
+          break;
+        case KB_ARROW_RIGHT:
+          m_menuLib = false;
+          break;
+        case KB_ENTER:
+          if (m_menuLib)
+          {
+            m_currentLibId = m_selectedLibId;
+            m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+          }
+          else
+          {
+            m_currentGameId = m_selectedGameId;
+            m_game.release();
+            m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
+            m_gameState = LOADING;
+            this->loadGame();
+          }
+          break;
+        default:
+          break;  
         }
       }
     }
@@ -492,7 +497,7 @@ namespace arcade
     for (size_t i = 0; i < m_libList.size(); ++i)
     {
       if (i == m_selectedLibId)
-        m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color(80, 80, 80));
+        m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color(60, 60, 60));
       else
         m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color::Transparent);
     }
@@ -500,9 +505,23 @@ namespace arcade
     for (size_t i = 0; i < m_gameList.size(); ++i)
     {
       if (i == m_selectedGameId)
-        m_gui->at(m_firstGameIndex + i).setBackgroundColor(Color(80, 80, 80));
+        m_gui->at(m_firstGameIndex + i).setBackgroundColor(Color(60, 60, 60));
       else
         m_gui->at(m_firstGameIndex + i).setBackgroundColor(Color::Transparent);
+    }
+
+    Color dark(10, 10, 10);
+    Color light(30, 30, 30);
+
+    if (m_menuLib)
+    {
+      m_gui->at(3).setBackgroundColor(light);
+      m_gui->at(4).setBackgroundColor(dark);
+    }
+    else
+    {
+      m_gui->at(3).setBackgroundColor(dark);
+      m_gui->at(4).setBackgroundColor(light);
     }
   }
 
