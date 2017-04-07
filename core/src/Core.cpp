@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <utility>
+#include <sys/stat.h>
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
@@ -78,7 +79,7 @@ namespace arcade
 #endif
   }
 
-  void Core::launch()
+  void Core::launch(std::string const &lib)
   {
     m_gameState = MENU;
 
@@ -86,7 +87,7 @@ namespace arcade
     Nope::Log::Info << "Launching the core";
 
     // Load all the game and graphic libraries
-    this->initLists();
+    this->initLists(lib);
 
     // Set the current library to the first one
     m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
@@ -225,10 +226,18 @@ namespace arcade
   }
 
   // We use dirent.h for cross-platform and lightweight solution
-  void Core::initLists()
+  void Core::initLists(std::string const &lib)
   {
     DIR *dir;
     struct dirent *ent;
+    bool found = false;
+    struct stat search;
+    struct stat file;
+
+    if (stat(lib.c_str(), &search) < 0)
+    {
+      throw std::exception();
+    }
 
     // Open "dir/" directory
     if ((dir = opendir("lib")) != NULL)
@@ -248,12 +257,30 @@ namespace arcade
 #endif
         {
           Nope::Log::Info << "Adding library '" << ent->d_name << "'";
-          m_libList.emplace_back(std::string("lib/") + ent->d_name);
+
+          std::string libPath = std::string("lib/") + ent->d_name;
+          m_libList.emplace_back(libPath);
+          if (stat(libPath.c_str(), &file) < 0)
+          {
+            throw std::exception();
+          }
+          
+          // If same file inode
+          if (search.st_ino == file.st_ino)
+          {
+            found = true;
+            m_currentLibId = m_libList.size() - 1;
+          }
         }
       }
       // Close the dir after using it because we are well educated people :)
       closedir(dir);
       Nope::Log::Info << "Closing dir 'lib'";
+      
+      if (found == false)
+      {
+        throw std::exception();
+      }
     }
     else
     {

@@ -4,7 +4,7 @@
 #include "Core.hpp"
 #include "Logger.hpp"
 
-int main()
+int main(int ac, char **av)
 {
 // Test of the dynamic library (.so or .dll)
 #if 0
@@ -40,6 +40,15 @@ int main()
 	::read(0, (char [1]){}, 1);
 #endif
 #endif
+        std::string lib;
+
+        if (ac != 2)
+        {
+          std::cout << "Usage: " << av[0] << " path_to_graphic_lib.so" << std::endl;
+          return (0);
+        }
+
+        lib = av[1];
 
 	// SRAND
 	srand(time(NULL));
@@ -52,6 +61,6 @@ int main()
 #else
 	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 #endif
-	core.launch();
+	core.launch(lib);
 	return (0);
 }

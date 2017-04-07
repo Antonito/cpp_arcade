@@ -21,13 +21,13 @@ namespace arcade
 
 		Core &operator=(Core const &other) = delete;
 
-		void launch();
+		void launch(std::string const &lib);
 
 	private:
 		GameState gameLoop();
 		GameState menuLoop();
 
-		void initLists();
+		void initLists(std::string const &lib);
 
 		static bool isNameValid(std::string const &name,
 			std::string const &prefix, std::string const &sufix);
