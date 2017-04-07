@@ -1,13 +1,13 @@
 #include <exception>
 #include <iostream>
+#include <algorithm>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "LibSDL.hpp"
 
 namespace arcade
 {
-  LibSDL::LibSDL(size_t width, size_t height) :
-    m_map(nullptr), m_mapWidth(0), m_mapHeight(0), m_gui(nullptr)
+  LibSDL::LibSDL(size_t width, size_t height)
   {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -123,75 +123,46 @@ namespace arcade
 
   void LibSDL::updateMap(IMap const & map)
   {
-    if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+    // If there is nothing to display, return (and avoid dividing by zero)
+    if (map.getWidth() == 0 || map.getHeight() == 0)
     {
-      if (m_map)
-      {
-        SDL_FreeSurface(m_map);
-      }
-      m_mapWidth = map.getWidth();
-      m_mapHeight = map.getHeight();
-
-      m_map = SDL_CreateRGBSurface(0, m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32,
-        0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-      if (!m_map)
-      {
-        std::cerr << "Failed to create SDL RGB surface"
-#ifdef DEBUG
-          << " (" << m_mapWidth * m_tileSize << "x" << m_mapHeight * m_tileSize << ")"
-#endif
-          << std::endl;
-        throw std::exception(); // TODO : create good exception
-      }
+      return;
     }
 
-    SDL_FillRect(m_map, NULL, Color::Black.full);
+    // Calculate the current tile size
+    int tileSize = std::min(m_winSurface->w / map.getWidth(), m_winSurface->h / map.getHeight());
 
-    uint32_t *pixels = static_cast<uint32_t *>(m_map->pixels);
-    size_t mapWidth = m_map->w;
-
+    tileSize = std::min(tileSize, static_cast<int>(m_maxTileSize));
+   
+    // Loop on each layer
     for (size_t l = 0; l < map.getLayerNb(); ++l)
     {
-      for (size_t y = 0; y < m_mapHeight; ++y)
+      // Loop on each line
+      for (size_t y = 0; y < map.getHeight(); ++y)
       {
-        for (size_t x = 0; x < m_mapWidth; ++x)
+        // Loop on each tile
+        for (size_t x = 0; x < map.getWidth(); ++x)
         {
+          // Get the current tile
           ITile const &tile = map.at(l, x, y);
+          Color color = tile.getColor();
 
+          // Calculate centered position
+          int posX = m_winSurface->w / 2 - (map.getWidth() * tileSize / 2) + (x + tile.getShiftX()) * tileSize;
+          int posY = m_winSurface->h / 2 - (map.getHeight() * tileSize / 2) + (y + tile.getShiftY()) * tileSize;
+          //int posX = (x + tile.getShiftX()) * tileSize;
+          //int posY = (y + tile.getShiftY()) * tileSize;
+          SDL_Rect rect = { posX, posY, tileSize, tileSize };
+
+          // If it has sprite, draw it
           if (tile.hasSprite() && m_sprites[tile.getSpriteId()][tile.getSpritePos()])
           {
-            SDL_Rect rect = { static_cast<int>(x * m_tileSize),
-              static_cast<int>(y * m_tileSize), m_tileSize, m_tileSize };
-            
-            SDL_BlitScaled(m_sprites[tile.getSpriteId()][tile.getSpritePos()], NULL, m_map, &rect);
+            SDL_BlitScaled(m_sprites[tile.getSpriteId()][tile.getSpritePos()], NULL, m_winSurface, &rect);
           }
-          else
+          // Else if it has color, draw it
+          else if (color.a != 0)
           {
-            Color color = tile.getColor();
-
-            if (color.a != 0)
-            {
-              for (size_t _y = 0; _y < m_tileSize; ++_y)
-              {
-                for (size_t _x = 0; _x < m_tileSize; ++_x)
-                {
-                  size_t X = x * m_tileSize + _x;
-                  size_t Y = y * m_tileSize + _y;
-                  size_t pix = Y * mapWidth + X;
-
-                  // Alpha
-                  double a(color.a / 255.0);
-
-                  Color old(pixels[pix]);
-                  Color merged(color.r * a + old.r * (1 - a),
-                    color.g * a + old.g * (1 - a),
-                    color.b * a + old.b * (1 - a),
-                    color.a + old.a * (1 - a));
-
-                  pixels[pix] = merged.full;
-                }
-              }
-            }
+            fillRect(m_winSurface, &rect, color);
           }
         }
       }
@@ -200,61 +171,31 @@ namespace arcade
 
   void LibSDL::updateGUI(IGUI & gui)
   {
-    if (!m_gui)
-    {
-      m_gui = SDL_CreateRGBSurface(0, m_winSurface->w, m_winSurface->h, 32,
-        0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-      if (!m_gui)
-      {
-        std::cerr << "Failed to create SDL RGB surface"
-#ifdef DEBUG
-          << " (" << m_winSurface->w << "x" << m_winSurface->h << ")"
-#endif
-          << std::endl;
-        throw std::exception(); // TODO : create good exception
-      }
-    }
-
-    SDL_FillRect(m_gui, NULL, Color::Transparent.full);
-
-    Color *pixels = static_cast<Color *>(m_gui->pixels);
-
-    memset(pixels, 0, m_gui->w * m_gui->h * sizeof(Color));
-
     for (size_t i = 0; i < gui.size(); ++i)
     {
       IComponent const &comp = gui.at(i);
-      size_t x = comp.getX() * m_gui->w;
-      size_t y = comp.getY() * m_gui->h;
-      size_t width = comp.getWidth() * m_gui->w;
-      size_t height = comp.getHeight() * m_gui->h;
+      int x = comp.getX() * m_winSurface->w;
+      int y = comp.getY() * m_winSurface->h;
+      int width = comp.getWidth() * m_winSurface->w;
+      int height = comp.getHeight() * m_winSurface->h;
       std::string str = comp.getText();
 
       Color color = comp.getBackgroundColor();
-      double a(color.a / 255.0);
 
-      if (color.a != 0)
+      SDL_Rect rect = { x, y, width, height };
+
+      if (comp.hasSprite() && m_sprites[comp.getBackgroundId()][0])
       {
-        for (size_t _y = 0; _y < height; ++_y)
-        {
-          for (size_t _x = 0; _x < width; ++_x)
-          {
-            size_t pix = (y + _y) * m_gui->w + (x + _x);
-
-            Color old(pixels[pix]);
-            Color merged(color.r * a + old.r * (1 - a),
-              color.g * a + old.g * (1 - a),
-              color.b * a + old.b * (1 - a),
-              color.a + old.a * (1 - a));
-
-            pixels[pix] = merged.full;
-          }
-        }
+        SDL_BlitScaled(m_sprites[comp.getBackgroundId()][0], NULL, m_winSurface, &rect);
+      }
+      else if (color.a != 0)
+      {
+        fillRect(m_winSurface, &rect, color);
       }
 
       if (str.length() > 0)
       {
-        SDL_Color c = { 255, 255, 255 };
+        SDL_Color c = { 255, 255, 255, 255};
         SDL_Surface *text = TTF_RenderText_Blended(m_font, str.c_str(), c);
         SDL_Rect pos;
 
@@ -263,7 +204,7 @@ namespace arcade
 
         pos.x = x;
         pos.y = y;
-        SDL_BlitSurface(text, NULL, m_gui, &pos);
+        SDL_BlitSurface(text, NULL, m_winSurface, &pos);
         SDL_FreeSurface(text);
       }
     }
@@ -271,9 +212,6 @@ namespace arcade
 
   void LibSDL::display()
   {
-    // TODO : implement
-    SDL_BlitSurface(m_map, NULL, m_winSurface, NULL);
-    SDL_BlitSurface(m_gui, NULL, m_winSurface, NULL);
     SDL_UpdateWindowSurface(m_win);
   }
 
@@ -354,6 +292,49 @@ namespace arcade
     else
     {
       return (MouseKey::M_SCROLL_DOWN);
+    }
+  }
+
+  void LibSDL::fillRect(SDL_Surface * surface, SDL_Rect * rect, Color color)
+  {
+    if (rect->x >= surface->w || rect->y >= surface->h)
+    {
+      return;
+    }
+
+    if (color.a == 255)
+    {
+      SDL_FillRect(surface, rect, color.full);
+      return;
+    }
+
+    // Calculate position and size
+    int posX = std::max(0, rect->x);
+    int posY = std::max(0, rect->y);
+    int width = std::min(rect->w, surface->w - posX);
+    int height = std::min(rect->h, surface->h - posY);
+
+    // Get pixel array
+    Color *pixels = static_cast<Color *>(surface->pixels);
+
+    // Get the color alpha
+    double a = color.a / 255.0;
+    double _a = 1.0 - a;
+
+    for (int y = 0; y < height; ++y)
+    {
+      for (int x = 0; x < width; ++x)
+      {
+        int X = posX + x;
+        int Y = posY + y;
+        Color old = pixels[Y * surface->w + X];
+
+        Color merged(color.r * a + old.r * _a,
+          color.g * a + old.g * _a,
+          color.b * a + old.b * _a, 255);
+
+        pixels[Y * surface->w + X] = merged;
+      }
     }
   }
 
