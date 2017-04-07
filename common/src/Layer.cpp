@@ -8,6 +8,7 @@ namespace arcade
 		Tile tile;
 		
 		tile.setColor(Color::Transparent);
+                tile.removeSprite();
 
 		m_tiles.insert(m_tiles.begin(), width * height, tile);
 	}

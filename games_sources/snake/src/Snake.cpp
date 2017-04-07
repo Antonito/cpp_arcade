@@ -23,8 +23,16 @@ Snake::Snake()
           m_map->at(0, x, y).setColor(Color(20, 20, 20));
           m_map->at(0, x, y).removeSprite();
         }
-    };
+    }
     m_map->addLayer();
+    for (size_t y = 0; y < height; ++y)
+    {
+      for (size_t x = 0; x < width; ++x)
+      {
+        m_map->at(1, x, y).setColor(Color::Transparent);
+        m_map->at(1, x, y).removeSprite();
+      }
+    }
     m_gui = std::make_unique<GUI>();
 
     m_dir = Dir::LEFT;
@@ -60,7 +68,10 @@ Snake::Snake(Snake const &other)
     {
         for (size_t x = 0; x < width; ++x)
         {
-            m_map->at(0, x, y).setColor(Color(20, 20, 20));
+          Tile &tile = m_map->at(0, x, y);
+          
+          tile.setColor(Color(20, 20, 20));
+          tile.removeSprite();
         }
     };
 

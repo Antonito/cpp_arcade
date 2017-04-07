@@ -27,7 +27,8 @@ namespace arcade
     m_currentGameId(0), 
     m_currentLibId(0), 
     m_gameState(LOADING),
-    m_selectedGameId(0)
+    m_selectedGameId(0),
+    m_menuLib(true)
   {
     m_state = INGAME;
 
@@ -468,8 +469,11 @@ namespace arcade
         case KB_ENTER:
           if (m_menuLib)
           {
-            m_currentLibId = m_selectedLibId;
-            m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+            if (m_currentLibId != m_selectedLibId)
+            {
+              m_currentLibId = m_selectedLibId;
+              m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+            }   
           }
           else
           {

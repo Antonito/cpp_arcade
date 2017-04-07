@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(PROJECT_DIR)/games/centipede.so
+NAME=			$(PROJECT_DIR)/games/libarcade_centipede.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 
