@@ -373,6 +373,58 @@ namespace arcade
       case KB_ESCAPE:
         m_gameState = QUIT;
         break;
+      case KB_ARROW_UP:
+        if (m_menuLib)
+        {
+          if (m_selectedLibId == 0)
+          {
+            m_selectedLibId = m_libList.size();
+          }
+          m_selectedLibId--;
+        }
+        else
+        {
+          if (m_selectedGameId == 0)
+          {
+            m_selectedGameId = m_gameList.size();
+          }
+          m_selectedGameId--;
+        }
+        break;
+      case KB_ARROW_DOWN:
+        if (m_menuLib)
+        {
+          m_selectedLibId++;
+          if (m_selectedLibId == m_libList.size())
+          {
+            m_selectedLibId = 0;
+          }
+        }
+        else
+        {
+          m_selectedGameId++;
+          if (m_selectedGameId == m_gameList.size())
+          {
+            m_selectedGameId = 0;
+          }
+        }
+        break;
+      case KB_ARROW_LEFT:
+        m_menuLib = true;
+        break;
+      case KB_ARROW_RIGHT:
+        m_menuLib = false;
+        break;
+      case KB_ENTER:
+        if (m_menuLib)
+        {
+          m_currentLibId = m_selectedLibId;
+        }
+        else
+        {
+          m_currentGameId = m_currentGameId;
+        }
+        break;
       default:
         m_eventBuffer.push_back(e);
         break;
