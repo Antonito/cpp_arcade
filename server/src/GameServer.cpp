@@ -1,7 +1,6 @@
 #include <cassert>
 #include <algorithm>
 #include <iostream>
-#include <sys/select.h>
 #include "GameServer.hpp"
 
 namespace arcade
@@ -26,7 +25,8 @@ namespace arcade
     std::cout << "Stopping server..." << std::endl;
   }
 
-  void	GameServer::handleIO(int max, fd_set const &readfds)
+  void	GameServer::handleIO(int max, fd_set const &readfds, fd_set const &writefds,
+			     fd_set const &exceptfds)
   {
     int	i = 0;
     if (FD_ISSET(m_sock.getSocket(), &readfds))
@@ -58,6 +58,18 @@ namespace arcade
 	      }
 	    ++i;
 	  }
+	else if (FD_ISSET(cur, &writefds))
+	  {
+	    // You can write to this socket
+	    client->write();
+	    ++i;
+	  }
+	else if (FD_ISSET(cur, &exceptfds))
+	  {
+	    // There's an error
+	    removeClient(*client);
+	    ++i;
+	  }
       }
   }
 
@@ -84,31 +96,46 @@ namespace arcade
 #endif
     while (m_running)
       {
-	fd_set		readfds;
+	fd_set		readfds, writefds, exceptfds;
 	sock_t		maxSock;
 	int	        ret;
 	struct timeval	tv;
 
-	FD_ZERO(&readfds);
-
-	// Loop over all clients
-	FD_SET(m_sock.getSocket(), &readfds);
-	maxSock = m_sock.getSocket();
-	for (std::unique_ptr<GameClient> const &client : m_clients)
+	do
 	  {
-	    sock_t cur;
+	    FD_ZERO(&readfds);
+	    FD_ZERO(&writefds);
 
-	    cur = client->getSock();
-	    FD_SET(cur, &readfds);
-	    if (cur > maxSock)
-	      maxSock = cur;
-	  }
+	    // Loop over all clients
+	    FD_SET(m_sock.getSocket(), &readfds);
+	    maxSock = m_sock.getSocket();
+	    for (std::unique_ptr<GameClient> const &client : m_clients)
+	      {
+		sock_t cur;
 
-	// Timeout of 5sec
-	tv.tv_usec = 0;
-	tv.tv_sec = 5;
+		// Check timeout
+		if (client->hasTimedOut())
+		  {
+		    removeClient(*client);
+		    continue;
+		  }
 
-	ret = select(maxSock + 1, &readfds, NULL, NULL, &tv);
+		// Add to list
+		cur = client->getSock();
+		FD_SET(cur, &readfds);
+		FD_SET(cur, &exceptfds);
+		if (client->canWrite())
+		  FD_SET(cur, &writefds);
+		if (cur > maxSock)
+		  maxSock = cur;
+	      }
+
+	    // Timeout of 5sec
+	    tv.tv_usec = 0;
+	    tv.tv_sec = 15;
+
+	    ret = select(maxSock + 1, &readfds, &writefds, &exceptfds, &tv);
+	  } while (ret == -1 && errno == EINTR);
 	if (ret == -1)
 	  {
 	    // Error
@@ -120,7 +147,7 @@ namespace arcade
 #if defined(DEBUG)
 	    std::cout << "Handling I/O operation" << std::endl;
 #endif
-	    handleIO(ret, readfds);
+	    handleIO(ret, readfds, writefds, exceptfds);
 	  }
 	else
 	  {
@@ -160,8 +187,7 @@ namespace arcade
 				   [&](std::unique_ptr<GameClient> const &e)
 				   {
 				     return (*e == gclient);
-				   }
-				   ));
+				   }));
     return (true);
   }
 
