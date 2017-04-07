@@ -16,7 +16,7 @@ public:
   Obstacle &operator=(Obstacle const &other) = default;
   virtual bool move(Map &map, Dir dir);
   virtual bool hit(Shoot const &shoot);
-  virtual void display(Map &map) const;
+  virtual void display(Map &map, double ratio = 0.0) const;
 
   ssize_t getPv() const;
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include "Sprite.hpp"
 #include "Centipede.hpp"
 
 namespace arcade
@@ -134,11 +135,15 @@ std::vector<std::pair<std::string, SoundType>> Centipede::getSoundsToLoad() cons
   return (std::vector<std::pair<std::string, SoundType>>());
 }
 
-std::vector<std::unique_ptr<ISprite>> &&Centipede::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Centipede::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
-  return (std::move(s));
+  //s.push_back(std::unique_ptr<ISprite>(new Sprite("assets/centipede/", "player", 1, ".png", "O")));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "player", 1, ".png", "A"));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "shoot", 2, ".png", "oo"));
+  s.push_back(std::make_unique<Sprite>("./assets/centipede/", "block", 1, ".png", "#"));
+  return (s);
 }
 
 void Centipede::placeObstacles()
@@ -162,7 +167,9 @@ void Centipede::process()
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)
     {
+      m_map->at(0, x, y).setColor(Color(20, 20, 20));
       m_map->at(1, x, y).setColor(Color::Transparent);
+      m_map->at(1, x, y).removeSprite();
     }
   };
   // Obstacles display and check destructed obstacles

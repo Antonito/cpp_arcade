@@ -13,12 +13,12 @@ namespace arcade
 		return (m_components.size());
 	}
 
-	IComponent & GUI::at(std::size_t n)
+	Component & GUI::at(std::size_t n)
 	{
 		return (m_components[n]);
 	}
 
-	IComponent const & GUI::at(std::size_t n) const
+	Component const & GUI::at(std::size_t n) const
 	{
 		return (m_components[n]);
 	}

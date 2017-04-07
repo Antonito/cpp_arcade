@@ -23,7 +23,7 @@ public:
 
   virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
 
-  virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+  virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
   virtual void process();
 

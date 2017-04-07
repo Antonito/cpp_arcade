@@ -35,9 +35,10 @@ Shoot Player::shoot(Map &map) const
     return (Shoot(shoot_pos, m_dir, map));
 }
 
-void Player::display(Map &map) const
+void Player::display(Map &map, double ratio) const
 {
-    map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
+    //map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
+    map.at(1, m_pos.getX(), m_pos.getY()).setSprite(0);
 }
 
 Dir Player::getDir() const

@@ -20,7 +20,7 @@ public:
   AEntity &operator=(AEntity const &other) = default;
   virtual bool move(Map &map, Dir dir) = 0;
   virtual bool hit(Shoot const &shoot) = 0;
-  virtual void display(Map &map) const = 0;
+  virtual void display(Map &map, double ratio) const = 0;
   Pos const &getPos() const;
 
 protected:

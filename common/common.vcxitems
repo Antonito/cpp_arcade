@@ -23,6 +23,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Layer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Map.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Sound.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Sprite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SpriteRef.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Tile.cpp" />
   </ItemGroup>
@@ -49,6 +50,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)src\NetworkPacket.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Protocol.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Sound.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Sprite.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\SpriteRef.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Tile.hpp" />
   </ItemGroup>

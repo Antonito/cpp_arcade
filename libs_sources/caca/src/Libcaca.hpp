@@ -50,7 +50,7 @@ namespace arcade
     static std::map<int, KeyboardKey> m_kb_keys;
     static std::map<int, MouseKey> m_mouse_keys;
 
-    static constexpr size_t m_tileSize = 24;
+    static constexpr size_t m_tileSize = 1;
     size_t m_width;
     size_t m_height;
     caca_display_t *m_win;

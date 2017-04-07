@@ -34,9 +34,10 @@ bool Obstacle::hit(Shoot const &shoot)
     return false;
 }
 
-void Obstacle::display(Map &map) const
+void Obstacle::display(Map &map, double ratio) const
 {
-    map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Green);
+    //map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Green);
+    map.at(1, m_pos.getX(), m_pos.getY()).setSprite(2);
 }
 
 ssize_t Obstacle::getPv() const

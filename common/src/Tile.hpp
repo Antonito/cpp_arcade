@@ -33,6 +33,7 @@ class Tile : public ITile
 	virtual void prevSprite();
 	virtual void setSpritePos(size_t pos);
 	virtual void setSprite(size_t id);
+        void removeSprite();
 
 	virtual double getShiftX() const;
 	virtual double getShiftY() const;
@@ -49,6 +50,7 @@ class Tile : public ITile
 	SpriteRef m_sprite;
 	double m_shiftX;
 	double m_shiftY;
+        bool m_hasSprite;
 };
 }
 

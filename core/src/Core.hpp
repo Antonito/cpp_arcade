@@ -21,13 +21,13 @@ namespace arcade
 
 		Core &operator=(Core const &other) = delete;
 
-		void launch();
+		void launch(std::string const &lib);
 
 	private:
 		GameState gameLoop();
 		GameState menuLoop();
 
-		void initLists();
+		void initLists(std::string const &lib);
 
 		static bool isNameValid(std::string const &name,
 			std::string const &prefix, std::string const &sufix);
@@ -55,10 +55,19 @@ namespace arcade
 		virtual void notifyEvent(std::vector<Event> &&events);
 		virtual std::vector<std::pair<std::string, SoundType> > getSoundsToLoad() const;
 		virtual void process();
-		virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+		virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 #if defined(__linux__)
 		virtual WhereAmI *getWhereAmI() const;
 #endif
+
+                // Main menu
+                size_t m_firstLibIndex;
+                size_t m_firstGameIndex;
+
+                size_t m_selectedLibId;
+                size_t m_selectedGameId;
+
+                bool m_menuLib;
 	};
 }
 

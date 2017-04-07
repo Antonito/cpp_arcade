@@ -62,10 +62,13 @@ bool Shoot::touchObstacles(std::vector<Obstacle> &obstacles)
     return (false);
 }
 
-void Shoot::display(Map &map) const
+void Shoot::display(Map &map, double ratio) const
 {
     if (m_shot)
-        map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Yellow);
+    {
+        //map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Yellow);
+        map.at(1, m_pos.getX(), m_pos.getY()).setSprite(1);
+    }
 }
 
 Dir Shoot::getDir() const

@@ -24,7 +24,7 @@ public:
 
   virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
 
-  virtual std::vector<std::unique_ptr<ISprite>> &&getSpritesToLoad() const;
+  virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
   virtual void process();
 
@@ -39,7 +39,10 @@ private:
   Dir m_dir;
   size_t m_lastTick;
   size_t m_curTick;
+  size_t m_score;
 };
 }
+
+extern "C" void Play(void);
 
 #endif // !SNAKE_HPP_

@@ -80,7 +80,7 @@ bool Enemy::hit(Shoot const &shoot)
     return false;
 }
 
-void Enemy::display(Map &map) const
+void Enemy::display(Map &map, double ratio) const
 {
     map.at(1, m_pos.getX(), m_pos.getY()).setColor(Color::Blue);
 

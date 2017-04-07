@@ -107,11 +107,11 @@ std::vector<std::pair<std::string, SoundType>> Pong::getSoundsToLoad() const
   return (std::vector<std::pair<std::string, SoundType>>());
 }
 
-std::vector<std::unique_ptr<ISprite>> &&Pong::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Pong::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
-  return (std::move(s));
+  return (s);
 }
 
 void Pong::process()

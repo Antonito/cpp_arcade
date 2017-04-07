@@ -18,7 +18,7 @@ public:
   Shoot &operator=(Shoot const &other) = default;
   virtual bool move(Map &map, Dir dir);
   virtual bool hit(Shoot const &shoot);
-  virtual void display(Map &map) const;
+  virtual void display(Map &map, double ratio = 0.0) const;
 
   bool touchCenti(std::vector<Enemy> &centipedes, std::vector<Obstacle> &obstacles, Map &map);
   bool touchObstacles(std::vector<Obstacle> &obstacles);

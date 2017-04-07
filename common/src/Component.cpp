@@ -5,6 +5,15 @@ namespace arcade
 	Component::Component()
 	{}
 
+        Component::Component(double x, double y, double width, double height,
+          Color color, std::string const & text) :
+          m_pos({ x, y }),
+          m_size({ width, height }),
+          m_color(color),
+          m_text(text)
+        {
+        }
+
 	Component::~Component()
 	{}
 
@@ -76,6 +85,11 @@ namespace arcade
 	void Component::setText(std::string const & text)
 	{
 		m_text = text;
+	}
+
+	Color Component::getTextColor() const
+	{
+	  return (Color());
 	}
 
 	void Component::setClicked()

@@ -1,6 +1,10 @@
 #ifndef AGAME_HPP_
 #define AGAME_HPP_
 
+#ifndef __linux__
+# define __linux__
+#endif
+
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -36,7 +40,7 @@ namespace arcade
 
 		// Sound
 		virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
-		virtual std::vector<int>         &&getSoundsToPlay();
+		virtual std::vector<Sound>         getSoundsToPlay();
 
 		// Map
 		virtual IMap const &getCurrentMap() const;
@@ -60,7 +64,7 @@ namespace arcade
 		std::vector<NetworkPacket> m_toSend;
 
 		// Sounds to play buffer
-		std::vector<int> m_soundsToPlay;
+		std::vector<Sound> m_soundsToPlay;
 
 		// Game map
 		std::unique_ptr<Map> m_map;
@@ -72,6 +76,9 @@ namespace arcade
 		typedef std::chrono::high_resolution_clock m_clock_t;
 
 		std::chrono::time_point<m_clock_t> m_startTick;
+
+                bool m_mouliMode;
+                mutable size_t m_fakeTick;
 	};
 }
 

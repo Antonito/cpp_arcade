@@ -4,9 +4,9 @@ NAME=			$(PROJECT_DIR)/lib/lib_arcade_sdl.so
 LOCAL_COMP_FLAGS=	-fPIC
 
 ifeq ($(UNAME_S),Darwin)
-LOCAL_LINK_FLAGS=	-shared -F/Library/Frameworks -framework SDL2
+LOCAL_LINK_FLAGS=	-shared -F/Library/Frameworks -framework SDL2 SDL2_ttf
 else
-LOCAL_LINK_FLAGS=	-shared -lSDL2
+LOCAL_LINK_FLAGS=	-shared -lSDL2 -lSDL2_image -lpng -lSDL2_ttf
 endif
 
 LOCAL_LINK_FLAGS+=	-L$(PROJECT_DIR)/build -larcade_common

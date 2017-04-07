@@ -17,7 +17,7 @@ public:
   Powerup &operator=(Powerup const &other) = default;
   virtual bool move(Map &map, Dir dir);
   virtual bool hit(Shoot const &shoot);
-  virtual void display(Map &map) const;
+  virtual void display(Map &map, double ratio = 0.0) const;
 
   void setTaken(bool taken);
   void replace(Map &map, Pos const &pos);
@@ -25,6 +25,7 @@ public:
 
 private:
   bool m_taken;
+  size_t m_sprite;
 };
 }
 
