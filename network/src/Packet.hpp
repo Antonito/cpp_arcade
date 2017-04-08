@@ -60,6 +60,26 @@ namespace arcade
       {
       };
 
+      void	handleAction(std::function <void (NetworkPlayerEvent const &)> _play,
+			     std::function <void (NetworkGameEvent<gameEventLen> const &)> _game,
+			     std::function <void (NetworkEntityEvent<EntityDataType> const &)> _entity)
+      {
+	switch (action)
+	  {
+	  case PLAYER_EVENT:
+	    _play(player);
+	    break;
+	  case GAME_EVENT:
+	    _game(game);
+	    break;
+	  case ENTITY_EVENT:
+	    _entity(entity);
+	    break;
+	  default:
+	    break;
+	  }
+      }
+
       arcade::NetworkAction			action;
       union
       {

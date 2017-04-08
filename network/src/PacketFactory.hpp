@@ -41,15 +41,17 @@ namespace arcade
 	// Fill header
 	head->magicNumber = htonl(arcade::NetworkPacketHeader::packetMagicNumber);
 	head->game = static_cast<arcade::NetworkGames>(htons(static_cast<uint16_t>(game)));
-	pck->len = htonl(sizeof(NetworkPacketHeader) + sizeof(uint32_t) + sizeof(NetworkPacketData<gameEventLen, EntityDataType>));
+	pck->len = htonl(sizeof(NetworkPacketData<gameEventLen, EntityDataType>));
 	head->checksum = head->magicNumber + head->game + pck->len;
 	curChck = head->checksum;
 
 	// Fill datas && calc checksum
 	NetworkPacketData<gameEventLen, EntityDataType>	*data = new NetworkPacketData<gameEventLen, EntityDataType>;
 	pck->data = reinterpret_cast<uint8_t *>(data);
+	std::memset(pck->data, 0, ntohl(pck->len));
 	callback(*data);
 	calcChecksum(ntohl(pck->len), pck->data, head->checksum);
+	std::cout << (head->checksum == curChck) << std::endl;
 	if (head->checksum == curChck)
 	  {
 	    throw arcade::Network::PacketError("Checksum not computed");
@@ -61,6 +63,7 @@ namespace arcade
     private:
       void	calcChecksum(uint32_t const len, uint8_t const *data, uint32_t &checksum) const
       {
+	std::cout << "Len: " << len << std::endl;
 	for (uint32_t i = 0; i < len; ++i)
 	  {
 	    checksum += data[i];
