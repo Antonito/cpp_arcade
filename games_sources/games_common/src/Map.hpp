@@ -2,15 +2,16 @@
 #define MAP_HPP_
 
 #include <cstdlib>
+#include <string>
 #include "IMap.hpp"
 #include "Layer.hpp"
 
 namespace arcade
 {
-  namespace game
-  {
-    class Map : public IMap
-    {
+namespace game
+{
+class Map : public IMap
+{
     public:
       Map(size_t width, size_t height);
 
@@ -25,13 +26,14 @@ namespace arcade
       virtual size_t getWidth() const;
       virtual size_t getHeight() const;
       void addLayer();
+      void loadMap(std::string const &path);
 
     private:
       std::vector<Layer> m_layers;
       size_t m_width;
       size_t m_height;
-    };
-  }
+};
+}
 }
 
 #endif // !MAP_HPP_
