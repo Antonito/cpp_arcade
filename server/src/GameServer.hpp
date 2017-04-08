@@ -5,9 +5,11 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
+#include <sys/select.h>
 #include "IServer.hpp"
 #include "TCPSocket.hpp"
 #include "GameClient.hpp"
+#include "PacketFactory.hpp"
 
 namespace arcade
 {
@@ -27,8 +29,12 @@ namespace arcade
     void		wait();
   private:
     void		_server();
-    void		handleIO(int sock, fd_set const &readfds);
+    void		authenticateClient(GameClient &client);
+    void		handleIO(int sock, fd_set const &readfds,
+				 fd_set const &writefds,
+				 fd_set const &exceptfds);
 
+    Network::PacketFactory			m_fact;
     Network::TCPSocket				m_sock;
     std::vector<std::unique_ptr<GameClient>>	m_clients;
     std::atomic<bool>				m_running;

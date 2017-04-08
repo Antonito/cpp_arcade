@@ -36,8 +36,11 @@ NETWORK=		network
 
 SERVER=			server
 
+EXCEPTIONS=		exceptions
+
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
+			./$(EXCEPTIONS)					\
 			./$(NETWORK)/					\
 			$(GFX_PROJECT)					\
 			$(GAME_PROJECT)					\
@@ -55,7 +58,7 @@ PRINT_DIR=		$(ECHO) "$(YELLOW)$(path) :$(CLEAR)\n";
 
 # Rules
 
-all: #			update
+all:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path);)
@@ -71,6 +74,10 @@ $(GFX_LIBS):
 $(COMMON):
 			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(COMMON)
+
+$(EXCEPTIONS):
+			@$(ECHO) "$(YELLOW)./$(EXCEPTIONS)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(EXCEPTIONS)
 
 $(NETWORK):
 			@$(ECHO) "$(YELLOW)./$(NETWORK)/ :$(CLEAR)\n"
@@ -104,7 +111,7 @@ fclean:
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) fclean;)
 
-re:			link
+re:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) re;)

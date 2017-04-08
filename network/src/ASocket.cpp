@@ -3,7 +3,9 @@
 #include <netdb.h>
 #endif
 
+#include <csignal>
 #include <cassert>
+#include <iostream> // TODO: RM
 #include "ASocket.hpp"
 #include "SockError.hpp"
 
@@ -20,6 +22,7 @@ namespace arcade
         : m_socket(-1), m_port(0), m_host(""), m_ip(false), m_maxClients(0),
           m_curClients(0), m_addr{}, m_type(type)
     {
+      std::signal(SIGPIPE, SIG_IGN);
 #if defined(_WIN32)
       // Do we need to load the network DLL ?
       if (!m_nbSockets && !initWSA())
@@ -163,7 +166,7 @@ namespace arcade
 		}
 	      catch (std::exception &e)
 		{
-		  // TODO: Logger ?
+		  std::cerr << e.what() << std::endl;
 		  break;
 		}
 #if defined(__linux__) || defined(__APPLE__)
@@ -174,6 +177,7 @@ namespace arcade
 #endif
 	      if (ret != -1)
 		{
+		  std::cout << "Connected to host !" << std::endl;
 		  if (typeBackup == ASocket::NONBLOCKING)
 		    {
 		      m_type = ASocket::NONBLOCKING;
@@ -210,7 +214,8 @@ namespace arcade
 	  if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable,
 			 sizeof(enable)) < 0)
 	    {
-	      throw Network::SockError("Cannot set socket options");
+	      if (errno != EINVAL)
+		throw Network::SockError("Cannot set socket options");
 	    }
 	}
     }
