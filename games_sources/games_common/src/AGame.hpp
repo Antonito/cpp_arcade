@@ -4,9 +4,9 @@
 // TODO: REMOVE
 // TODO: REMOVE
 // TODO: REMOVE
-#ifndef __linux__
-# define __linux__
-#endif
+//#ifndef __linux__
+//# define __linux__
+//#endif
 // TODO: REMOVE
 // TODO: REMOVE
 // TODO: REMOVE
