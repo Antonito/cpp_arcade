@@ -33,6 +33,7 @@ int	main()
 								    });
   size_t const len = sizeof(arcade::NetworkPacketHeader) + sizeof(uint32_t);
   std::unique_ptr<uint8_t[]> rawPck = std::make_unique<uint8_t[]>(len + ntohl(pck->len));
+  //std::unique_ptr<uint8_t[]> rawPck(new uint8_t[len + ntohl(pck->len)]);
   std::memcpy(rawPck.get(), pck.get(), len);
   std::memcpy(reinterpret_cast<uint8_t *>(rawPck.get()) + len, pck->data, ntohl(pck->len));
   if (sock.send(rawPck.get(), len + ntohl(pck->len)) < 0)

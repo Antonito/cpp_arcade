@@ -17,6 +17,7 @@ namespace std
     void operator()(arcade::NetworkPacket* ptr)
     {
       delete ptr->data;
+      delete ptr;
     }
   };
 }
