@@ -1,5 +1,5 @@
-#ifndef PLAYER_HPP_
-#define PLAYER_HPP_
+#ifndef FRUIT_HPP_
+#define FRUIT_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
@@ -11,16 +11,16 @@ namespace game
 {
 namespace snake
 {
-class Player : public AMovable
+class Fruit : public AEntity
 {
 
 public:
-  Player();
-  Player(Player const &other) = default;
-  virtual ~Player();
+  Fruit(Pos const &pos);
+  Fruit(Fruit const &other) = default;
+  virtual ~Fruit();
   virtual void display(Map &map, double ratio) const;
 };
 }
 }
 }
-#endif // !PLAYER_HPP_
+#endif // !FRUIT_HPP_

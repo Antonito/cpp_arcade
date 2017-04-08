@@ -6,20 +6,20 @@
 
 namespace arcade
 {
-  namespace game
-  {
-    class AMovable : public AEntity
-    {
-    public:
-      AMovable();
-      AMovable(AMovable const &other) = default;
-      virtual ~AMovable();
+namespace game
+{
+class AMovable : public AEntity
+{
+public:
+  AMovable();
+  AMovable(AMovable const &other) = default;
+  virtual ~AMovable();
 
-      AMovable &operator=(AMovable const &other) = default;
+  AMovable &operator=(AMovable const &other) = default;
 
-      void move(Direction dir);
-    };
-  }
+  virtual void move();
+};
+}
 }
 
 #endif // !AMOVABLE_HPP_

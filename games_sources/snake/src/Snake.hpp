@@ -6,37 +6,40 @@
 
 namespace arcade
 {
-  namespace game
-  {
-    namespace snake
-    {
-      class Snake : public AGame
-      {
+namespace game
+{
+namespace snake
+{
+class Snake : public AGame
+{
 
-      public:
-        Snake();
-        Snake(Snake const &other);
-        ~Snake();
+public:
+  Snake();
+  Snake(Snake const &other);
+  ~Snake();
 
-        Snake &operator=(Snake const &other);
+  Snake &operator=(Snake const &other);
 
-        virtual void notifyEvent(std::vector<Event> &&events);
+  virtual void notifyEvent(std::vector<Event> &&events);
 
-        virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
+  virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
 
-        virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
+  virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
-        virtual void process();
+  virtual void process();
 
 #if defined(__linux__)
-        virtual WhereAmI *getWhereAmI() const;
+  virtual WhereAmI *getWhereAmI() const;
 #endif
-      private:
-        size_t m_lastTick;
-        size_t m_curTick;
-      };
-    }
-  }
+private:
+  Player m_player;
+  Fruit m_fruit;
+  Direction m_tmpDir;
+  size_t m_lastTick;
+  size_t m_curTick;
+};
+}
+}
 }
 
 extern "C" void Play(void);

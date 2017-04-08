@@ -1,4 +1,4 @@
-#include "Player.hpp"
+#include "Fruit.hpp"
 
 namespace arcade
 {
@@ -6,7 +6,7 @@ namespace game
 {
 namespace snake
 {
-Player::Player()
+Fruit::Fruit(Pos const &pos)
 {
 }
 
@@ -14,7 +14,7 @@ void display(Map &map, double ratio) const
 {
     for (Pos const &p : m_pos)
     {
-        map->at(1, p.x, p.y).setColor(Color::Red);
+        map->at(1, p.x, p.y).setColor(Color::Green);
     }
 }
 }
