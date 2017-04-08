@@ -71,7 +71,9 @@ namespace arcade
 		    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
 		    for (std::unique_ptr<GameClient> const &_client : m_clients)
 		      {
-			_client->sendData(queue.back());
+			// Send packets to players on the same game
+			if (_client.getGame() == client.getGame())
+			  _client->sendData(queue.back());
 		      }
 		    queue.pop();
 		  }
