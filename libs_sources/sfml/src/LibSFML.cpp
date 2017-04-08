@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include "LibSFML.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -11,7 +12,7 @@ namespace arcade
       m_mousePos = sf::Mouse::getPosition(*m_win);
       if (!m_font.loadFromFile("assets/fonts/arial.ttf"))
       {
-        throw std::exception();
+        throw RessourceError("Cannot load assets/fonts/arial.ttf");
       }
   }
 
@@ -110,7 +111,7 @@ namespace arcade
 	    if (!cur->openFromFile(p.first))
 	      {
 		std::cerr << "Cannot open music: " << p.first << std::endl;
-		throw std::exception(); // TODO
+		throw RessourceError("Error loading music");
 	      }
 	  }
 	else
@@ -120,7 +121,7 @@ namespace arcade
 	    if (!buf->loadFromFile(p.first))
 	      {
 		std::cerr << "Cannot open sound: " << p.first << std::endl;
-		throw std::exception(); // TODO
+		throw RessourceError("Error loading sound");
 	      }
 	    m_sound.push_back(std::make_unique<sf::Sound>());
 	    sf::Sound *cur = m_sound.back().get();
@@ -139,7 +140,7 @@ namespace arcade
     // Move the given vector
     std::vector<std::unique_ptr<ISprite>> sp(std::move(sprites));
 
-    // Remove all the current sprites 
+    // Remove all the current sprites
     m_sprites.clear();
 
     // Loop on every sprites
@@ -158,7 +159,7 @@ namespace arcade
         // Load the current image
         if (!tex.loadFromFile(s->getGraphicPath(i)))
         {
-          throw std::exception();
+          throw RessourceError("Error loading image");
         }
       }
     }
@@ -233,7 +234,7 @@ namespace arcade
 	size_t y = comp.getY() * size.y;
 	size_t width = comp.getWidth() * size.x;
 	size_t height = comp.getHeight() * size.y;
-	
+
         // Get the component properties
         size_t backgroundId = comp.getBackgroundId();
         Color color = comp.getBackgroundColor();
@@ -243,7 +244,7 @@ namespace arcade
         if (comp.hasSprite() || color.a != 0)
         {
           sf::RectangleShape shape;
-          
+
           // Set texture OR color
           if (comp.hasSprite())
             shape.setTexture(&m_sprites[backgroundId][0]);
