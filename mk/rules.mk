@@ -1,10 +1,10 @@
-OBJ_DIR=	${PWD}/obj/
+OBJ_DIR=	$(ROOT_DIR)/obj/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 NAME_EXTENSION=	$(suffix $(NAME))
 
-$(NAME):	prepare_obj_dir $(OBJ)
+$(NAME):	$(OBJ_DIR_LIST) $(OBJ)
 ifeq ($(NAME_EXTENSION),.a)
 		@$(RANLIB) $(NAME) $(OBJ) && \
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Generated $(CYAN)"$(NAME)"\n$(CLEAR)" || \
@@ -19,6 +19,11 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp
 		@$(CXX) $(CXXFLAGS) -c -o $@ $< && \
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Compiled "$<"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Compiled "$<"\n$(CLEAR)"
+
+$(OBJ_DIR_LIST):
+		$(MKDIR) $@ && \
+		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$@"\n$(CLEAR)" || \
+		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$@"\n$(CLEAR)"
 
 all:		$(NAME)
 
@@ -44,14 +49,5 @@ re:		fclean all
 
 run:
 		./$(NAME)
-
-mk_obj_dir=	$(if $(shell if [ ! -d $(1) ]; then echo "1"; fi),\
-			$(MKDIR) $(1) && \
-			$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$(1)"\n$(CLEAR)" || \
-			$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$(1)"\n$(CLEAR)"; \
-		)
-
-prepare_obj_dir:
-		@$(foreach dir, $(OBJ_DIR_LIST), $(call mk_obj_dir,$(dir)))
 
 .PHONY: all clean fclean re run install prepare_obj_dir

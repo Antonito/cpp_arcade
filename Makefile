@@ -50,8 +50,7 @@ PROJECTS=		./$(COMMON)/					\
 # Some useful variables
 DEBUG=			no
 
-PROJECT_DIR=		${PWD}
-ARGS=			DEBUG=$(DEBUG) PROJECT_DIR=$(PROJECT_DIR) -s --warn-undefined-variables -C
+ARGS=			DEBUG=$(DEBUG) -s --warn-undefined-variables -C
 
 CURRENT_DIR=		${PWD}
 

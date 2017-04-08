@@ -75,6 +75,8 @@ namespace arcade
       {
         tile.setColor(color);
         tile.removeSprite();
+        tile.setShiftX(0);
+        tile.setShiftY(0);
       }
     }
 
@@ -84,6 +86,8 @@ namespace arcade
       {
         tile.setColor(color);
         tile.setSprite(sprite);
+        tile.setShiftX(0);
+        tile.setShiftY(0);
       }
     }
 

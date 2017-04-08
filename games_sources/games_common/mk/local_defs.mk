@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(PROJECT_DIR)/build/libgames_common.a
+NAME=			$(ROOT_DIR)/build/libgames_common.a
 
 LOCAL_COMP_FLAGS=	-fPIC
 

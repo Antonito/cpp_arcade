@@ -90,41 +90,34 @@ void Map::addLayer()
 
 void Map::loadMap(std::string const &path)
 {
-    std::stringstream map;
-    std::ifstream file;
-    std::string tmp;
-
-    std::cout << path << std::endl;
-    file.open(path.c_str());
-    if (file.is_open())
+  std::stringstream map;
+  std::ifstream file;
+  std::string tmp;
+  
+  file.open(path.c_str());
+  if (file.is_open())
+  {
+    map << file.rdbuf();
+    file.close();
+  }
+  else
+    throw std::exception();
+  map >> m_width;
+  map >> m_height;
+  std::getline(map, tmp);
+  addLayer();
+  if (m_width * m_height > map.str().size())
+  {
+    throw std::exception();
+  }
+  for (size_t y = 0; std::getline(map, tmp) && y < m_height; y++)
+  {
+    for (size_t x = 0; x < tmp.size() && x < m_width; x++)
     {
-        map << file.rdbuf();
-        file.close();
+      if (tmp[x] >= '0' && tmp[x] <= '9')
+        m_layers[0].at(x, y).setType(static_cast<TileType>(tmp[x] - '0'));
     }
-    else
-        throw std::exception();
-    map >> m_width;
-    map >> m_height;
-    std::cout << m_width << std::endl;
-    std::cout << m_height << std::endl;
-    std::getline(map, tmp);
-    addLayer();
-    if (m_width * m_height <= map.str().size())
-    {
-        for (size_t y = 0; std::getline(map, tmp) && y < m_height; y++)
-        {
-            std::cout << " y = " << y << std::endl;
-            std::cout << tmp << std::endl;
-            for (size_t x = 0; x < tmp.size() && x < m_width; x++)
-            {
-                std::cout << "x = " << x << std::endl;
-                if (tmp[x] >= '0' && tmp[x] <= '9')
-                    m_layers[0].at(x, y).setType(static_cast<TileType>(tmp[x] - '0'));
-            }
-        }
-    }
-    else
-        throw std::exception();
+  }
 }
 
 void Map::clear(Color color)

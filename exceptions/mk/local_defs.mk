@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(PROJECT_DIR)/build/libarcade_exceptions.a
+NAME=			$(ROOT_DIR)/build/libarcade_exceptions.a
 
 LOCAL_COMP_FLAGS=	-fPIC
 

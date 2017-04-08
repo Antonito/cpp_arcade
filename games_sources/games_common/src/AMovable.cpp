@@ -20,10 +20,6 @@ void AMovable::move()
     return;
   }
 
-  std::cout << m_pos[0].x << std::endl;
-  std::cout << m_pos[0].x << std::endl;
-  std::cout << static_cast<int>(m_dir) << std::endl;
-
   m_pos.insert(m_pos.begin(), m_pos[0] + m_dir);
   m_pos.erase(m_pos.end() - 1);
 }

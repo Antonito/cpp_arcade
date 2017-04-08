@@ -20,6 +20,11 @@ namespace arcade
       return (m_state);
     }
 
+    tick_t AGame::getTickRate() const
+    {
+      return (60.0);
+    }
+
     void AGame::notifyNetwork(std::vector<NetworkPacket> &&events)
     {
       m_received = events;
@@ -46,19 +51,18 @@ namespace arcade
     }
 
 #if defined(__linux__)
-    GetMap *AGame::getMap() const
+    void AGame::getMap(std::ostream &os) const
     {
       // Allocate the struct
-      size_t size = sizeof(GetMap) + (m_map->getWidth() * m_map->getHeight()) * sizeof(TileType);
-      GetMap *map = reinterpret_cast<GetMap *>(new uint8_t[size]);
+      GetMap header = { CommandType::GET_MAP,
+        static_cast<uint16_t>(m_map->getWidth()),
+        static_cast<uint16_t>(m_map->getHeight()), };
+      std::unique_ptr<TileType[]> map(new TileType[header.width * header.height]);
 
       // Prepare the struct
-      map->type = CommandType::GET_MAP;
-      map->width = m_map->getWidth();
-      map->height = m_map->getHeight();
-      for (size_t i = 0; i < m_map->getWidth() * m_map->getHeight(); ++i)
+      for (size_t i = 0; i < header.width * header.height; ++i)
       {
-        map->tile[i] = TileType::EMPTY;
+        map[i] = TileType::EMPTY;
       }
 
       // Fill the data
@@ -72,12 +76,14 @@ namespace arcade
 
             if (type != TileType::EMPTY)
             {
-              map->tile[y * map->width + x] = type;
+              map[y * header.width + x] = type;
             }
           }
         }
       }
-      return (map);
+      
+      os.write(reinterpret_cast<char *>(&header), sizeof(GetMap));
+      os.write(reinterpret_cast<char *>(map.get()), header.width * header.height * sizeof(TileType));
     }
 
     void AGame::Play(void)
@@ -91,6 +97,9 @@ namespace arcade
       ev.action = AT_PRESSED;
       m_mouliMode = true;
       m_state = INGAME;
+      this->process();
+      this->process();
+      this->process();
 
       while (m_state == INGAME)
       {
@@ -109,53 +118,37 @@ namespace arcade
         switch (type)
         {
         case CommandType::WHERE_AM_I:
-        {
-          WhereAmI *w = this->getWhereAmI();
-
-          std::cout.write(reinterpret_cast<char *>(w), sizeof(WhereAmI) + w->lenght * sizeof(Position));
-          delete[] w;
+          this->WhereAmI(std::cout);
           break;
-        }
         case CommandType::GET_MAP:
-        {
-          GetMap *m = this->getMap();
-
-          std::cout.write(reinterpret_cast<char *>(m), sizeof(GetMap) + m->width * m->height * sizeof(TileType));
-          delete[] m;
+          this->getMap(std::cout);
           break;
-        }
         case CommandType::GO_UP:
           ev.kb_key = KB_ARROW_UP;
           events.push_back(ev);
-          play = true;
           break;
         case CommandType::GO_DOWN:
           ev.kb_key = KB_ARROW_DOWN;
           events.push_back(ev);
-          play = true;
           break;
         case CommandType::GO_LEFT:
           ev.kb_key = KB_ARROW_LEFT;
           events.push_back(ev);
-          play = true;
           break;
         case CommandType::GO_RIGHT:
           ev.kb_key = KB_ARROW_RIGHT;
           events.push_back(ev);
-          play = true;
           break;
         case CommandType::GO_FORWARD:
-          play = true;
           break;
         case CommandType::SHOOT:
           ev.kb_key = KB_SPACE;
           events.push_back(ev);
-          play = true;
           break;
         case CommandType::PLAY:
+          play = true;
           break;
         default:
-          play = true;
           break;
         }
       }
