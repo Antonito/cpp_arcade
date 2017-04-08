@@ -27,10 +27,16 @@ namespace arcade
     bool hasDataToSend() const;
 
     std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	&getRecQueue();
-    void		        sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> &pck);
+    void		        sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> const &pck);
+
+    NetworkGames	getGame() const;
+    void		setGame(NetworkGames game);
 
     bool operator==(GameClient const &);
     sock_t getSock() const;
+    void authenticate();
+    bool isAuthenticated() const;
+
   private:
     sock_t	m_sock;
     size_t	m_buffSize;
@@ -39,6 +45,8 @@ namespace arcade
     std::chrono::time_point<std::chrono::system_clock> m_lastActionDate;
     std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	m_recQueue;
     std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	m_sendQueue;
+    bool	m_authenticated;
+    NetworkGames	m_game;
   };
 }
 

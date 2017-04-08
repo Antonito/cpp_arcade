@@ -2,10 +2,12 @@
 #include <algorithm>
 #include <iostream>
 #include "GameServer.hpp"
+#include "Packet.hpp"
 
 namespace arcade
 {
   GameServer::GameServer(int16_t port, uint32_t maxClients) :
+    m_fact(),
     m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
     m_running(false), m_mutex()
   {
@@ -58,13 +60,21 @@ namespace arcade
 	      }
 	    else if (action == GameClient::ClientAction::SUCCESS)
 	      {
-		// Send data to every players
-		std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
-		for (std::unique_ptr<GameClient> const &_client : m_clients)
+		if (!client->isAuthenticated())
 		  {
-		    _client->sendData(queue.back());
+		    // Authenticate client
+		    authenticateClient(*client);
 		  }
-		queue.pop();
+		else
+		  {
+		    // Send data to every players
+		    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
+		    for (std::unique_ptr<GameClient> const &_client : m_clients)
+		      {
+			_client->sendData(queue.back());
+		      }
+		    queue.pop();
+		  }
 	      }
 	    ++i;
 	  }
@@ -188,9 +198,41 @@ namespace arcade
     return (false);
   }
 
+  void		GameServer::authenticateClient(GameClient &client)
+  {
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	queue = client.getRecQueue();
+    NetworkPacket *pck = reinterpret_cast<NetworkPacket *>(queue.back().second.get());
+    Network::NetworkPacketData<0, bool> *data = reinterpret_cast<Network::NetworkPacketData<0, bool> *>(pck->data);
+
+#if defined(DEBUG)
+    std::cout << "Authenticating client" << std::endl;
+#endif
+    if (ntohl(pck->header.magicNumber) == NetworkPacketHeader::packetMagicNumber &&
+	static_cast<arcade::NetworkAction>(ntohl(static_cast<uint32_t>(data->action))) == arcade::NetworkAction::HELLO_EVENT)
+      {
+	uint32_t	pckLen;
+	client.setGame(static_cast<NetworkGames>(ntohl(static_cast<uint32_t>(pck->header.game))));
+	std::unique_ptr<arcade::NetworkPacket> pck =
+	  m_fact.create<0, uint8_t>(client.getGame(), [&](Network::NetworkPacketData<0, uint8_t> &packet){
+	      packet.action = static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
+	      packet.auth = true;
+	    });
+	pckLen = ntohl(pck->len);
+	uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.release());
+	std::shared_ptr<uint8_t> shPck(tmp);
+
+	client.sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(pckLen, shPck));
+	queue.pop();
+#if defined(DEBUG)
+	std::cout << "Authentication successful" << std::endl;
+#endif
+	client.authenticate();
+      }
+  }
+
   bool GameServer::removeClient(Network::IClient &client)
   {
-    GameClient &gclient = dynamic_cast<GameClient &>(client);
+    GameClient &gclient = static_cast<GameClient &>(client);
 
     gclient.disconnect();
     m_clients.erase(std::remove_if(m_clients.begin(), m_clients.end(),

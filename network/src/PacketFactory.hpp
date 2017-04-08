@@ -31,7 +31,7 @@ namespace arcade
       ~PacketFactory(){};
 
       template<size_t gameEventLen, typename EntityDataType>
-      std::unique_ptr<arcade::NetworkPacket> create(arcade::NetworkGames const game, uint32_t len,
+      std::unique_ptr<arcade::NetworkPacket> create(arcade::NetworkGames const game,
 						    std::function< void (NetworkPacketData<gameEventLen, EntityDataType> &)> callback) const
       {
 	std::unique_ptr<arcade::NetworkPacket>	pck = std::make_unique<arcade::NetworkPacket>();
@@ -41,7 +41,7 @@ namespace arcade
 	// Fill header
 	head->magicNumber = htonl(arcade::NetworkPacketHeader::packetMagicNumber);
 	head->game = static_cast<arcade::NetworkGames>(htons(static_cast<uint16_t>(game)));
-	pck->len = htonl(len);
+	pck->len = htonl(sizeof(NetworkPacketHeader) + sizeof(uint32_t) + sizeof(NetworkPacketData<gameEventLen, EntityDataType>));
 	head->checksum = head->magicNumber + head->game + pck->len;
 	curChck = head->checksum;
 
@@ -49,7 +49,7 @@ namespace arcade
 	NetworkPacketData<gameEventLen, EntityDataType>	*data = new NetworkPacketData<gameEventLen, EntityDataType>;
 	pck->data = reinterpret_cast<uint8_t *>(data);
 	callback(*data);
-	calcChecksum(len, pck->data, head->checksum);
+	calcChecksum(ntohl(pck->len), pck->data, head->checksum);
 	if (head->checksum == curChck)
 	  {
 	    throw arcade::Network::PacketError("Checksum not computed");

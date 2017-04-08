@@ -63,6 +63,7 @@ namespace arcade
       arcade::NetworkAction			action;
       union
       {
+	bool					auth;
 	NetworkPlayerEvent			player;
 	NetworkGameEvent<gameEventLen>		game;
 	NetworkEntityEvent<EntityDataType>	entity;

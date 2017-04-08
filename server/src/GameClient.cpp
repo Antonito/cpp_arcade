@@ -9,7 +9,7 @@ namespace arcade
     m_sock(socket), m_buffSize(0),
     m_buff(std::make_unique<uint8_t[]>(GameClient::buffSize)),
     m_write(false), m_lastActionDate(std::chrono::system_clock::from_time_t(0)),
-    m_recQueue(), m_sendQueue()
+    m_recQueue(), m_sendQueue(), m_authenticated(false), m_game(NetworkGames::NO_GAME)
   {
   }
 
@@ -102,7 +102,27 @@ namespace arcade
     return (m_sock);
   }
 
-  void		        GameClient::sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> &pck)
+  void GameClient::authenticate()
+  {
+    m_authenticated = true;
+  }
+
+  bool GameClient::isAuthenticated() const
+  {
+    return (m_authenticated);
+  }
+
+  NetworkGames	GameClient::getGame() const
+  {
+    return (m_game);
+  }
+
+  void		GameClient::setGame(NetworkGames game)
+  {
+    m_game = game;
+  }
+
+  void		        GameClient::sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> const &pck)
   {
     m_sendQueue.push(pck);
   }
