@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "Pong.hpp"
 #include "Sprite.hpp"
 
@@ -7,15 +8,38 @@ namespace arcade
 {
   namespace game
   {
-    namespace Pong
+    namespace pong
     {
       Pong::Pong()
       {
+        m_map = std::make_unique<Map>(80, 50);
 
+        m_map->addLayer();
+        m_map->addLayer();
+
+        m_map->clearLayer(0, Color(30, 30, 30));
+        m_map->clearLayer(1);
+
+        size_t size = std::max(m_map->getHeight() / 10, static_cast<size_t>(10));
+        size_t y = (m_map->getHeight() - size) / 2;
+
+        for (size_t player = 0; player < 2; ++player)
+        {
+          for (size_t i = 0; i < size; ++i)
+          {
+            m_player[player].push(Position(player * (m_map->getWidth() - 3) + 1, y + i));
+          }
+        }
+        m_id = 0;
       }
 
-      Pong::Pong(Pong const &other)
+      Pong::Pong(Pong const &other) :
+        m_lastTick(other.m_lastTick),
+        m_curTick(other.m_curTick),
+        m_id(other.m_id)
       {
+        m_player[0] = other.m_player[0];
+        m_player[1] = other.m_player[1];
       }
 
       Pong::~Pong()
@@ -26,6 +50,11 @@ namespace arcade
       {
         if (this != &other)
         {
+          m_lastTick = other.m_lastTick;
+          m_curTick = other.m_curTick;
+          m_player[0] = other.m_player[0];
+          m_player[1] = other.m_player[1];
+          m_id = other.m_id;
         }
         return (*this);
       }
@@ -34,6 +63,31 @@ namespace arcade
       {
         std::vector<Event> ev = events;
 
+        for (Event const &e : ev)
+        {
+          if (e.type == ET_KEYBOARD && e.action == AT_PRESSED)
+          {
+            switch (e.kb_key)
+            {
+            case KB_ARROW_UP:
+              if (m_player[m_id][0].y > 0)
+              {
+                m_player[m_id].setDir(Direction::UP);
+                m_player[m_id].move();
+              }
+              break;
+            case KB_ARROW_DOWN:
+              if (m_player[m_id].last().y < m_map->getHeight() - 1)
+              {
+                m_player[m_id].setDir(Direction::DOWN);
+                m_player[m_id].move();
+              }
+              break;
+            default:
+              break;
+            }
+          }
+        }
       }
 
       std::vector<std::pair<std::string, SoundType>> Pong::getSoundsToLoad() const
@@ -52,13 +106,15 @@ namespace arcade
 
       void Pong::process()
       {
+        m_map->clearLayer(1);
+
+        m_player[0].display(*m_map);
+        m_player[1].display(*m_map);
       }
 
 #if defined(__linux__)
-      WhereAmI *Pong::getWhereAmI() const
+      void Pong::WhereAmI(std::ostream &) const
       {
-        // TODO: implement
-        return (nullptr);
       }
 #endif
     }
@@ -68,7 +124,7 @@ namespace arcade
 
 extern "C" void Play(void)
 {
-  arcade::game::Pong::Pong game;
+  arcade::game::pong::Pong game;
 
   game.Play();
 }

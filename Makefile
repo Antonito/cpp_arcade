@@ -55,7 +55,7 @@ PRINT_DIR=		$(ECHO) "$(YELLOW)$(path) :$(CLEAR)\n";
 
 # Rules
 
-all:			update
+all: #			update
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path);)

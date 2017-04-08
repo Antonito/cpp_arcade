@@ -3,6 +3,8 @@
 
 #include <cstdlib>
 #include "AGame.hpp"
+#include "Player.hpp"
+#include "Ball.hpp"
 
 namespace arcade
 {
@@ -16,7 +18,7 @@ namespace arcade
       public:
         Pong();
         Pong(Pong const &other);
-        ~Pong();
+        virtual ~Pong();
 
         Pong &operator=(Pong const &other);
 
@@ -29,12 +31,16 @@ namespace arcade
         virtual void process();
 
 #if defined(__linux__)
-        virtual WhereAmI *getWhereAmI() const;
+        virtual void WhereAmI(std::ostream &) const;
 #endif
       private:
 
         size_t m_lastTick;
         size_t m_curTick;
+
+        Ball m_ball;
+        Player m_player[2];
+        size_t m_id;
       };
     }
   }

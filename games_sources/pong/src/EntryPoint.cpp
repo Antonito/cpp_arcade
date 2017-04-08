@@ -3,7 +3,7 @@
 #include <cstdbool>
 #endif
 #include "IGame.hpp"
-#include "Snake.hpp"
+#include "Pong.hpp"
 
 #if defined(__linux__) || (__APPLE__)
 #define GAME_API
@@ -16,7 +16,7 @@ extern "C"
 {
 	GAME_API arcade::IGame * getGame()
 	{
-		return (new arcade::game::snake::Snake());
+		return (new arcade::game::pong::Pong());
 	}
 
 #if defined(_WIN32)
