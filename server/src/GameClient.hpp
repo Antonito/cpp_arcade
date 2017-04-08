@@ -4,8 +4,10 @@
 #include <cstdint>
 #include <memory>
 #include <chrono>
+#include <queue>
 #include "GenNetwork.hpp"
 #include "IClient.hpp"
+#include "NetworkPacket.hpp"
 
 namespace arcade
 {
@@ -22,6 +24,10 @@ namespace arcade
     virtual IClient::ClientAction read();
     virtual bool hasTimedOut() const;
     bool canWrite() const;
+    bool hasDataToSend() const;
+
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	&getRecQueue();
+    void		        sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> &pck);
 
     bool operator==(GameClient const &);
     sock_t getSock() const;
@@ -31,6 +37,8 @@ namespace arcade
     std::unique_ptr<uint8_t[]> m_buff;
     bool m_write;
     std::chrono::time_point<std::chrono::system_clock> m_lastActionDate;
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	m_recQueue;
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	m_sendQueue;
   };
 }
 

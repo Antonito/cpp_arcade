@@ -6,7 +6,7 @@
 namespace arcade
 {
   GameServer::GameServer(int16_t port, uint32_t maxClients) :
-    m_fact(), m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
+    m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
     m_running(false), m_mutex()
   {
     m_sock.openConnection();
@@ -55,6 +55,16 @@ namespace arcade
 	      {
 		// The client asked for a disconnection
 		removeClient(*client);
+	      }
+	    else if (action == GameClient::ClientAction::SUCCESS)
+	      {
+		// Send data to every players
+		std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
+		for (std::unique_ptr<GameClient> const &_client : m_clients)
+		  {
+		    _client->sendData(queue.back());
+		  }
+		queue.pop();
 	      }
 	    ++i;
 	  }
@@ -124,7 +134,7 @@ namespace arcade
 		cur = client->getSock();
 		FD_SET(cur, &readfds);
 		FD_SET(cur, &exceptfds);
-		if (client->canWrite())
+		if (client->canWrite() && client->hasDataToSend())
 		  FD_SET(cur, &writefds);
 		if (cur > maxSock)
 		  maxSock = cur;

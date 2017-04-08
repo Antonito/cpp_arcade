@@ -8,7 +8,7 @@ LINK_INTERFACE=		./link_interface.sh
 GFX_LIBS_DIR=		./libs_sources/
 
 GFX_LIBS=		allegro5	\
-			ncurses		\
+#			ncurses		\
 			sdl		\
 			sfml		\
 			caca		\
@@ -21,7 +21,7 @@ GFX_PROJECT=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))
 GAMES_DIR=		./games_sources/
 
 GAMES=			snake		\
-			centipede
+#			centipede
 
 GAME_PROJECT=		$(addprefix $(GAMES_DIR), $(GAMES))
 

@@ -1,4 +1,5 @@
 #include <sys/socket.h>
+#include <cstring>
 #include "GameClient.hpp"
 #include "Packet.hpp"
 
@@ -7,7 +8,8 @@ namespace arcade
   GameClient::GameClient(sock_t socket) :
     m_sock(socket), m_buffSize(0),
     m_buff(std::make_unique<uint8_t[]>(GameClient::buffSize)),
-    m_write(false), m_lastActionDate(std::chrono::system_clock::from_time_t(0))
+    m_write(false), m_lastActionDate(std::chrono::system_clock::from_time_t(0)),
+    m_recQueue(), m_sendQueue()
   {
   }
 
@@ -27,12 +29,17 @@ namespace arcade
   {
     ssize_t ret;
 
-    ret = send(m_sock, m_buff.get(), m_buffSize, 0);
+    // Fill buffer
+    std::pair<uint32_t, std::shared_ptr<uint8_t>> pair = m_sendQueue.back();
+
+    // Send buffer
+    ret = send(m_sock, pair.second.get(), pair.first, 0);
     m_lastActionDate = std::chrono::system_clock::now();
     if (ret == -1)
       {
 	return (ClientAction::FAILURE);
       }
+    m_sendQueue.pop();
     m_write = false;
     return (ClientAction::SUCCESS);
   }
@@ -52,6 +59,16 @@ namespace arcade
 	return (ClientAction::DISCONNECT);
       }
     m_buffSize = ret;
+    if (m_buffSize < sizeof(NetworkPacket))
+      {
+	return (ClientAction::FAILURE);
+      }
+
+    // Build packet
+    std::shared_ptr<uint8_t> pck(new uint8_t[m_buffSize], std::default_delete<uint8_t[]>());
+
+    std::memcpy(pck.get(), m_buff.get(), m_buffSize);
+    m_recQueue.push(std::pair<uint32_t, std::shared_ptr<uint8_t>>(m_buffSize, pck));
     m_write = true;
     return (ClientAction::SUCCESS);
   }
@@ -63,6 +80,11 @@ namespace arcade
     size_t elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>
       (std::chrono::system_clock::now() - m_lastActionDate).count();
     return (elapsed_seconds >= GameClient::timeOut);
+  }
+
+  bool GameClient::hasDataToSend() const
+  {
+    return (!m_sendQueue.empty());
   }
 
   bool GameClient::canWrite() const
@@ -78,5 +100,15 @@ namespace arcade
   sock_t GameClient::getSock() const
   {
     return (m_sock);
+  }
+
+  void		        GameClient::sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> &pck)
+  {
+    m_sendQueue.push(pck);
+  }
+
+  std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	&GameClient::getRecQueue()
+  {
+    return (m_recQueue);
   }
 }
