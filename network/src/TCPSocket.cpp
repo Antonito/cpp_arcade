@@ -1,5 +1,6 @@
 #include <cerrno>
 #include <cassert>
+#include <iostream> // TODO: RM
 #include "TCPSocket.hpp"
 #include "SockError.hpp"
 
@@ -54,7 +55,9 @@ namespace arcade
     bool TCPSocket::sendBlocking(void const *data, size_t len) const
     {
       ssize_t ret;
+
       assert(getType() == ASocket::BLOCKING);
+      std::cout << "Socket: " << m_socket << std::endl;
 #if defined(__linux__) || defined(__APPLE__)
       ret = ::send(m_socket, static_cast<char const *>(data), len, 0);
 #elif defined(_WIN32)

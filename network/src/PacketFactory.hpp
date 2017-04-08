@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <functional>
 #include <memory>
+#include <cstring>
 #include "PacketError.hpp"
 #include "Packet.hpp"
 
@@ -36,7 +37,7 @@ namespace arcade
       {
 	std::unique_ptr<arcade::NetworkPacket>	pck = std::make_unique<arcade::NetworkPacket>();
 	arcade::NetworkPacketHeader		*head = &pck->header;
-	uint16_t					curChck;
+	uint16_t			        curChck = 0;
 
 	// Fill header
 	head->magicNumber = htonl(arcade::NetworkPacketHeader::packetMagicNumber);
@@ -51,7 +52,6 @@ namespace arcade
 	std::memset(pck->data, 0, ntohl(pck->len));
 	callback(*data);
 	calcChecksum(ntohl(pck->len), pck->data, head->checksum);
-	std::cout << (head->checksum == curChck) << std::endl;
 	if (head->checksum == curChck)
 	  {
 	    throw arcade::Network::PacketError("Checksum not computed");
@@ -63,7 +63,6 @@ namespace arcade
     private:
       void	calcChecksum(uint32_t const len, uint8_t const *data, uint32_t &checksum) const
       {
-	std::cout << "Len: " << len << std::endl;
 	for (uint32_t i = 0; i < len; ++i)
 	  {
 	    checksum += data[i];
