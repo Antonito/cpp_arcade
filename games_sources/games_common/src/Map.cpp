@@ -93,8 +93,7 @@ void Map::loadMap(std::string const &path)
   std::stringstream map;
   std::ifstream file;
   std::string tmp;
-
-  std::cout << path << std::endl;
+  
   file.open(path.c_str());
   if (file.is_open())
   {
@@ -105,8 +104,6 @@ void Map::loadMap(std::string const &path)
     throw std::exception();
   map >> m_width;
   map >> m_height;
-  std::cout << m_width << std::endl;
-  std::cout << m_height << std::endl;
   std::getline(map, tmp);
   addLayer();
   if (m_width * m_height > map.str().size())

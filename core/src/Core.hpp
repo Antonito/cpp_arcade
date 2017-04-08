@@ -57,7 +57,7 @@ namespace arcade
 		virtual void process();
 		virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 #if defined(__linux__)
-		virtual WhereAmI *getWhereAmI() const;
+		virtual void WhereAmI(std::ostream &os) const;
 #endif
 
                 // Main menu

@@ -1,10 +1,10 @@
-OBJ_DIR=	${PWD}/obj/
+OBJ_DIR=	$(ROOT_DIR)/obj/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 NAME_EXTENSION=	$(suffix $(NAME))
 
-$(NAME):	prepare_obj_dir $(OBJ)
+$(NAME):	$(OBJ_DIR_LIST) $(OBJ)
 ifeq ($(NAME_EXTENSION),.a)
 		@$(RANLIB) $(NAME) $(OBJ) && \
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Generated $(CYAN)"$(NAME)"\n$(CLEAR)" || \

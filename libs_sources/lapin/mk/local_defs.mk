@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(PROJECT_DIR)/lib/lib_arcade_lapin.so
+NAME=			$(ROOT_DIR)/lib/lib_arcade_lapin.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 
@@ -9,6 +9,6 @@ LOCAL_LINK_FLAGS=	-shared				\
 			-lsfml-audio -lsfml-window	\
 			-lsfml-system -lm		\
 			-ldl -lpthread			\
-			-L$(PROJECT_DIR)/build -larcade_common
+			-L$(ROOT_DIR)/build -larcade_common
 
 LOCAL_DEBUG_FLAGS=

@@ -27,6 +27,11 @@ Position &AEntity::operator[](size_t n)
   return (m_pos[n]);
 }
 
+Position const & AEntity::operator[](size_t n) const
+{
+  return (m_pos[n]);
+}
+
 void AEntity::push(Position pos, size_t n)
 {
   for (size_t i = 0; i < n; ++i)

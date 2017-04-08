@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <functional>
 #include <chrono>
+#include <ostream>
 #include "IGame.hpp"
 #include "Map.hpp"
 #include "GUI.hpp"
@@ -61,8 +62,7 @@ namespace arcade
 
     protected:
 #if defined(__linux__)
-      virtual WhereAmI *getWhereAmI() const = 0;
-      GetMap *getMap() const;
+      virtual void WhereAmI(std::ostream &os) const = 0;
 #endif
 
       GameState m_state;
@@ -81,6 +81,10 @@ namespace arcade
       size_t getCurrentTick() const;
 
     private:
+#if defined(__linux__)
+      void getMap(std::ostream &os) const;
+#endif
+
       typedef std::chrono::high_resolution_clock m_clock_t;
 
       std::chrono::time_point<m_clock_t> m_startTick;

@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(PROJECT_DIR)/lib/lib_arcade_sfml.so
+NAME=			$(ROOT_DIR)/lib/lib_arcade_sfml.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 
@@ -9,6 +9,6 @@ else
 LOCAL_LINK_FLAGS=	-shared -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 endif
 
-LOCAL_LINK_FLAGS+=	-L$(PROJECT_DIR)/build -larcade_common
+LOCAL_LINK_FLAGS+=	-L$(ROOT_DIR)/build -larcade_common
 
 LOCAL_DEBUG_FLAGS=
