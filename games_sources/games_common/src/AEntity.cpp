@@ -62,9 +62,22 @@ Direction AEntity::getDir() const
   return (m_dir);
 }
 
-Position const & AEntity::last() const
+Position const &AEntity::last() const
 {
   return (m_pos.back());
+}
+
+void AEntity::erase(Position const &pos)
+{
+  for (std::vector<Position>::iterator it = m_pos.begin(); it != m_pos.end();)
+  {
+    if (*it == pos)
+    {
+      it = m_pos.erase(it);
+    }
+    else
+      it++;
+  }
 }
 }
 }
