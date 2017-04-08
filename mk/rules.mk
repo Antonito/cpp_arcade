@@ -20,6 +20,11 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Compiled "$<"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Compiled "$<"\n$(CLEAR)"
 
+$(OBJ_DIR_LIST):
+		$(MKDIR) $@ && \
+		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$@"\n$(CLEAR)" || \
+		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$@"\n$(CLEAR)"
+
 all:		$(NAME)
 
 infos:
@@ -44,14 +49,5 @@ re:		fclean all
 
 run:
 		./$(NAME)
-
-mk_obj_dir=	$(if $(shell if [ ! -d $(1) ]; then echo "1"; fi),\
-			$(MKDIR) $(1) && \
-			$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$(1)"\n$(CLEAR)" || \
-			$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$(1)"\n$(CLEAR)"; \
-		)
-
-prepare_obj_dir:
-		@$(foreach dir, $(OBJ_DIR_LIST), $(call mk_obj_dir,$(dir)))
 
 .PHONY: all clean fclean re run install prepare_obj_dir

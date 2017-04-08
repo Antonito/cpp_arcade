@@ -20,6 +20,11 @@ namespace arcade
       return (m_state);
     }
 
+    tick_t AGame::getTickRate() const
+    {
+      return (60.0);
+    }
+
     void AGame::notifyNetwork(std::vector<NetworkPacket> &&events)
     {
       m_received = events;

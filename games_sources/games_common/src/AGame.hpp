@@ -40,6 +40,9 @@ namespace arcade
       // Game state
       virtual GameState getGameState() const;
 
+      // Tick rate
+      virtual tick_t getTickRate() const;
+
       // Events
       virtual void notifyEvent(std::vector<Event> &&events) = 0;
 
