@@ -8,11 +8,7 @@ do
 	src="../../deps/interface/""$name"
 	target="$name"
 	cd ./common/src/
-	ln -s "$src" "$target" 2> /dev/null
-	if [[ $? -eq 1 ]]; then
-	   rm -f "$target"
-	fi
-	ln -s "$src" "$target" > /dev/null
+	cp -f "$src" "$target" > /dev/null
 	cd - > /dev/null;
     fi
 done
