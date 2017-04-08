@@ -12,13 +12,13 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	ASocket.cpp			\
-		TCPSocket.cpp
+SRC_FILES=	AException.cpp	\
+		PacketError.cpp	\
+		SockError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)			\
-		$(PROJECT_DIR)/exceptions/src
+INC_DIR=	$(DIR_LIST)
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

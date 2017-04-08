@@ -36,8 +36,11 @@ NETWORK=		network
 
 SERVER=			server
 
+EXCEPTIONS=		exceptions
+
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
+			./$(EXCEPTIONS)					\
 			./$(NETWORK)/					\
 			$(GFX_PROJECT)					\
 			$(GAME_PROJECT)					\
@@ -72,6 +75,10 @@ $(GFX_LIBS):
 $(COMMON):
 			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(COMMON)
+
+$(EXCEPTIONS):
+			@$(ECHO) "$(YELLOW)./$(EXCEPTIONS)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(EXCEPTIONS)
 
 $(NETWORK):
 			@$(ECHO) "$(YELLOW)./$(NETWORK)/ :$(CLEAR)\n"
