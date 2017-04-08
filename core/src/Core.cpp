@@ -27,21 +27,22 @@ namespace arcade
     m_currentGameId(0), 
     m_currentLibId(0), 
     m_gameState(LOADING),
-    m_selectedGameId(0)
+    m_selectedGameId(0),
+    m_menuLib(true)
   {
     m_state = INGAME;
 
-    m_map = std::make_unique<Map>(0, 0);
-    m_gui = std::make_unique<GUI>();
+    m_map = std::make_unique<game::Map>(0, 0);
+    m_gui = std::make_unique<game::GUI>();
 
     // Create the main menu GUI
     Color dark(10, 10, 10);
 
-    m_gui->push(Component(0, 0, 1, 1, Color(20, 20, 20)));
-    m_gui->push(Component(0.3, 0.1, 0.4, 0.1, dark));
-    m_gui->push(Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
-    m_gui->push(Component(0.1, 0.3, 0.35, 0.6));
-    m_gui->push(Component(0.55, 0.3, 0.35, 0.6));
+    m_gui->push(game::Component(0, 0, 1, 1, Color(20, 20, 20)));
+    m_gui->push(game::Component(0.3, 0.1, 0.4, 0.1, dark));
+    m_gui->push(game::Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
+    m_gui->push(game::Component(0.1, 0.3, 0.35, 0.6));
+    m_gui->push(game::Component(0.55, 0.3, 0.35, 0.6));
 
     m_firstLibIndex = m_gui->size();
 
@@ -243,7 +244,7 @@ namespace arcade
             throw std::exception();
           }
           
-          m_gui->push(Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
+          m_gui->push(game::Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
             0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
 
           // If same file inode
@@ -295,7 +296,7 @@ namespace arcade
           Nope::Log::Info << "Adding library '" << ent->d_name << "'";
           m_gameList.emplace_back(std::string("games/") + ent->d_name);
 
-          m_gui->push(Component(0.57, 0.35 + 0.07 * (m_gameList.size() - 1),
+          m_gui->push(game::Component(0.57, 0.35 + 0.07 * (m_gameList.size() - 1),
             0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
         }
       }
@@ -468,8 +469,11 @@ namespace arcade
         case KB_ENTER:
           if (m_menuLib)
           {
-            m_currentLibId = m_selectedLibId;
-            m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+            if (m_currentLibId != m_selectedLibId)
+            {
+              m_currentLibId = m_selectedLibId;
+              m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+            }   
           }
           else
           {

@@ -16,7 +16,7 @@ extern "C"
 {
 	GAME_API arcade::IGame * getGame()
 	{
-		return (new arcade::Snake());
+		return (new arcade::game::snake::Snake());
 	}
 
 #if defined(_WIN32)

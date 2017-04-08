@@ -3,7 +3,7 @@
 #include <cstdbool>
 #endif
 #include "IGame.hpp"
-#include "Centipede.hpp"
+#include "Snake.hpp"
 
 #if defined(__linux__) || (__APPLE__)
 #define GAME_API
@@ -12,16 +12,17 @@
 #endif
 
 #include <iostream>
-extern "C" {
-GAME_API arcade::IGame *getGame()
+extern "C"
 {
-  return (new arcade::Centipede());
-}
+	GAME_API arcade::IGame * getGame()
+	{
+		return (new arcade::game::snake::Snake());
+	}
 
 #if defined(_WIN32)
-BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
-{
-  return (true);
-}
+	BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
+	{
+		return (true);
+	}
 #endif
 }

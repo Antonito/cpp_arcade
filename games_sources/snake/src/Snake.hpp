@@ -4,11 +4,14 @@
 #include <cstdlib>
 #include "AGame.hpp"
 #include "Player.hpp"
-#include "Pos.hpp"
-#include "Powerup.hpp"
-#include "Shoot.hpp"
+#include "Fruit.hpp"
+#include "AEntity.hpp"
 
 namespace arcade
+{
+namespace game
+{
+namespace snake
 {
 class Snake : public AGame
 {
@@ -32,15 +35,16 @@ public:
   virtual WhereAmI *getWhereAmI() const;
 #endif
 private:
-  Pos placeFood();
+  Position placeFood(Map const &map) const;
 
-  Powerup m_food;
   Player m_player;
-  Dir m_dir;
+  Fruit m_fruit;
+  Direction m_tmpDir;
   size_t m_lastTick;
   size_t m_curTick;
-  size_t m_score;
 };
+}
+}
 }
 
 extern "C" void Play(void);

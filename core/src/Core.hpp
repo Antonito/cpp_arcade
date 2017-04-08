@@ -12,7 +12,7 @@
 
 namespace arcade
 {
-	class Core : public AGame
+	class Core : public game::AGame
 	{
 	public:
 		Core();

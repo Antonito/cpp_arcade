@@ -13,15 +13,7 @@ DIR_LIST=	$(SRC_DIR)
 # Project's files
 
 SRC_FILES=	Color.cpp		\
-		Component.cpp		\
-		GUI.cpp			\
-		Event.cpp		\
-		AGame.cpp		\
-		Layer.cpp		\
-		Map.cpp			\
-		Sprite.cpp		\
-		SpriteRef.cpp		\
-		Tile.cpp
+		Event.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
