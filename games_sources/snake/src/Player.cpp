@@ -30,6 +30,7 @@ void Player::display(Map &map, double ratio) const
         diff = Position(0, 0) + m_dir;
         tile.setColor(Color::Yellow);
         tile.setSprite(4);
+        tile.setSpritePos(static_cast<int>(m_dir));
       }
       // Body
       else

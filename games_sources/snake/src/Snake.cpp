@@ -102,7 +102,7 @@ std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
   s.push_back(std::make_unique<Sprite>("assets/snake/", "peach", 1, ".png", "$"));
   s.push_back(std::make_unique<Sprite>("assets/snake/", "strawberry", 1, ".png", "$"));
   s.push_back(std::make_unique<Sprite>("assets/snake/", "cherry", 1, ".png", "$"));
-  s.push_back(std::make_unique<Sprite>("assets/snake/", "head", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "head", 4, ".png", "$"));
   s.push_back(std::make_unique<Sprite>("assets/snake/", "body", 1, ".png", "$"));
 
   return (s);
