@@ -1,6 +1,5 @@
 #include <cerrno>
 #include <cassert>
-#include <iostream> // TODO: Rm
 #include "TCPSocket.hpp"
 #include "SockError.hpp"
 

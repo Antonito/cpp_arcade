@@ -6,7 +6,7 @@
 namespace arcade
 {
   GameServer::GameServer(int16_t port, uint32_t maxClients) :
-    m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
+    m_fact(), m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
     m_running(false), m_mutex()
   {
     m_sock.openConnection();

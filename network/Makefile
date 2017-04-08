@@ -16,6 +16,7 @@ DIR_LIST=	$(SRC_DIR)			\
 SRC_FILES=	ASocket.cpp			\
 		TCPSocket.cpp			\
 		exceptions/AException.cpp	\
+		exceptions/PacketError.cpp	\
 		exceptions/SockError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))

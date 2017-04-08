@@ -1,5 +1,6 @@
 #include <sys/socket.h>
 #include "GameClient.hpp"
+#include "Packet.hpp"
 
 namespace arcade
 {

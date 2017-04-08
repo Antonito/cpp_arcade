@@ -1,7 +1,9 @@
 # Definitions for Makefile
 NAME=			$(PROJECT_DIR)/server_arcade
 
-INC_DIR=		$(PROJECT_DIR)/network/src/
+INC_DIR=		$(PROJECT_DIR)/network/src/		\
+			$(PROJECT_DIR)/network/src/exceptions	\
+			$(PROJECT_DIR)/common/src
 
 LOCAL_COMP_FLAGS=
 
