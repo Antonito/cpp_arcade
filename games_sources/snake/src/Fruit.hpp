@@ -15,10 +15,14 @@ class Fruit : public AEntity
 {
 
 public:
-  Fruit(Pos const &pos);
+  Fruit();
   Fruit(Fruit const &other) = default;
   virtual ~Fruit();
-  virtual void display(Map &map, double ratio) const;
+  virtual void display(Map &map, double ratio = 0.0) const;
+  void updateSprite();
+
+private:
+  size_t m_sprite;
 };
 }
 }

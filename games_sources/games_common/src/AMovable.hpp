@@ -18,6 +18,7 @@ public:
   AMovable &operator=(AMovable const &other) = default;
 
   virtual void move();
+  virtual Position next() const;
 };
 }
 }

@@ -8,14 +8,54 @@ namespace arcade
 {
 namespace game
 {
-Map::Map(size_t width, size_t height) : m_width(width), m_height(height)
+Map::Map(size_t width, size_t height) :
+  m_width(width),
+  m_height(height)
 {
-    // Push a first layer
-    //this->addLayer();
+}
+
+Map::Map(Map const & other) :
+  m_layers(other.m_layers),
+  m_width(other.m_width),
+  m_height(other.m_height)
+{
+}
+
+Map::Map(Map && other) :
+  m_layers(std::move(other.m_layers)),
+  m_width(other.m_width),
+  m_height(other.m_height)
+{
+  other.m_width = 0;
+  other.m_height = 0;
 }
 
 Map::~Map()
 {
+}
+
+Map & Map::operator=(Map const & other)
+{
+  if (this != &other)
+  {
+    m_layers = other.m_layers;
+    m_width = other.m_width;
+    m_height = other.m_height;
+  }
+  return (*this);
+}
+
+Map & Map::operator=(Map && other)
+{
+  if (this != &other)
+  {
+    m_layers = std::move(other.m_layers);
+    m_width = other.m_width;
+    m_height = other.m_height;
+    other.m_width = 0;
+    other.m_height = 0;
+  }
+  return (*this);
 }
 
 Tile &Map::at(size_t layer, size_t x, size_t y)
@@ -85,6 +125,32 @@ void Map::loadMap(std::string const &path)
     }
     else
         throw std::exception();
+}
+
+void Map::clear(Color color)
+{
+  for (Layer &layer : m_layers)
+  {
+    layer.clear(color);
+  }
+}
+
+void Map::clear(Color color, size_t sprite)
+{
+  for (Layer &layer : m_layers)
+  {
+    layer.clear(color, sprite);
+  }
+}
+
+void Map::clearLayer(size_t layer, Color color)
+{
+  m_layers[layer].clear(color);
+}
+
+void Map::clearLayer(size_t layer, Color color, size_t sprite)
+{
+  m_layers[layer].clear(color, sprite);
 }
 }
 }

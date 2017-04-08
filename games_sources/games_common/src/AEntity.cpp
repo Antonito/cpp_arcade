@@ -47,14 +47,19 @@ bool AEntity::isTouch(Position pos) const
   return (false);
 }
 
-void AEntity::setDir(Direction dir) a
+void AEntity::setDir(Direction dir)
 {
   m_dir = dir;
 }
 
-Direction AEntity::getDir() const;
+Direction AEntity::getDir() const
 {
   return (m_dir);
+}
+
+Position const & AEntity::last() const
+{
+  return (m_pos.back());
 }
 }
 }

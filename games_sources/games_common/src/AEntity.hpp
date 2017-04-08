@@ -23,11 +23,13 @@ public:
   Position &operator[](size_t n);
   void push(Position pos, size_t n = 1);
   bool isTouch(Position pos) const;
-  virtual void display(Map &map, double ratio) const = 0;
+  virtual void display(Map &map, double ratio = 0.0) const = 0;
 
   void setDir(Direction dir);
 
   Direction getDir() const;
+
+  Position const &last() const;
 
 protected:
   std::vector<Position> m_pos;

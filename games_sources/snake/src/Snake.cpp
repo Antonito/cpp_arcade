@@ -12,13 +12,16 @@ namespace snake
 Snake::Snake()
 {
   m_map = std::make_unique<Map>(0, 0);
-  m_map->loadMap("./map/snake/snake_map.txt");
+  m_map->loadMap("./map/snake/map0.txt");
   m_map->addLayer();
-  //clear;
-  m_player->push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 4);
-  m_fruit->push(Position(placeFood()));
+  m_map->clearLayer(0, Color(50, 50, 50));
+  m_map->clearLayer(1);
+  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 4);
+  m_player.setDir(Direction::LEFT);
+  m_fruit.push(Position(placeFood(*m_map)));
   m_lastTick = 0;
   m_curTick = 0;
+  m_tmpDir = Direction::LEFT;
 }
 
 Snake::Snake(Snake const &other)
@@ -27,7 +30,7 @@ Snake::Snake(Snake const &other)
   m_player = other.m_player;
   m_fruit = other.m_fruit;
   m_lastTick = other.m_lastTick;
-  m_curTick = other.m__curTick;
+  m_curTick = other.m_curTick;
 }
 
 Snake::~Snake()
@@ -88,23 +91,35 @@ std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "apple", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "peach", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "strawberry", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "cherry", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "head", 1, ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/snake/", "body", 1, ".png", "$"));
+
   return (s);
 }
 
 void Snake::process()
 {
   m_curTick = this->getCurrentTick();
-  //clear
+  m_map->clearLayer(1);
   m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
   m_fruit.display(*m_map);
 
   if (m_curTick - m_lastTick > 100)
   {
-    if (m_fruit.isTouch(m_player.next()))
-      m_fruit[0] = placeFood();
-    if (m_player.next().inMap(*m_map) && !m_player.isTouch(m_player.next()))
-    {
       m_player.setDir(m_tmpDir);
+    if (m_fruit.isTouch(m_player.next()))
+    {
+      m_fruit[0] = placeFood(*m_map);
+      m_fruit.updateSprite();
+      m_player.push(m_player.last());
+    }
+    if (m_player.next().inMap(*m_map) && !m_player.isTouch(m_player.next())
+      && m_player.next() != m_player.last())
+    {
       m_player.move();
     }
     else
@@ -118,6 +133,40 @@ WhereAmI *Snake::getWhereAmI() const
 {
   // TODO: implement
   return (nullptr);
+}
+
+Position Snake::placeFood(Map const & map) const
+{
+  size_t width = map.getWidth();
+  size_t height = map.getHeight();
+
+  // Try to place random
+  for (size_t i = 0; i < 10000; ++i)
+  {
+    Position p(rand() % width, rand() % height);
+
+    if (map.at(0, p.x, p.y).getType() != TileType::BLOCK &&
+      m_player.isTouch(p) == false)
+    {
+      return (p);
+    }
+  }
+
+  // Search the first spot
+  for (size_t y = 0; y < height; ++y)
+  {
+    for (size_t x = 0; x < width; ++x)
+    {
+      Position p(x, y);
+
+      if (map.at(0, x, y).getType() != TileType::BLOCK &&
+        m_player.isTouch(p) == false)
+      {
+        return (p);
+      }
+    }
+  }
+  return (Position(0, 0));
 }
 #endif
 }

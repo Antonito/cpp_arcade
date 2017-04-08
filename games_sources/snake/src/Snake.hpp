@@ -3,6 +3,9 @@
 
 #include <cstdlib>
 #include "AGame.hpp"
+#include "Player.hpp"
+#include "Fruit.hpp"
+#include "AEntity.hpp"
 
 namespace arcade
 {
@@ -32,6 +35,8 @@ public:
   virtual WhereAmI *getWhereAmI() const;
 #endif
 private:
+  Position placeFood(Map const &map) const;
+
   Player m_player;
   Fruit m_fruit;
   Direction m_tmpDir;

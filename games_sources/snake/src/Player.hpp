@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include "AGame.hpp"
 #include "AEntity.hpp"
+#include "AMovable.hpp"
 
 namespace arcade
 {
@@ -18,7 +19,7 @@ public:
   Player();
   Player(Player const &other) = default;
   virtual ~Player();
-  virtual void display(Map &map, double ratio) const;
+  virtual void display(Map &map, double ratio = 0.0) const;
 };
 }
 }

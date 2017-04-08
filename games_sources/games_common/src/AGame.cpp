@@ -6,7 +6,9 @@ namespace arcade
 {
   namespace game
   {
-    AGame::AGame() : m_state(INGAME),
+    AGame::AGame() :
+      m_state(INGAME),
+      m_gui(std::make_unique<GUI>()),
       m_startTick(m_clock_t::now()),
       m_mouliMode(false),
       m_fakeTick(0)
