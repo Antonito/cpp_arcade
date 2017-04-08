@@ -20,6 +20,8 @@ public:
   Player(Player const &other) = default;
   virtual ~Player();
   virtual void display(Map &map, double ratio = 0.0) const;
+private:
+  Position m_endPos;
 };
 }
 }

@@ -16,9 +16,9 @@ Snake::Snake()
   m_map->addLayer();
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
-  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 4);
+  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 5);
   m_player.setDir(Direction::LEFT);
-  m_fruit.push(Position(placeFood(*m_map)));
+  m_fruit.push(placeFood(*m_map));
   m_lastTick = 0;
   m_curTick = 0;
   m_tmpDir = Direction::LEFT;
@@ -31,6 +31,7 @@ Snake::Snake(Snake const &other)
   m_fruit = other.m_fruit;
   m_lastTick = other.m_lastTick;
   m_curTick = other.m_curTick;
+  m_tmpDir = other.m_tmpDir;
 }
 
 Snake::~Snake()
@@ -41,6 +42,12 @@ Snake &Snake::operator=(Snake const &other)
 {
   if (this != &other)
   {
+    *m_map = *other.m_map;
+    m_player = other.m_player;
+    m_fruit = other.m_fruit;
+    m_lastTick = other.m_lastTick;
+    m_curTick = other.m_curTick;
+    m_tmpDir = other.m_tmpDir;
   }
   return (*this);
 }
@@ -111,14 +118,15 @@ void Snake::process()
   if (m_curTick - m_lastTick > 100)
   {
       m_player.setDir(m_tmpDir);
-    if (m_fruit.isTouch(m_player.next()))
+    if (m_fruit[0] == m_player.next())
     {
       m_fruit[0] = placeFood(*m_map);
       m_fruit.updateSprite();
       m_player.push(m_player.last());
+      m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
     }
-    if (m_player.next().inMap(*m_map) && !m_player.isTouch(m_player.next())
-      && m_player.next() != m_player.last())
+    if (m_player.next().inMap(*m_map) && (!m_player.isTouch(m_player.next())
+      || m_player.next() == m_player.last()))
     {
       m_player.move();
     }
