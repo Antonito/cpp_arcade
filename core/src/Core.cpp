@@ -47,15 +47,15 @@ namespace arcade
 
     m_firstLibIndex = m_gui->size();
 
-    //try
-    //{
-    //  m_soundLib.load("sound/lib_arcade_sfmlsound.so");
-    //  m_sound = std::unique_ptr<IGfxLib>(m_soundLib.getFunction<IGfxLib *()>("getLib")());
-    //}
-    //catch (RessourceError const &e)
-    //{
-    //  Nope::Log::Info << "Backup sound lib not found";
-    //}
+    try
+    {
+      m_soundLib.load("sound/lib_arcade_sfml_sound.so");
+      m_sound = std::unique_ptr<IGfxLib>(m_soundLib.getFunction<IGfxLib* ()>("getLib")());
+    }
+    catch (RessourceError const &e)
+    {
+      Nope::Log::Warning<< "Backup sound lib not found";
+    }
 
 #ifdef DEBUG
     Nope::Log::Debug << "Core constructed";
@@ -142,10 +142,7 @@ Nope::Log::Info << "Exiting the core";
       if (m_gameState != INGAME && m_gameState != LOADING)
       {
         if (m_gameState == QUIT)
-	  {
-	    std::cout << "QUIT #2" << std::endl;
-	  }
-	m_sock = nullptr;
+          std::cout << "QUIT #2" << std::endl;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -179,7 +176,7 @@ Nope::Log::Info << "Exiting the core";
           m_lib->soundControl(s);
         }
       }
-      else if (false && m_sound.get())
+      else if (m_sound.get())
       {
         for (Sound const &s : sounds)
         {
@@ -359,25 +356,13 @@ Nope::Log::Info << "Exiting the core";
   void Core::loadGame()
   {
     std::cout << "Loading GAME" << std::endl;
-    if (m_game->hasNetwork())
-      {
-	uint16_t	port;
-	std::string	host;
-
-	std::cout << "Host: ";
-	std::cin >> host;
-	std::cout << "Game Port: ";
-	std::cin >> port;
-	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
-	m_sock->openConnection();
-	if (!m_sock->isStarted())
-	  {
-	    throw std::exception(); // TODO: Change
-	  }
-      }
     m_lib->loadSounds(m_game->getSoundsToLoad());
     m_lib->loadSprites(m_game->getSpritesToLoad());
     m_lib->loadSounds(m_game->getSoundsToLoad());
+    if (m_sound.get())
+    {
+      m_sound->loadSounds(m_game->getSoundsToLoad());
+    }
     m_gameState = INGAME;
   }
 

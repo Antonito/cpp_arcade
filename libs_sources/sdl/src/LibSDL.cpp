@@ -109,7 +109,7 @@ namespace arcade
 
   bool LibSDL::doesSupportSound() const
   {
-    return (true);
+    return (false);
   }
 
   void LibSDL::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)

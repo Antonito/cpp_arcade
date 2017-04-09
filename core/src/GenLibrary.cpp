@@ -44,6 +44,7 @@ namespace arcade
 
         void GenLibrary::load(std::string const & filename)
         {
+          m_filename = filename;
 #if defined(__linux__) || ( __APPLE__)
           m_libPtr = dlopen(m_filename.c_str(), RTLD_NOW | RTLD_GLOBAL);
           if (!m_libPtr)
@@ -57,6 +58,5 @@ namespace arcade
             throw RessourceError("Cannot load '" + m_filename + "' ! Error : " + GetLastError());
           }
 #endif
-
         }
 }
