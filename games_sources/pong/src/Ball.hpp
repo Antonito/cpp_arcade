@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include "AGame.hpp"
 #include "AEntity.hpp"
+#include "Player.hpp"
 
 namespace arcade
 {
@@ -19,6 +20,8 @@ public:
   virtual ~Ball();
   virtual void display(Map &map, double ratio = 0.0) const;
   void updatePosition(Player const &p, double time);
+  int getBallDir() const;
+  void setBallPos(Position const &p);
 
 private:
   double m_x;
