@@ -45,10 +45,12 @@ namespace arcade
 
 		bool m_inMenu;
 
+                GenLibrary m_soundLib;
+
 		std::unique_ptr<IGame> m_game;
 		std::unique_ptr<IGfxLib> m_lib;
 		GameState m_gameState;
-		// std::unique_ptr<ISoundLib> m_sound;
+		std::unique_ptr<IGfxLib> m_sound;
 		// std::unique_ptr<Network> m_network;
 
 		// Game implementation part (for main menu)

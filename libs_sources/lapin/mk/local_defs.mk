@@ -9,6 +9,6 @@ LOCAL_LINK_FLAGS=	-shared				\
 			-lsfml-audio -lsfml-window	\
 			-lsfml-system -lm		\
 			-ldl -lpthread			\
-			-L$(ROOT_DIR)/build -larcade_common
+			-L$(ROOT_DIR)/build -larcade_common -larcade_exceptions
 
 LOCAL_DEBUG_FLAGS=

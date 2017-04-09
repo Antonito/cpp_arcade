@@ -22,6 +22,8 @@ namespace arcade
 
         Pong &operator=(Pong const &other);
 
+	virtual bool hasNetwork() const;
+
         virtual void notifyEvent(std::vector<Event> &&events);
 
         virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
@@ -46,6 +48,8 @@ namespace arcade
   }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void);
+#endif
 
 #endif // !PONG_HPP_

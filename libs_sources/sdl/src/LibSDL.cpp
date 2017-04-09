@@ -1,9 +1,16 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#if defined(_WIN32)
+#include <SDL.h>
+#else
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#endif
 #include "LibSDL.hpp"
+#include "WindowError.hpp"
+#include "InitializationError.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -11,32 +18,28 @@ namespace arcade
   {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-      std::cerr << "Error while initializing SDL2 : " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw InitializationError("Error while initializing SDL2 : " + std::string(SDL_GetError()));
     }
 
     m_win = SDL_CreateWindow("Arcade sdl", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 
     if (m_win == NULL)
     {
-      std::cerr << "Error while creating SDL2 Window (1): " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw WindowError("Cannot create SDL2 Window: " + std::string(SDL_GetError()));
     }
 
     m_winSurface = SDL_GetWindowSurface(m_win);
 
     if (m_winSurface == NULL)
     {
-      std::cerr << "Error while creating SDL2 Window (2): " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw WindowError("Cannot create SDL2 Window Surface: " + std::string(SDL_GetError()));
     }
 
     if (TTF_Init() == -1)
     {
-      std::cerr << "Error while initializing SDL ttf" << std::endl;
-      throw std::exception();
+      throw InitializationError("Error while initializing SDL ttf");
     }
-    
+
     m_font = TTF_OpenFont("assets/fonts/arial.ttf", 30);
   }
 
@@ -106,7 +109,7 @@ namespace arcade
 
   bool LibSDL::doesSupportSound() const
   {
-    return (true);
+    return (false);
   }
 
   void LibSDL::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
@@ -133,7 +136,7 @@ namespace arcade
     int tileSize = std::min(m_winSurface->w / map.getWidth(), m_winSurface->h / map.getHeight());
 
     tileSize = std::min(tileSize, static_cast<int>(m_maxTileSize));
-   
+
     // Loop on each layer
     for (size_t l = 0; l < map.getLayerNb(); ++l)
     {
@@ -246,8 +249,7 @@ namespace arcade
 
         if (!surface)
         {
-          std::cerr << "File not found" << std::endl;
-          throw std::exception(); // TODO: create good exception
+	  throw RessourceError("File not found: " + sprite->getGraphicPath(i));
         }
         std::cout << "Loaded " << surface->w << "x" << surface->h << std::endl;
         //SDL_FillRect(surface, NULL, Color::Black.full);

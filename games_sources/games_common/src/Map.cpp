@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -97,7 +98,7 @@ void Map::loadMap(std::string const &path)
     file.close();
   }
   else
-    throw std::exception();
+    throw RessourceError("Cannot open map: " + path);
   map >> m_width;
   map >> m_height;
   std::getline(map, tmp);
@@ -105,7 +106,7 @@ void Map::loadMap(std::string const &path)
 
   if (m_width * m_height > map.str().size())
   {
-    throw std::exception();
+    throw RessourceError("Invalid map size");
   }
   for (size_t y = 0; std::getline(map, tmp) && y < m_height; y++)
   {

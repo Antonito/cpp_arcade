@@ -12,9 +12,14 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	AException.cpp	\
-		PacketError.cpp	\
-		SockError.cpp
+SRC_FILES=	AException.cpp		\
+		AllocationError.cpp	\
+		CapabilityError.cpp	\
+		InitializationError.cpp	\
+		PacketError.cpp		\
+		RessourceError.cpp	\
+		SockError.cpp		\
+		WindowError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

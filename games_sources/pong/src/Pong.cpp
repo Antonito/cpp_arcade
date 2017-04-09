@@ -10,7 +10,9 @@ namespace arcade
   {
     namespace pong
     {
-      Pong::Pong()
+      Pong::Pong() :
+        m_curTick(0),
+        m_lastTick(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -31,6 +33,7 @@ namespace arcade
           }
         }
         m_id = 0;
+        m_ball.setBallPos(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
       }
 
       Pong::Pong(Pong const &other) :
@@ -57,6 +60,11 @@ namespace arcade
           m_id = other.m_id;
         }
         return (*this);
+      }
+
+      bool Pong::hasNetwork() const
+      {
+	return (true);
       }
 
       void Pong::notifyEvent(std::vector<Event> &&events)
@@ -108,8 +116,22 @@ namespace arcade
       {
         m_map->clearLayer(1);
 
+        m_curTick = this->getCurrentTick();
+        m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
+          (m_curTick - m_lastTick) / 1000.0);
+        if (m_ball[0].x < 0)
+        {
+          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+        }
+        else if (m_ball[0].x > m_map->getWidth() - 1)
+        {
+          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+        }
+
         m_player[0].display(*m_map);
         m_player[1].display(*m_map);
+        m_ball.display(*m_map);
+        m_lastTick = m_curTick;
       }
 
 #if defined(__linux__)
@@ -121,10 +143,11 @@ namespace arcade
   }
 }
 
-
+#if defined (__linux__)
 extern "C" void Play(void)
 {
   arcade::game::pong::Pong game;
 
   game.Play();
 }
+#endif

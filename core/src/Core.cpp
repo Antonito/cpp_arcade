@@ -4,6 +4,7 @@
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
+#include "RessourceError.hpp"
 
 //
 // PLEASE READ CAREFULLY
@@ -24,8 +25,8 @@
 namespace arcade
 {
   Core::Core() :
-    m_currentGameId(0), 
-    m_currentLibId(0), 
+    m_currentGameId(0),
+    m_currentLibId(0),
     m_gameState(LOADING),
     m_selectedGameId(0),
     m_menuLib(true)
@@ -46,6 +47,16 @@ namespace arcade
 
     m_firstLibIndex = m_gui->size();
 
+    try
+    {
+      m_soundLib.load("sound/lib_arcade_sfml_sound.so");
+      m_sound = std::unique_ptr<IGfxLib>(m_soundLib.getFunction<IGfxLib* ()>("getLib")());
+    }
+    catch (RessourceError const &e)
+    {
+      Nope::Log::Warning<< "Backup sound lib not found";
+    }
+
 #ifdef DEBUG
     Nope::Log::Debug << "Core constructed";
 #endif
@@ -63,37 +74,37 @@ namespace arcade
     m_gameState = MENU;
 
     // Log
-    Nope::Log::Info << "Launching the core";
+Nope::Log::Info << "Launching the core";
 
-    // Load all the game and graphic libraries
-    this->initLists(lib);
+// Load all the game and graphic libraries
+this->initLists(lib);
 
-    // Set the current library to the first one
-    m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
+// Set the current library to the first one
+m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());
 
-    while (m_gameState != QUIT)
-    {
-      switch (m_gameState)
-      {
-      case MENU:
-        if (m_game.get() == this)
-          m_game.release();
-        this->m_game = std::unique_ptr<IGame>(this);
-      case INGAME:
-        m_gameState = LOADING;
-        m_gameState = this->gameLoop();
-        if (m_gameState == QUIT)
-          std::cout << "QUIT #3" << std::endl;
-        break;
-      default:
-        m_gameState = QUIT;
-        break;
-      }
-    }
-    // Log
+while (m_gameState != QUIT)
+{
+  switch (m_gameState)
+  {
+  case MENU:
     if (m_game.get() == this)
       m_game.release();
-    Nope::Log::Info << "Exiting the core";
+    this->m_game = std::unique_ptr<IGame>(this);
+  case INGAME:
+    m_gameState = LOADING;
+    m_gameState = this->gameLoop();
+    if (m_gameState == QUIT)
+      std::cout << "QUIT #3" << std::endl;
+    break;
+  default:
+    m_gameState = QUIT;
+    break;
+  }
+}
+// Log
+if (m_game.get() == this)
+m_game.release();
+Nope::Log::Info << "Exiting the core";
   }
 
   GameState Core::gameLoop()
@@ -158,6 +169,20 @@ namespace arcade
 #endif
       // Sound
       sounds = m_game->getSoundsToPlay();
+      if (m_lib->doesSupportSound())
+      {
+        for (Sound const &s : sounds)
+        {
+          m_lib->soundControl(s);
+        }
+      }
+      else if (m_sound.get())
+      {
+        for (Sound const &s : sounds)
+        {
+          m_sound->soundControl(s);
+        }
+      }
 #ifdef DEBUG
       Nope::Log::Debug << "Get sounds to play";
 #endif
@@ -215,7 +240,7 @@ namespace arcade
 
     if (stat(lib.c_str(), &search) < 0)
     {
-      throw std::exception();
+      throw RessourceError("Library " + lib + " not found");
     }
 
     // Open "dir/" directory
@@ -241,9 +266,9 @@ namespace arcade
           m_libList.emplace_back(libPath);
           if (stat(libPath.c_str(), &file) < 0)
           {
-            throw std::exception();
+            throw RessourceError("Error while accessing " + libPath);
           }
-          
+
           m_gui->push(game::Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
             0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
 
@@ -259,21 +284,21 @@ namespace arcade
       // Close the dir after using it because we are well educated people :)
       closedir(dir);
       Nope::Log::Info << "Closing dir 'lib'";
-      
+
       if (found == false)
       {
-        throw std::exception();
+        throw RessourceError("The given file does not seems to be in the ./lib/ directory");
       }
     }
     else
     {
-      throw std::exception(); // TODO: create a good exception
+      throw RessourceError("Cannot open ./lib/ directory");
     }
 
     // Check if there was at least one graphic lib
     if (m_libList.size() == 0)
     {
-      throw std::exception(); // TODO: there is no graphic library
+      throw RessourceError("No graphic library was found");
     }
 
     m_firstGameIndex = m_gui->size();
@@ -303,14 +328,19 @@ namespace arcade
       // Close the dir after using it because we are well educated people
       // and yes all of this was copy/pasted :)
       closedir(dir);
-      Nope::Log::Info << "Closing dir 'lib'";
+      Nope::Log::Info << "Closing dir 'games'";
     }
     else
     {
-      throw std::exception(); // TODO: create a good exception
+      throw RessourceError("Cannot open ./games/ directory");
+    }
+
+    // Check if there was at least one graphic lib
+    if (m_gameList.size() == 0)
+    {
+      throw RessourceError("No game was found");
     }
   }
-
   // Check if the name string begins with prefix and end with suffix
   // ex: isNameValid("liboui.a", "lib", ".a") => true
   //	   isNameValid("liboui.a", "lib_arcade", ".a") => false
@@ -328,6 +358,11 @@ namespace arcade
     std::cout << "Loading GAME" << std::endl;
     m_lib->loadSounds(m_game->getSoundsToLoad());
     m_lib->loadSprites(m_game->getSpritesToLoad());
+    m_lib->loadSounds(m_game->getSoundsToLoad());
+    if (m_sound.get())
+    {
+      m_sound->loadSounds(m_game->getSoundsToLoad());
+    }
     m_gameState = INGAME;
   }
 
@@ -441,6 +476,7 @@ namespace arcade
             }
             m_selectedGameId--;
           }
+          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ARROW_DOWN:
           if (m_menuLib)
@@ -459,12 +495,15 @@ namespace arcade
               m_selectedGameId = 0;
             }
           }
+          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ARROW_LEFT:
           m_menuLib = true;
+          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ARROW_RIGHT:
           m_menuLib = false;
+          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ENTER:
           if (m_menuLib)
@@ -485,7 +524,7 @@ namespace arcade
           }
           break;
         default:
-          break;  
+          break;
         }
       }
     }
@@ -493,7 +532,10 @@ namespace arcade
 
   std::vector<std::pair<std::string, SoundType > > Core::getSoundsToLoad() const
   {
-    return (std::vector<std::pair<std::string, SoundType > >());
+    std::vector<std::pair<std::string, SoundType>> s;
+
+    s.emplace_back("assets/sounds/menu_move.wav", SoundType::SOUND);
+    return (s);
   }
 
   void Core::process()

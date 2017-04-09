@@ -11,7 +11,8 @@ SRC_DIR=		./src/
 DIR_LIST=	$(SRC_DIR)
 
 ifeq ($(UNAME_S),Darwin)
-DIR_LIST+=	/Library/Frameworks/SDL2.framework/Headers/
+DIR_LIST+=	/Library/Frameworks/SDL2.framework/Headers/	\
+		/Library/Frameworks/SDL2_ttf.framework/Headers/
 endif
 
 # Project's files

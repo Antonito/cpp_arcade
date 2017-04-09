@@ -3,8 +3,11 @@
 #include <cstring>
 #include <sys/select.h>
 #include "LibX.hpp"
-#include <X11/Xutil.h>
+#include <X11/Xutil.h> // Must be after LibX.hpp
 #include <X11/Xlibint.h>
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
+#include "CapabilityError.hpp"
 
 namespace arcade
 {
@@ -18,16 +21,14 @@ namespace arcade
     m_disp = XOpenDisplay(nullptr);
     if (!m_disp)
       {
-	std::cerr << "Cannot open X Display" << std::endl;
-	throw std::exception(); // TODO
+	throw WindowError("Cannot open X Display");
       }
     // Map keyboard and mouse
     setKeyMapping();
     m_vis = DefaultVisual(m_disp, 0);
     if (m_vis->c_class != TrueColor)
       {
-	std::cerr << "TrueColor not supported." << std::endl;
-	throw std::exception(); // TODO
+	throw CapabilityError("TrueColor not supported");
       }
     // Set up a window
     m_screen = DefaultScreen(m_disp);
@@ -50,8 +51,7 @@ namespace arcade
 			 reinterpret_cast<char *>(m_guiData), m_width, m_height, 32, 0);
     if (!m_gui)
       {
-	std::cerr << "Cannot create XImage" << std::endl;
-	throw std::exception(); // TODO
+	throw AllocationError("Cannot create XImage");
       }
     XFlush(m_disp);
   }
@@ -79,8 +79,7 @@ namespace arcade
     ret = select(m_fd + 1, &readfds, nullptr, nullptr, &tv);
     if (ret == -1)
       {
-	std::cerr << "Cannot read LibX events" << std::endl;
-	throw std::exception(); // TODO
+	throw std::runtime_error("Cannot read LibX events");
       }
     else if (ret)
       {
@@ -182,8 +181,7 @@ namespace arcade
 			     m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32, 0);
 	if (!m_map)
 	  {
-	    std::cerr << "Cannot create XImage map" << std::endl;
-	    throw std::exception(); // TODO
+	    throw AllocationError("Cannot create XImage map");
 	  }
       }
 

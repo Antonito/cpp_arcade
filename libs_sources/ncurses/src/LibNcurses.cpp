@@ -1,9 +1,9 @@
 #include <exception>
-#include <iostream>
 #include <curses.h>
 #include <cstdio>
 #include <sys/poll.h>
 #include "LibNcurses.hpp"
+#include "WindowError.hpp"
 
 namespace arcade
 {
@@ -22,8 +22,7 @@ namespace arcade
     m_width = width;
     if (!m_win)
       {
-	std::cerr << "Cannot create ncurses window" << std::endl;
-	throw std::exception(); // TODO: Exception
+	throw WindowError("Cannot create Ncurses window");
       }
     if (has_colors())
       {
@@ -125,7 +124,7 @@ namespace arcade
 		    Color color = tile.getColor();
 		    if (color.a != 0) // TODO: color.a ?
 		      {
-			  
+
 		      }
 		  }
 	      }

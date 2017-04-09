@@ -191,9 +191,11 @@ Position Snake::placeFood(Map const & map) const
 }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void)
 {
   arcade::game::snake::Snake game;
 
   game.Play();
 }
+#endif

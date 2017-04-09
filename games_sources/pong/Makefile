@@ -14,7 +14,8 @@ DIR_LIST=	$(SRC_DIR)
 
 SRC_FILES=	Pong.cpp	\
 		EntryPoint.cpp	\
-		Player.cpp
+		Player.cpp	\
+		Ball.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

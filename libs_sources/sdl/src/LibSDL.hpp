@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #else
 #include <SDL.h>
+#include <SDL_ttf.h>
 #endif
 #include <map>
 #include "IGfxLib.hpp"

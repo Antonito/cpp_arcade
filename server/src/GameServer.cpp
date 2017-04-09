@@ -214,7 +214,7 @@ namespace arcade
 	if (ntohl(pck->header.magicNumber) == NetworkPacketHeader::packetMagicNumber &&
 	    static_cast<arcade::NetworkAction>(ntohl(static_cast<uint32_t>(data->action))) == arcade::NetworkAction::HELLO_EVENT)
 	  {
-	    uint32_t	pckLen;
+	    uint32_t	pckLen = 0;
 	    client.setGame(static_cast<NetworkGames>(ntohl(static_cast<uint32_t>(pck->header.game))));
 	    std::unique_ptr<arcade::NetworkPacket> pck =
 	      m_fact.create<0, uint8_t>(client.getGame(), [&](Network::NetworkPacketData<0, uint8_t> &packet){
