@@ -115,6 +115,9 @@ namespace arcade
 
       void Pong::process()
       {
+	static bool	auth = false;
+	bool	rec = false;
+
 	// Treat input data
 	switch (m_state)
 	  {
@@ -122,7 +125,9 @@ namespace arcade
 	    for (NetworkPacket const &pck : m_received)
 	      {
 		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
-		if (ntohl(pck.header.magicNumber) && _pck &&
+		rec = true;
+		std::cout << "Action: " << _pck->action << _pck->auth << std::endl;
+		if (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber && _pck &&
 		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
 		    NetworkAction::HELLO_EVENT && _pck->auth == true)
 		  {
@@ -139,14 +144,16 @@ namespace arcade
 	  {
 	  case PongState::AUTHENTICATING:
 	    // We should authenticate
-	    std::cout << "Authenticating Pong" << std::endl;
+	    if (!auth || rec)
 	    {
+	      std::cout << "Authenticating Pong" << std::endl;
 	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p){
 		  p.action = NetworkAction::HELLO_EVENT;
 		  p.auth = false;
 		});
 	      NetworkPacket	pck = *createdPck;
 	      m_toSend.push_back(pck);
+	      auth = true;
 	    }
 	    break;
 

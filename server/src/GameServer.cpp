@@ -221,10 +221,17 @@ namespace arcade
 		  packet.action = static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
 		  packet.auth = true;
 		});
-	    pckLen = ntohl(pck->len);
+	    std::cout << "sizeof: " << sizeof(Network::NetworkPacketData<0, uint8_t>) << std::endl;
+	    std::cout << "Len: " << ntohl(pck->len) << std::endl;
+	    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
 	    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.release());
-	    std::shared_ptr<uint8_t> shPck(tmp);
+	    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
 
+						       std::memset(shPck.get(), 0, pckLen);
+						       // TODO: Fix
+	    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
+			pck->data, ntohl(pck->len));
 	    client.sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(pckLen, shPck));
 	    queue.pop();
 #if defined(DEBUG)

@@ -618,9 +618,11 @@ void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
 	      // Convert packet to uint8_t *
 	      size_t len = sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck.len);
 	      std::unique_ptr<uint8_t[]>	data = std::make_unique<uint8_t[]>(len);
+	      uint8_t				*cur = data.get();
 
-	      std::memcpy(data.get(), &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	      std::memcpy(data.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t), pck.data, ntohl(pck.len));
+	      std::memcpy(cur, &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	      std::memcpy(cur + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
+			  pck.data, ntohl(pck.len));
 
 	      // Send
 	      m_sock->send(data.get(), len);
