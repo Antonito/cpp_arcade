@@ -21,6 +21,7 @@ public:
 
   size_t size() const;
   Position &operator[](size_t n);
+  Position const &operator[](size_t n) const;
   void push(Position pos, size_t n = 1);
   bool isTouch(Position pos) const;
   virtual void display(Map &map, double ratio = 0.0) const = 0;

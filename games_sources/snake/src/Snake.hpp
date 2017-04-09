@@ -32,7 +32,7 @@ public:
   virtual void process();
 
 #if defined(__linux__)
-  virtual WhereAmI *getWhereAmI() const;
+  virtual void WhereAmI(std::ostream &os) const;
 #endif
 private:
   Position placeFood(Map const &map) const;

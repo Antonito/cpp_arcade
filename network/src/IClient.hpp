@@ -17,7 +17,9 @@ namespace arcade
 
       virtual ~IClient(){};
       virtual bool	disconnect() = 0;
+      virtual IClient::ClientAction write() = 0;
       virtual IClient::ClientAction read() = 0;
+      virtual bool hasTimedOut() const = 0;
     };
   }
 }

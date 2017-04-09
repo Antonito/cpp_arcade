@@ -8,19 +8,17 @@ include $(MK_COMMON_DIR)colors.mk $(MK_DIR)local_defs.mk $(MK_COMMON_DIR)defs.mk
 
 SRC_DIR=	./src/
 
-DIR_LIST=	$(SRC_DIR)			\
-		$(SRC_DIR)exceptions/
+DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
 SRC_FILES=	ASocket.cpp			\
-		TCPSocket.cpp			\
-		exceptions/AException.cpp	\
-		exceptions/SockError.cpp
+		TCPSocket.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)
+INC_DIR=	$(DIR_LIST)			\
+		$(ROOT_DIR)/exceptions/src
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

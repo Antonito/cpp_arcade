@@ -90,8 +90,6 @@ void Map::loadMap(std::string const &path)
   std::stringstream map;
   std::ifstream file;
   std::string tmp;
-
-  std::cout << path << std::endl;
   file.open(path.c_str());
   if (file.is_open())
   {
@@ -104,19 +102,19 @@ void Map::loadMap(std::string const &path)
   map >> m_height;
   std::getline(map, tmp);
   addLayer();
-  if (m_width * m_height <= map.str().size())
+
+  if (m_width * m_height > map.str().size())
   {
-    for (size_t y = 0; std::getline(map, tmp) && y < m_height; y++)
+    throw std::exception();
+  }
+  for (size_t y = 0; std::getline(map, tmp) && y < m_height; y++)
+  {
+    for (size_t x = 0; x < tmp.size() && x < m_width; x++)
     {
-      for (size_t x = 0; x < tmp.size() && x < m_width; x++)
-      {
-        if (tmp[x] >= '0' && tmp[x] <= '9')
-          m_layers[0].at(x, y).setType(static_cast<TileType>(tmp[x] - '0'));
-      }
+      if (tmp[x] >= '0' && tmp[x] <= '9')
+        m_layers[0].at(x, y).setType(static_cast<TileType>(tmp[x] - '0'));
     }
   }
-  else
-    throw std::exception();
 }
 
 void Map::clear(Color color)

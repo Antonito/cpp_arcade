@@ -537,9 +537,8 @@ namespace arcade
   }
 
 #if defined(__linux__)
-  WhereAmI * Core::getWhereAmI() const
+  void Core::WhereAmI(std::ostream &) const
   {
-    return nullptr;
   }
 #endif
 }
