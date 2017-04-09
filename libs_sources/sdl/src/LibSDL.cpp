@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "LibSDL.hpp"
+#include "WindowError.hpp"
 
 namespace arcade
 {
@@ -20,7 +21,7 @@ namespace arcade
     if (m_win == NULL)
     {
       std::cerr << "Error while creating SDL2 Window (1): " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw WindowError("Cannot create SDL2 Window");
     }
 
     m_winSurface = SDL_GetWindowSurface(m_win);
@@ -28,7 +29,7 @@ namespace arcade
     if (m_winSurface == NULL)
     {
       std::cerr << "Error while creating SDL2 Window (2): " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw WindowError("Cannot create SDL2 Window Surface");
     }
 
     if (TTF_Init() == -1)
@@ -36,7 +37,7 @@ namespace arcade
       std::cerr << "Error while initializing SDL ttf" << std::endl;
       throw std::exception();
     }
-    
+
     m_font = TTF_OpenFont("assets/fonts/arial.ttf", 30);
   }
 
@@ -133,7 +134,7 @@ namespace arcade
     int tileSize = std::min(m_winSurface->w / map.getWidth(), m_winSurface->h / map.getHeight());
 
     tileSize = std::min(tileSize, static_cast<int>(m_maxTileSize));
-   
+
     // Loop on each layer
     for (size_t l = 0; l < map.getLayerNb(); ++l)
     {

@@ -3,8 +3,10 @@
 #include <cstring>
 #include <sys/select.h>
 #include "LibX.hpp"
-#include <X11/Xutil.h>
+#include <X11/Xutil.h> // Must be after LibX.hpp
 #include <X11/Xlibint.h>
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
 
 namespace arcade
 {
@@ -19,7 +21,7 @@ namespace arcade
     if (!m_disp)
       {
 	std::cerr << "Cannot open X Display" << std::endl;
-	throw std::exception(); // TODO
+	throw WindowError("Cannot open X Display");
       }
     // Map keyboard and mouse
     setKeyMapping();
@@ -51,7 +53,7 @@ namespace arcade
     if (!m_gui)
       {
 	std::cerr << "Cannot create XImage" << std::endl;
-	throw std::exception(); // TODO
+	throw AllocationError("Cannot create XImage");
       }
     XFlush(m_disp);
   }
@@ -183,7 +185,7 @@ namespace arcade
 	if (!m_map)
 	  {
 	    std::cerr << "Cannot create XImage map" << std::endl;
-	    throw std::exception(); // TODO
+	    throw AllocationError("Cannot create XImage map");
 	  }
       }
 

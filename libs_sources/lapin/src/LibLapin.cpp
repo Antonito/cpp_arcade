@@ -4,6 +4,8 @@
 #include <cstring>
 #include <algorithm>
 #include "LibLapin.hpp"
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
 
 namespace arcade
 {
@@ -19,14 +21,14 @@ LibLapin::LibLapin(size_t width, size_t height) : m_width(width), m_height(heigh
               << " [" << width << "x" << height << "]"
 #endif
               << std::endl;
-    throw std::exception(); // TODO: Exception
+    throw WindowError("Cannot create LibLapin Window");
   }
   m_render = bunny_new_pixelarray(width, height);
   m_gui = bunny_new_pixelarray(width, height);
   if (!m_render || !m_gui)
   {
     std::cerr << "Cannot create pixelarray" << std::endl;
-    throw std::exception(); // TODO: Exception
+    throw AllocationError("Cannot create pixelarray");
   }
   bunny_set_loop_main_function(&LibLapin::_mainLoop);
   bunny_loop(m_win, 60, this);
@@ -165,7 +167,7 @@ void LibLapin::updateMap(IMap const &map)
                 << " [" << m_mapWidth * m_tileSize << "x" << m_mapHeight * m_tileSize << "]"
 #endif
                 << std::endl;
-      throw std::exception(); // TODO
+      throw AllocationError("Cannot create LibLapin pixelarray");
     }
   }
 

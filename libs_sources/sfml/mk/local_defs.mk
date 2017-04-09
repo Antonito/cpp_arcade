@@ -9,6 +9,6 @@ else
 LOCAL_LINK_FLAGS=	-shared -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 endif
 
-LOCAL_LINK_FLAGS+=	-L$(ROOT_DIR)/build -larcade_common
+LOCAL_LINK_FLAGS+=	-L$(ROOT_DIR)/build -larcade_common -larcade_exceptions
 
 LOCAL_DEBUG_FLAGS=

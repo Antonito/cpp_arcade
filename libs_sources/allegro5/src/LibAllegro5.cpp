@@ -4,6 +4,8 @@
 #include "LibAllegro5.hpp"
 #include "ITile.hpp"
 #include "IMap.hpp"
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
 
 namespace arcade
 {
@@ -18,7 +20,7 @@ namespace arcade
     if (!m_win)
     {
       std::cerr << "Cannot create Allegro5 window" << std::endl;
-      throw std::exception(); // TODO
+      throw WindowError("Cannot create Allegro5 window");
     }
     al_set_window_title(m_win, "Arcade allegro");
     if (!al_install_keyboard())
@@ -52,7 +54,7 @@ namespace arcade
     if (!m_gui)
     {
       std::cerr << "Cannot get bitmap Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw AllocationError("Cannot get Allegro5 bitmap");
     }
     al_set_new_bitmap_flags(flags);
   }
@@ -145,7 +147,7 @@ namespace arcade
       if (!m_map)
       {
         std::cerr << "Cannot get bitmap Allegro5" << std::endl;
-        throw std::exception(); // TODO
+        throw AllocationError("Cannot get Allegro5 bitmap");
       }
       al_set_new_bitmap_flags(flags);
     }
