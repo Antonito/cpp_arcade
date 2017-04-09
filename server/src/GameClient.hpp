@@ -15,7 +15,7 @@ namespace arcade
   {
   public:
     static size_t constexpr buffSize = 4096;
-    static size_t constexpr timeOut = 10;
+    static size_t constexpr timeOut = 60; // Seconds
 
     GameClient(sock_t sock);
     virtual ~GameClient();

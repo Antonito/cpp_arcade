@@ -66,7 +66,6 @@ namespace arcade
 
     // Build packet
     std::shared_ptr<uint8_t> pck(new uint8_t[m_buffSize], std::default_delete<uint8_t[]>());
-
     std::memcpy(pck.get(), m_buff.get(), m_buffSize);
     m_recQueue.push(std::pair<uint32_t, std::shared_ptr<uint8_t>>(m_buffSize, pck));
     m_write = true;

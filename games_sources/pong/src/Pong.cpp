@@ -62,6 +62,11 @@ namespace arcade
         return (*this);
       }
 
+      bool Pong::hasNetwork() const
+      {
+	return (true);
+      }
+
       void Pong::notifyEvent(std::vector<Event> &&events)
       {
         std::vector<Event> ev = events;

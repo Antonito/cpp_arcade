@@ -41,6 +41,7 @@ namespace arcade
 	uint16_t			        curChck = 0;
 
 	// Fill header
+	std::memset(pck.get(), 0, sizeof(arcade::NetworkPacket));
 	head->magicNumber = htonl(arcade::NetworkPacketHeader::packetMagicNumber);
 	head->game = static_cast<arcade::NetworkGames>(htons(static_cast<uint16_t>(game)));
 	pck->len = htonl(sizeof(NetworkPacketData<gameEventLen, EntityDataType>));
@@ -50,7 +51,7 @@ namespace arcade
 	// Fill datas && calc checksum
 	NetworkPacketData<gameEventLen, EntityDataType>	*data = new NetworkPacketData<gameEventLen, EntityDataType>;
 	pck->data = reinterpret_cast<uint8_t *>(data);
-	std::memset(pck->data, 0, ntohl(pck->len));
+	std::memset(data, 0, sizeof(NetworkPacketData<gameEventLen, EntityDataType>));
 	callback(*data);
 	calcChecksum(ntohl(pck->len), pck->data, head->checksum);
 	if (head->checksum == curChck)

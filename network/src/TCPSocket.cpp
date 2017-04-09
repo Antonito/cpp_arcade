@@ -1,6 +1,5 @@
 #include <cerrno>
 #include <cassert>
-#include <iostream> // TODO: RM
 #include "TCPSocket.hpp"
 #include "SockError.hpp"
 
@@ -49,6 +48,12 @@ namespace arcade
 	{
 	  ret = connectToHost();
 	}
+      if (ret == false)
+	{
+	  if (m_socket > 0)
+	    closesocket(m_socket);
+	  m_socket = -1;
+	}
       return (ret && isStarted());
     }
 
@@ -57,7 +62,6 @@ namespace arcade
       ssize_t ret;
 
       assert(getType() == ASocket::BLOCKING);
-      std::cout << "Socket: " << m_socket << std::endl;
 #if defined(__linux__) || defined(__APPLE__)
       ret = ::send(m_socket, static_cast<char const *>(data), len, 0);
 #elif defined(_WIN32)
