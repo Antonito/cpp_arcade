@@ -30,6 +30,7 @@ public:
   Direction getDir() const;
 
   Position const &last() const;
+  void erase(Position const &pos);
 
 protected:
   std::vector<Position> m_pos;

@@ -12,9 +12,9 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Centipede.cpp	\
+SRC_FILES=	Pacman.cpp	\
 		Enemy.cpp	\
-		Obstacles.cpp 	\
+		PowerUps.cpp 	\
 		Player.cpp 	\
 		EntryPoint.cpp
 

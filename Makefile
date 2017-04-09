@@ -23,6 +23,7 @@ GAMES_DIR=		./games_sources/
 GAMES=			games_common	\
 			snake		\
 			centipede	\
+			pacman		\
 			pong
 
 GAME_PROJECT=		$(addprefix $(GAMES_DIR), $(GAMES))
