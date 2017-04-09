@@ -14,9 +14,58 @@ Centipede::Centipede()
   Enemy new_enemy;
   Position tmp;
 
-  m_map = std::make_unique<Map>(0, 0);
-  m_map->loadMap("./map/centipede/map0.txt");
+  std::vector<std::string> m =
+      {
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "1111111111111111111111111",
+          "0000000000000000000000000",
+          "0000000000000000000000000",
+          "0000000000000000000000000",
+          "0000000000000000000000000",
+          "0000000000000000000000000"};
+
+  m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
+  m_map->addLayer();
+  std::cout << m_map->getHeight() << std::endl;
+  std::cout << m_map->getWidth() << std::endl;
+  for (size_t y = 0; y < m_map->getHeight(); ++y)
+  {
+    for (size_t x = 0; x < m_map->getWidth(); ++x)
+    {
+      TileType type;
+
+      switch (m[y][x])
+      {
+      case '0':
+        type = TileType::EMPTY;
+        break;
+      case '1':
+        type = TileType::BLOCK;
+        break;
+      }
+      m_map->at(0, x, y).setType(type);
+    }
+  }
+
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
   m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() - (m_map->getHeight() / 5)));
@@ -29,9 +78,11 @@ Centipede::Centipede()
     tmp = placeObstacle(*m_map);
     m_obstacles.push_back(Obstacle());
     m_obstacles[i].push(tmp);
+    m_obstacles[i].setPv(5);
     m_map->at(0, tmp.x, tmp.y).setType(TileType::OBSTACLE);
   }
   m_lastTick = 0;
+  m_lastShootTick = 0;
   m_curTick = 0;
   m_hasShot = false;
 }
@@ -43,6 +94,7 @@ Centipede::Centipede(Centipede const &other)
   m_obstacles = other.m_obstacles;
   m_enemy = other.m_enemy;
   m_lastTick = other.m_lastTick;
+  m_lastShootTick = other.m_lastShootTick;
   m_curTick = other.m_curTick;
   m_hasShot = other.m_hasShot;
 }
@@ -168,14 +220,20 @@ void Centipede::process()
     e.display(*m_map);
   }
 
+  if (m_hasShot && m_curTick - m_lastShootTick > 40)
+  {
+    checkShoot();
+    m_lastShootTick = m_curTick;
+  }
+
   if (m_curTick - m_lastTick > 100)
   {
     for (Enemy &e : m_enemy)
     {
       e.move(*m_map);
+      if (e.isTouch(m_player[0]))
+        m_state = MENU;
     }
-    if (m_hasShot)
-      checkShoot();
     m_lastTick = m_curTick;
   }
 }

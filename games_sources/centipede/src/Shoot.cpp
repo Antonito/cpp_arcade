@@ -1,5 +1,5 @@
 #include <cmath>
-#include "Player.hpp"
+#include "Shoot.hpp"
 
 namespace arcade
 {
@@ -7,15 +7,15 @@ namespace game
 {
 namespace centipede
 {
-Player::Player()
+Shoot::Shoot()
 {
 }
 
-Player::~Player()
+Shoot::~Shoot()
 {
 }
 
-void Player::display(Map &map, double ratio) const
+void Shoot::display(Map &map, double ratio) const
 {
   //ratio = 1 / (1 + std::exp(-ratio + 1.0));
   for (size_t i = 0; i < m_pos.size(); ++i)
@@ -26,7 +26,7 @@ void Player::display(Map &map, double ratio) const
   }
 }
 
-void Player::move(Map &map)
+void Shoot::move(Map &map)
 {
   map.at(0, m_pos[0].x, m_pos[0].y).setType(TileType::EMPTY);
   if (m_pos.size() == 0 || !next().inMap(map))

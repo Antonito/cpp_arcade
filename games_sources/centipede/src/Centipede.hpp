@@ -7,6 +7,7 @@
 #include "Player.hpp"
 #include "Obstacle.hpp"
 #include "Enemy.hpp"
+#include "Shoot.hpp"
 #include "AEntity.hpp"
 
 namespace arcade
@@ -45,6 +46,7 @@ private:
   Shoot m_shoot;
   bool m_hasShot;
   size_t m_lastTick;
+  size_t m_lastShootTick;
   size_t m_curTick;
 };
 }

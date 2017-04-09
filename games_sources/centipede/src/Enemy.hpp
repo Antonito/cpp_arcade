@@ -21,6 +21,9 @@ public:
   virtual ~Enemy();
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
+
+private:
+  Direction m_fallDir = Direction::DOWN;
 };
 }
 }

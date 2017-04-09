@@ -12,32 +12,80 @@ namespace pacman
 Pacman::Pacman()
 {
   Enemy new_enemy;
+  std::vector<std::string> m =
+      {
+          "1##################",
+          "#........#........#",
+          "#U##.###.#.###.##U#",
+          "#.................#",
+          "#.##.#.#####.#.##.#",
+          "#....#...#...#....#",
+          "####.###.#.###.####",
+          "####.#.......#.####",
+          "####.#.## ##.#.####",
+          "    ...# E #...    ",
+          "####.#.#   #.#.####",
+          "####.#.#####.#.####",
+          "####.#...S...#.####",
+          "####.#.#####.#.####",
+          "#........#........#",
+          "#.##.###.#.###.##.#",
+          "#..#...........#..#",
+          "##.#.#.#####.#.#.##",
+          "#....#...#...#....#",
+          "#U######.#.######U#",
+          "#.................#",
+          "###################",
+      };
 
-  m_map = std::make_unique<Map>(0, 0);
-  m_map->loadMap("./map/pacman/map0.txt");
+  m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
+  m_map->addLayer();
+  std::cout << m_map->getHeight() << std::endl;
+  std::cout << m_map->getWidth() << std::endl;
   m_map->clearLayer(0, Color(50, 50, 50));
-  m_map->clearLayer(1);
-  for (size_t y = 0; y < m_map->getHeight(); y++)
+  for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
-    for (size_t x = 0; x < m_map->getWidth(); x++)
+    for (size_t x = 0; x < m_map->getWidth(); ++x)
     {
-      if (m_map->at(0, x, y).getType() == TileType::BLOCK)
+      TileType type;
+
+      switch (m[y][x])
+      {
+      case ' ':
+        type = TileType::EMPTY;
+        break;
+      case '#':
+        type = TileType::BLOCK;
         m_map->at(0, x, y).setColor(Color::Black);
-      else if (m_map->at(0, x, y).getType() == TileType::POWERUP)
+        break;
+      case '.':
+        type = TileType::POWERUP;
         m_powerups.push(Position(x, y));
-      else if (m_map->at(0, x, y).getType() == TileType::OTHER)
+        break;
+      case 'U':
+        type = TileType::POWERUP;
         m_superPowers.push(Position(x, y));
+        break;
+      case 'S':
+        type = TileType::EMPTY;
+        m_player.push(Position(x, y));
+        m_player.setDir(Direction::RIGHT);
+        break;
+      case 'E':
+        type = TileType::EMPTY;
+        new_enemy.push(Position(x, y));
+        new_enemy.setDir(Direction::UP);
+        for (size_t i = 0; i < 4; i++)
+        {
+          m_enemy.push_back(new_enemy);
+        }
+        break;
+      }
+      m_map->at(0, x, y).setType(type);
     }
   }
-  m_player.push(Position(9, 12));
-  m_player.setDir(Direction::RIGHT);
-  new_enemy.push(Position(10, 9));
-  new_enemy.setDir(Direction::UP);
-  for (size_t i = 0; i < 4; i++)
-  {
-    m_enemy.push_back(new_enemy);
-  }
+  m_map->clearLayer(1);
   m_lastTick = 0;
   m_nextDir = Direction::RIGHT;
   m_curTick = 0;
