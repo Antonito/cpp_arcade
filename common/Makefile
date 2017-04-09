@@ -13,7 +13,8 @@ DIR_LIST=	$(SRC_DIR)
 # Project's files
 
 SRC_FILES=	Color.cpp		\
-		Event.cpp
+		Event.cpp		\
+		Sound.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

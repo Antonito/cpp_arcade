@@ -1,26 +1,18 @@
 #include <iostream>
 #include "GenLibrary.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
-	GenLibrary::GenLibrary(std::string const &filename) : m_filename(filename)
+  GenLibrary::GenLibrary() :
+    m_filename(""),
+    m_libPtr(nullptr)
+  {
+  }
+
+  GenLibrary::GenLibrary(std::string const &filename) : m_filename(filename)
 	{
-#if defined(__linux__) || ( __APPLE__)
-		m_libPtr = dlopen(m_filename.c_str(), RTLD_NOW | RTLD_GLOBAL);
-		if (!m_libPtr)
-		{
-			std::cerr << "Error while loading '" << m_filename << "'! Error : "
-				<< dlerror() << std::endl;
-		}
-#elif defined(_WIN32)
-		m_libPtr = LoadLibraryA(m_filename.c_str());
-		if (!m_libPtr)
-		{
-			std::cerr << "Error while loading '" << m_filename << "'! Error : "
-				<< GetLastError() << std::endl;
-		}
-#endif
-		// TODO: Check m_libPtr (no such file)
+          this->load(filename);
 	}
 
 	GenLibrary::GenLibrary(GenLibrary const &other) : GenLibrary(other.m_filename)
@@ -49,4 +41,22 @@ namespace arcade
 		}
 		return (*this);
 	}
+
+        void GenLibrary::load(std::string const & filename)
+        {
+          m_filename = filename;
+#if defined(__linux__) || ( __APPLE__)
+          m_libPtr = dlopen(m_filename.c_str(), RTLD_NOW | RTLD_GLOBAL);
+          if (!m_libPtr)
+          {
+            throw RessourceError("Cannot load '" + m_filename + "' ! Error : " + dlerror());
+          }
+#elif defined(_WIN32)
+          m_libPtr = LoadLibraryA(m_filename.c_str());
+          if (!m_libPtr)
+          {
+            throw RessourceError("Cannot load '" + m_filename + "' ! Error : " + GetLastError());
+          }
+#endif
+        }
 }

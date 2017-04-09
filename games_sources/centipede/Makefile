@@ -14,7 +14,8 @@ DIR_LIST=	$(SRC_DIR)
 
 SRC_FILES=	Centipede.cpp	\
 		Enemy.cpp	\
-		Obstacles.cpp 	\
+		Obstacle.cpp 	\
+		Shoot.cpp	\
 		Player.cpp 	\
 		EntryPoint.cpp
 

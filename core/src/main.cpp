@@ -54,22 +54,22 @@ int main(int ac, char **av)
 	srand(time(NULL));
 
 	//Launching of the Core
-	arcade::Core core;
-	Nope::Log::Logger::start();
-#if defined(DEBUG)
-	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
-#else
-	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
-#endif
         try
         {
+          arcade::Core core;
+          Nope::Log::Logger::start();
+#if defined(DEBUG)
+          Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
+#else
+          Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
+#endif
           core.launch(lib);
         }
-        catch (std::exception const &e)
-        {
-          std::cerr << e.what() << std::endl;
-          Nope::Log::Error << e.what();
-          return (1);
-        }
+        //catch (std::exception const &e)
+        //{
+        //  std::cerr << "Fatal error : " << e.what() << std::endl;
+        //  return (1);
+        //}
+        catch (int n) {}
 	return (0);
 }

@@ -15,6 +15,7 @@ DIR_LIST=	$(SRC_DIR)
 SRC_FILES=	Pacman.cpp	\
 		Enemy.cpp	\
 		PowerUps.cpp 	\
+		SuperPowers.cpp	\
 		Player.cpp 	\
 		EntryPoint.cpp
 

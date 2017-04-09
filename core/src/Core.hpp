@@ -9,7 +9,6 @@
 #include "IGfxLib.hpp"
 #include "GenLibrary.hpp"
 #include "AGame.hpp"
-#include "TCPSocket.hpp"
 
 namespace arcade
 {
@@ -47,9 +46,12 @@ namespace arcade
 
 		bool m_inMenu;
 
+                GenLibrary m_soundLib;
+
 		std::unique_ptr<IGame> m_game;
 		std::unique_ptr<IGfxLib> m_lib;
 		GameState m_gameState;
+		std::unique_ptr<IGfxLib> m_sound;
 
 		// Game implementation part (for main menu)
 		virtual void notifyEvent(std::vector<Event> &&events);
@@ -70,9 +72,6 @@ namespace arcade
                 size_t m_selectedGameId;
 
                 bool m_menuLib;
-
-	  // Network
-	  std::unique_ptr<Network::TCPSocket>	m_sock;
 	};
 }
 

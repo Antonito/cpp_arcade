@@ -12,33 +12,85 @@ namespace pacman
 Pacman::Pacman()
 {
   Enemy new_enemy;
+  std::vector<std::string> m =
+      {
+          "1##################",
+          "#........#........#",
+          "#U##.###.#.###.##U#",
+          "#.................#",
+          "#.##.#.#####.#.##.#",
+          "#....#...#...#....#",
+          "####.###.#.###.####",
+          "####.#.......#.####",
+          "####.#.## ##.#.####",
+          "    ...# E #...    ",
+          "####.#.#   #.#.####",
+          "####.#.#####.#.####",
+          "####.#...S...#.####",
+          "####.#.#####.#.####",
+          "#........#........#",
+          "#.##.###.#.###.##.#",
+          "#..#...........#..#",
+          "##.#.#.#####.#.#.##",
+          "#....#...#...#....#",
+          "#U######.#.######U#",
+          "#.................#",
+          "###################",
+      };
 
-  m_map = std::make_unique<Map>(0, 0);
-  m_map->loadMap("./map/pacman/map0.txt");
+  m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
+  m_map->addLayer();
+  std::cout << m_map->getHeight() << std::endl;
+  std::cout << m_map->getWidth() << std::endl;
   m_map->clearLayer(0, Color(50, 50, 50));
-  m_map->clearLayer(1);
-  for (size_t y = 0; y < m_map->getHeight(); y++)
+  for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
-    for (size_t x = 0; x < m_map->getWidth(); x++)
+    for (size_t x = 0; x < m_map->getWidth(); ++x)
     {
-      if (m_map->at(0, x, y).getType() == TileType::BLOCK)
+      TileType type;
+
+      switch (m[y][x])
+      {
+      case ' ':
+        type = TileType::EMPTY;
+        break;
+      case '#':
+        type = TileType::BLOCK;
         m_map->at(0, x, y).setColor(Color::Black);
-      else if (m_map->at(0, x, y).getType() == TileType::POWERUP)
+        break;
+      case '.':
+        type = TileType::POWERUP;
         m_powerups.push(Position(x, y));
+        break;
+      case 'U':
+        type = TileType::POWERUP;
+        m_superPowers.push(Position(x, y));
+        break;
+      case 'S':
+        type = TileType::EMPTY;
+        m_player.push(Position(x, y));
+        m_player.setDir(Direction::RIGHT);
+        break;
+      case 'E':
+        type = TileType::EMPTY;
+        new_enemy.push(Position(x, y));
+        new_enemy.setDir(Direction::UP);
+        for (size_t i = 0; i < 4; i++)
+        {
+          m_enemy.push_back(new_enemy);
+        }
+        break;
+      }
+      m_map->at(0, x, y).setType(type);
     }
   }
-  m_player.push(Position(9, 12));
-  m_player.setDir(Direction::RIGHT);
-  new_enemy.push(Position(10, 9));
-  new_enemy.setDir(Direction::UP);
-  for (size_t i = 0; i < 4; i++)
-  {
-    m_enemy.push_back(new_enemy);
-  }
+  m_map->clearLayer(1);
   m_lastTick = 0;
   m_nextDir = Direction::RIGHT;
   m_curTick = 0;
+  m_eatTime = 0;
+  m_hasEat = false;
 }
 
 Pacman::Pacman(Pacman const &other)
@@ -50,6 +102,8 @@ Pacman::Pacman(Pacman const &other)
   m_lastTick = other.m_lastTick;
   m_curTick = other.m_curTick;
   m_nextDir = other.m_nextDir;
+  m_hasEat = other.m_hasEat;
+  m_eatTime = other.m_eatTime;
 }
 
 Pacman::~Pacman()
@@ -123,12 +177,70 @@ std::vector<std::unique_ptr<ISprite>> Pacman::getSpritesToLoad() const
   return (s);
 }
 
+void Pacman::checkEnemy()
+{
+  for (Enemy &e : m_enemy)
+  {
+    if (e[0] == m_player[0])
+    {
+      if (e.getEatable())
+      {
+        e.setDead(true);
+        e.setDeathTime(this->getCurrentTick());
+      }
+      else
+        m_state = MENU;
+    }
+  }
+}
+
+void Pacman::checkPowerUps()
+{
+  if (m_powerups.size() == 0)
+    m_state = MENU;
+  if (m_powerups.isTouch(m_player[0]))
+  {
+    // up score
+    m_powerups.erase(m_player[0]);
+  }
+}
+
+void Pacman::checkSuperPowers()
+{
+  if (m_superPowers.isTouch(m_player[0]))
+  {
+    m_hasEat = true;
+    for (Enemy &e : m_enemy)
+    {
+      if (!e.getDead())
+      {
+        e.setEatable(true);
+      }
+    }
+    m_hasEat = true;
+    m_eatTime = this->getCurrentTick();
+    m_superPowers.erase(m_player[0]);
+  }
+}
+
+void Pacman::unsetSuperPowers()
+{
+  for (Enemy &e : m_enemy)
+  {
+    e.setEatable(false);
+  }
+  m_hasEat = false;
+  std::cout << "RESET POWERS" << std::endl;
+}
+
 void Pacman::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_powerups.display(*m_map);
+  m_superPowers.display(*m_map);
   m_player.display(*m_map);
+
   for (Enemy const &e : m_enemy)
   {
     e.display(*m_map);
@@ -136,12 +248,11 @@ void Pacman::process()
 
   if (m_curTick - m_lastTick > 130)
   {
-    if (m_powerups.isTouch(m_player[0]))
-    {
-      m_powerups.erase(m_player[0]);
-    }
-    if (m_powerups.size() == 0)
-      m_state = MENU;
+    checkEnemy();
+    checkPowerUps();
+    checkSuperPowers();
+    if (m_hasEat && m_curTick - m_eatTime > 10000)
+      unsetSuperPowers();
     m_player.move(*m_map, m_nextDir);
     m_lastTick = m_curTick;
   }

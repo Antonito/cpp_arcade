@@ -6,6 +6,7 @@
 #include "AGame.hpp"
 #include "Player.hpp"
 #include "PowerUps.hpp"
+#include "SuperPowers.hpp"
 #include "Enemy.hpp"
 #include "AEntity.hpp"
 
@@ -37,13 +38,21 @@ public:
   virtual void WhereAmI(std::ostream &) const;
 #endif
 private:
+  void checkEnemy();
+  void checkPowerUps();
+  void checkSuperPowers();
+  void unsetSuperPowers();
+
   Player m_player;
   PowerUps m_powerups;
+  SuperPowers m_superPowers;
   std::vector<Enemy> m_enemy;
 
   Direction m_nextDir;
+  bool m_hasEat;
   size_t m_lastTick;
   size_t m_curTick;
+  size_t m_eatTime;
 };
 }
 }

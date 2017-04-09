@@ -1,5 +1,5 @@
-#ifndef LIBSFML_HPP_
-#define LIBSFML_HPP_
+#ifndef LIBSFMLSOUND_HPP_
+#define LIBSFMLSOUND_HPP_
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -8,14 +8,14 @@
 
 namespace arcade
 {
-  class LibSFML : public IGfxLib
+  class LibSFMLSound : public IGfxLib
   {
   public:
-    LibSFML(size_t width = 1280, size_t height = 720);
-    LibSFML(LibSFML const &other) = delete;
-    ~LibSFML();
+    LibSFMLSound();
+    LibSFMLSound(LibSFMLSound const &other) = delete;
+    ~LibSFMLSound();
 
-    LibSFML &operator=(LibSFML const &other) = delete;
+    LibSFMLSound &operator=(LibSFMLSound const &other) = delete;
 
     // Events
     virtual bool pollEvent(Event &e);
@@ -41,30 +41,11 @@ namespace arcade
     virtual void clear();
 
   private:
-    static KeyboardKey getKeyboardKey(sf::Keyboard::Key code);
-    static MouseKey getMouseKey(sf::Mouse::Button code);
-    static MouseKey getMouseWheel(sf::Mouse::Wheel code);
-    MousePos getMousePos();
-
-    static std::map<sf::Keyboard::Key, KeyboardKey> m_kb_keys;
-    static std::map<sf::Mouse::Button, MouseKey> m_mouse_keys;
-
-    static constexpr size_t m_maxTileSize = 24;
-
-    std::unique_ptr<sf::RenderWindow> m_win;
     std::vector<std::unique_ptr<sf::Music>> m_music;
     std::vector<sf::SoundBuffer> m_soundBuffer;
     std::vector<sf::Sound> m_sound;
     std::vector<std::pair<SoundType, size_t>> m_soundIndex;
-    sf::Vector2i m_mousePos;
-
-    std::vector<std::vector<sf::Texture>> m_sprites;
-
-    sf::Font m_font;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 
-#endif // !LIBSFML_HPP_
+#endif // !LIBSFMLSOUND_HPP_

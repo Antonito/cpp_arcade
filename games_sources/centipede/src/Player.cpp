@@ -35,6 +35,14 @@ void Player::move(Map &map)
   m_pos.insert(m_pos.begin(), m_pos[0] + m_dir);
   m_pos.erase(m_pos.end() - 1);
 }
+
+std::unique_ptr<AEntity> Player::shoot() const
+{
+  std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
+
+  shoot->push(m_pos[0] + Direction::UP);
+  return (shoot);
+}
 }
 }
 }

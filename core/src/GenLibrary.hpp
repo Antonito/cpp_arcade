@@ -23,11 +23,13 @@ namespace arcade
 	class GenLibrary
 	{
 	public:
-		explicit GenLibrary(std::string const &filename);
+          GenLibrary();
+		GenLibrary(std::string const &filename);
 		GenLibrary(GenLibrary const &);
 		~GenLibrary();
 		GenLibrary &operator=(GenLibrary const &);
 
+                void load(std::string const &filename);
 		template<typename T>
 		std::function<T> getFunction(std::string const &sym) const
 		{
