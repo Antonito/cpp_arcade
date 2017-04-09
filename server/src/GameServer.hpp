@@ -25,6 +25,8 @@ namespace arcade
     virtual bool	addClient();
     virtual bool	removeClient(Network::IClient &client);
 
+    std::vector<std::unique_ptr<GameClient>> const &getClients() const;
+
     bool		isRunning() const;
     void		wait();
   private:

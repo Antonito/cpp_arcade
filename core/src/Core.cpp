@@ -476,7 +476,7 @@ Nope::Log::Info << "Exiting the core";
             }
             m_selectedGameId--;
           }
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_DOWN:
           if (m_menuLib)
@@ -495,15 +495,21 @@ Nope::Log::Info << "Exiting the core";
               m_selectedGameId = 0;
             }
           }
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_LEFT:
+          if (m_menuLib == false)
+          {
+            m_soundsToPlay.emplace_back(1, PLAY);
+          }
           m_menuLib = true;
-          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ARROW_RIGHT:
+          if (m_menuLib == true)
+          {
+            m_soundsToPlay.emplace_back(1, PLAY);
+          }
           m_menuLib = false;
-          m_soundsToPlay.emplace_back(0);
           break;
         case KB_ENTER:
           if (m_menuLib)
@@ -516,6 +522,7 @@ Nope::Log::Info << "Exiting the core";
           }
           else
           {
+            m_soundsToPlay.emplace_back(2, PLAY);
             m_currentGameId = m_selectedGameId;
             m_game.release();
             m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
@@ -530,11 +537,21 @@ Nope::Log::Info << "Exiting the core";
     }
   }
 
-  std::vector<std::pair<std::string, SoundType > > Core::getSoundsToLoad() const
+  std::vector<std::pair<std::string, SoundType>> Core::getSoundsToLoad() const
   {
     std::vector<std::pair<std::string, SoundType>> s;
 
-    s.emplace_back("assets/sounds/menu_move.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_03.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_00.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_01.wav", SoundType::SOUND);
+
+    // Init mode
+    m_soundsToPlay.emplace_back(0, UNIQUE);
+    m_soundsToPlay.emplace_back(0, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(1, UNIQUE);
+    m_soundsToPlay.emplace_back(1, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(2, UNIQUE);
+    m_soundsToPlay.emplace_back(2, VOLUME, 25.0);
     return (s);
   }
 

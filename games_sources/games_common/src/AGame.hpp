@@ -47,7 +47,6 @@ namespace arcade
       virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
       virtual std::vector<NetworkPacket> getNetworkToSend();
       virtual bool hasNetwork() const;
-
       // Sound
       virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
       virtual std::vector<Sound>         getSoundsToPlay();
@@ -75,7 +74,7 @@ namespace arcade
       std::vector<NetworkPacket> m_toSend;
 
       // Sounds to play buffer
-      std::vector<Sound> m_soundsToPlay;
+      mutable std::vector<Sound> m_soundsToPlay;
 
       // Game map
       std::unique_ptr<Map> m_map;
