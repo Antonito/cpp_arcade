@@ -79,8 +79,7 @@ namespace arcade
     ret = select(m_fd + 1, &readfds, nullptr, nullptr, &tv);
     if (ret == -1)
       {
-	std::cerr << "Cannot read LibX events" << std::endl;
-	throw std::exception(); // TODO
+	throw std::runtime_error("Cannot read LibX events");
       }
     else if (ret)
       {

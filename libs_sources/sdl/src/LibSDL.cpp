@@ -6,6 +6,7 @@
 #include "LibSDL.hpp"
 #include "WindowError.hpp"
 #include "InitializationError.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -244,8 +245,7 @@ namespace arcade
 
         if (!surface)
         {
-          std::cerr << "File not found" << std::endl;
-          throw std::exception(); // TODO: create good exception
+	  throw RessourceError("File not found: " + sprite->getGraphicPath(i));
         }
         std::cout << "Loaded " << surface->w << "x" << surface->h << std::endl;
         //SDL_FillRect(surface, NULL, Color::Black.full);
