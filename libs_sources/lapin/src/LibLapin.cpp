@@ -27,7 +27,6 @@ LibLapin::LibLapin(size_t width, size_t height) : m_width(width), m_height(heigh
   m_gui = bunny_new_pixelarray(width, height);
   if (!m_render || !m_gui)
   {
-    std::cerr << "Cannot create pixelarray" << std::endl;
     throw AllocationError("Cannot create pixelarray");
   }
   bunny_set_loop_main_function(&LibLapin::_mainLoop);

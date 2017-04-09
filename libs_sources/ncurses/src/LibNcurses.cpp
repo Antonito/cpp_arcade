@@ -1,5 +1,4 @@
 #include <exception>
-#include <iostream>
 #include <curses.h>
 #include <cstdio>
 #include <sys/poll.h>
@@ -23,7 +22,6 @@ namespace arcade
     m_width = width;
     if (!m_win)
       {
-	std::cerr << "Cannot create ncurses window" << std::endl;
 	throw WindowError("Cannot create Ncurses window");
       }
     if (has_colors())
