@@ -53,7 +53,7 @@ namespace arcade
 
     static void fillRect(SDL_Surface *surface, SDL_Rect *rect, Color color);
 
-    static constexpr size_t m_maxTileSize = 24;
+    static constexpr size_t m_maxTileSize = 30;
 
     SDL_Window *m_win;
     SDL_Surface *m_winSurface;

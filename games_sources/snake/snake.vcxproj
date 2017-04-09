@@ -148,19 +148,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\AEntity.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
+    <ClCompile Include="src\Fruit.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Pos.cpp" />
-    <ClCompile Include="src\Powerup.cpp" />
     <ClCompile Include="src\Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AEntity.hpp" />
+    <ClInclude Include="src\Fruit.hpp" />
     <ClInclude Include="src\Player.hpp" />
-    <ClInclude Include="src\Pos.hpp" />
-    <ClInclude Include="src\Powerup.hpp" />
-    <ClInclude Include="src\Shoot.hpp" />
     <ClInclude Include="src\Snake.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
