@@ -4,6 +4,7 @@
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
+#include "RessourceError.hpp"
 
 //
 // PLEASE READ CAREFULLY
@@ -218,7 +219,7 @@ namespace arcade
 
     if (stat(lib.c_str(), &search) < 0)
     {
-      throw std::exception();
+      throw RessourceError("Library " + lib + " not found");
     }
 
     // Open "dir/" directory
@@ -244,7 +245,7 @@ namespace arcade
           m_libList.emplace_back(libPath);
           if (stat(libPath.c_str(), &file) < 0)
           {
-            throw std::exception();
+            throw RessourceError("Error while accessing " + libPath);
           }
 
           m_gui->push(game::Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
@@ -265,18 +266,18 @@ namespace arcade
 
       if (found == false)
       {
-        throw std::exception();
+        throw RessourceError("The given file does not seems to be in the ./lib/ directory");
       }
     }
     else
     {
-      throw std::exception(); // TODO: create a good exception
+      throw RessourceError("Cannot open ./lib/ directory");
     }
 
     // Check if there was at least one graphic lib
     if (m_libList.size() == 0)
     {
-      throw std::exception(); // TODO: there is no graphic library
+      throw RessourceError("No graphic library was found");
     }
 
     m_firstGameIndex = m_gui->size();
@@ -306,14 +307,19 @@ namespace arcade
       // Close the dir after using it because we are well educated people
       // and yes all of this was copy/pasted :)
       closedir(dir);
-      Nope::Log::Info << "Closing dir 'lib'";
+      Nope::Log::Info << "Closing dir 'games'";
     }
     else
     {
-      throw std::exception(); // TODO: create a good exception
+      throw RessourceError("Cannot open ./games/ directory");
+    }
+
+    // Check if there was at least one graphic lib
+    if (m_gameList.size() == 0)
+    {
+      throw RessourceError("No game was found");
     }
   }
-
   // Check if the name string begins with prefix and end with suffix
   // ex: isNameValid("liboui.a", "lib", ".a") => true
   //	   isNameValid("liboui.a", "lib_arcade", ".a") => false

@@ -48,20 +48,13 @@ namespace Nope
 
 		void Logger::start()
 		{
-			LogSink console = LogSink::makeOstream(std::cout);
 			LogSink file = LogSink::makeFile("log/arcade.log");
 
-			Trace.addSink(console);
-#ifdef DEBUG
-			Debug.addSink(console);
-#endif
-			Info.addSink(console);
-			Warning.addSink(console);
-			Error.addSink(console);
-
+			Trace.addSink(file);
 #ifdef DEBUG
 			Debug.addSink(file);
 #endif
+			Info.addSink(file);
 			Warning.addSink(file);
 			Error.addSink(file);
 		}

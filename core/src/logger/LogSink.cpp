@@ -48,9 +48,6 @@ namespace Nope
 
 				*file << level << (time.count() / 1000) << "." << std::setfill('0')
 					<< std::setw(3) << (time.count() % 1000) << "\t"
-#ifdef DEBUG
-					<< "(" << msg.meta << ") : "
-#endif
 					<< msg.getMessage() << std::endl;
 			});
 		}
