@@ -27,11 +27,13 @@ Centipede::Centipede()
   for (size_t i = 0; i < 30; i++)
   {
     tmp = placeObstacle(*m_map);
-    m_obstacles.push(tmp);
+    m_obstacles.push_back(Obstacle());
+    m_obstacles[i].push(tmp);
     m_map->at(0, tmp.x, tmp.y).setType(TileType::OBSTACLE);
   }
   m_lastTick = 0;
   m_curTick = 0;
+  m_hasShot = false;
 }
 
 Centipede::Centipede(Centipede const &other)
@@ -42,6 +44,7 @@ Centipede::Centipede(Centipede const &other)
   m_enemy = other.m_enemy;
   m_lastTick = other.m_lastTick;
   m_curTick = other.m_curTick;
+  m_hasShot = other.m_hasShot;
 }
 
 Centipede::~Centipede()
@@ -82,6 +85,14 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
         m_player.setDir(Direction::RIGHT);
         m_player.move(*m_map);
         break;
+      case KB_SPACE:
+        if (!m_hasShot)
+        {
+          m_hasShot = true;
+          m_shoot = m_player.shoot();
+          m_shoot.setDir(Direction::UP);
+        }
+        break;
       case KB_ESCAPE:
         m_state = MENU;
       default:
@@ -105,12 +116,53 @@ std::vector<std::unique_ptr<ISprite>> Centipede::getSpritesToLoad() const
   return (s);
 }
 
+void Centipede::checkShoot()
+{
+  m_shoot.move(*m_map);
+  for (Enemy &e : m_enemy)
+  {
+    if (e.isTouch(m_shoot[0]))
+    {
+      // split centipede
+      m_hasShot = false;
+    }
+  }
+
+  for (std::vector<Obstacle>::iterator it = m_obstacles.begin(); it != m_obstacles.end();)
+  {
+    if (it->isTouch(m_shoot[0]))
+    {
+      it->hit();
+      if (it->getPv() == 0)
+      {
+        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::EMPTY);
+        it = m_obstacles.erase(it);
+      }
+      else
+        it++;
+      m_hasShot = false;
+    }
+    else
+      it++;
+  }
+
+  if (m_shoot[0].y == 0)
+    m_hasShot = false;
+}
+
 void Centipede::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_player.display(*m_map);
-  m_obstacles.display(*m_map);
+  if (m_hasShot)
+    m_shoot.display(*m_map);
+
+  for (Obstacle const &o : m_obstacles)
+  {
+    o.display(*m_map);
+  }
+
   for (Enemy const &e : m_enemy)
   {
     e.display(*m_map);
@@ -122,6 +174,8 @@ void Centipede::process()
     {
       e.move(*m_map);
     }
+    if (m_hasShot)
+      checkShoot();
     m_lastTick = m_curTick;
   }
 }
@@ -142,7 +196,13 @@ Position Centipede::placeObstacle(Map const &map) const
   {
     Position p(rand() % width, rand() % (height - (height / 5)));
 
-    if (map.at(0, p.x, p.y).getType() != TileType::EMPTY && m_obstacles.isTouch(p) == false)
+    for (Obstacle const &o : m_obstacles)
+    {
+      if (o.isTouch(p))
+        continue;
+    }
+
+    if (map.at(0, p.x, p.y).getType() != TileType::EMPTY)
     {
       return (p);
     }

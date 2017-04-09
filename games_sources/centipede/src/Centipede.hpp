@@ -5,7 +5,7 @@
 #include <ostream>
 #include "AGame.hpp"
 #include "Player.hpp"
-#include "Obstacles.hpp"
+#include "Obstacle.hpp"
 #include "Enemy.hpp"
 #include "AEntity.hpp"
 
@@ -38,11 +38,12 @@ public:
 #endif
 private:
   Position placeObstacle(Map const &map) const;
-
+  void checkShoot();
   Player m_player;
-  Obstacles m_obstacles;
+  std::vector<Obstacle> m_obstacles;
   std::vector<Enemy> m_enemy;
-
+  Shoot m_shoot;
+  bool m_hasShot;
   size_t m_lastTick;
   size_t m_curTick;
 };

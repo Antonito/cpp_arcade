@@ -26,6 +26,8 @@ Pacman::Pacman()
         m_map->at(0, x, y).setColor(Color::Black);
       else if (m_map->at(0, x, y).getType() == TileType::POWERUP)
         m_powerups.push(Position(x, y));
+      else if (m_map->at(0, x, y).getType() == TileType::OTHER)
+        m_superPowers.push(Position(x, y));
     }
   }
   m_player.push(Position(9, 12));
@@ -39,6 +41,8 @@ Pacman::Pacman()
   m_lastTick = 0;
   m_nextDir = Direction::RIGHT;
   m_curTick = 0;
+  m_eatTime = 0;
+  m_hasEat = false;
 }
 
 Pacman::Pacman(Pacman const &other)
@@ -50,6 +54,8 @@ Pacman::Pacman(Pacman const &other)
   m_lastTick = other.m_lastTick;
   m_curTick = other.m_curTick;
   m_nextDir = other.m_nextDir;
+  m_hasEat = other.m_hasEat;
+  m_eatTime = other.m_eatTime;
 }
 
 Pacman::~Pacman()
@@ -123,12 +129,70 @@ std::vector<std::unique_ptr<ISprite>> Pacman::getSpritesToLoad() const
   return (s);
 }
 
+void Pacman::checkEnemy()
+{
+  for (Enemy &e : m_enemy)
+  {
+    if (e[0] == m_player[0])
+    {
+      if (e.getEatable())
+      {
+        e.setDead(true);
+        e.setDeathTime(this->getCurrentTick());
+      }
+      else
+        m_state = MENU;
+    }
+  }
+}
+
+void Pacman::checkPowerUps()
+{
+  if (m_powerups.size() == 0)
+    m_state = MENU;
+  if (m_powerups.isTouch(m_player[0]))
+  {
+    // up score
+    m_powerups.erase(m_player[0]);
+  }
+}
+
+void Pacman::checkSuperPowers()
+{
+  if (m_superPowers.isTouch(m_player[0]))
+  {
+    m_hasEat = true;
+    for (Enemy &e : m_enemy)
+    {
+      if (!e.getDead())
+      {
+        e.setEatable(true);
+      }
+    }
+    m_hasEat = true;
+    m_eatTime = this->getCurrentTick();
+    m_superPowers.erase(m_player[0]);
+  }
+}
+
+void Pacman::unsetSuperPowers()
+{
+  for (Enemy &e : m_enemy)
+  {
+    e.setEatable(false);
+  }
+  m_hasEat = false;
+  std::cout << "RESET POWERS" << std::endl;
+}
+
 void Pacman::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_powerups.display(*m_map);
+  m_superPowers.display(*m_map);
   m_player.display(*m_map);
+
   for (Enemy const &e : m_enemy)
   {
     e.display(*m_map);
@@ -136,12 +200,11 @@ void Pacman::process()
 
   if (m_curTick - m_lastTick > 130)
   {
-    if (m_powerups.isTouch(m_player[0]))
-    {
-      m_powerups.erase(m_player[0]);
-    }
-    if (m_powerups.size() == 0)
-      m_state = MENU;
+    checkEnemy();
+    checkPowerUps();
+    checkSuperPowers();
+    if (m_hasEat && m_curTick - m_eatTime > 10000)
+      unsetSuperPowers();
     m_player.move(*m_map, m_nextDir);
     m_lastTick = m_curTick;
   }
