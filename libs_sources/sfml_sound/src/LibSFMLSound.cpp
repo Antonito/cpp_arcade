@@ -69,12 +69,12 @@ namespace arcade
 
     if (type == SoundType::MUSIC)
     {
-      sf::Music &m = m_music[index];
-      switch (sound.action)
+      sf::Music &m = *m_music[index];
+      switch (sound.mode)
       {
       case UNIQUE:
       case REPEAT:
-        m.setLoop(sound.action == REPEAT);
+        m.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
         m.setVolume(sound.volume);
@@ -84,10 +84,10 @@ namespace arcade
         m.play();
         break;
       case PAUSE:
-        m.play();
+        m.pause();
         break;
       case RESUME:
-        m.pause();
+        m.play();
         break;
       case STOP:
         m.stop();
@@ -98,11 +98,11 @@ namespace arcade
     {
       sf::Sound &s = m_sound[index];
 
-      switch (sound.action)
+      switch (sound.mode)
       {
       case UNIQUE:
       case REPEAT:
-        s.setLoop(sound.action == REPEAT);
+        s.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
         s.setVolume(sound.volume);
@@ -112,10 +112,10 @@ namespace arcade
         s.play();
         break;
       case PAUSE:
-        s.play();
+        s.pause();
         break;
       case RESUME:
-        s.pause();
+        s.play();
         break;
       case STOP:
         s.stop();

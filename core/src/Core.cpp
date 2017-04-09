@@ -1,8 +1,6 @@
 #include <dirent.h>
 #include <utility>
 #include <sys/stat.h>
-#include <sys/select.h>
-#include <cstring>
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
@@ -145,7 +143,6 @@ Nope::Log::Info << "Exiting the core";
       {
         if (m_gameState == QUIT)
           std::cout << "QUIT #2" << std::endl;
-	m_sock = nullptr;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -163,14 +160,7 @@ Nope::Log::Info << "Exiting the core";
         return (QUIT);
       }
       // Network
-#ifdef DEBUG
-      Nope::Log::Debug << "Sending Network data";
-#endif
-      notifyNetwork(m_game->getNetworkToSend());
-#ifdef DEBUG
-      Nope::Log::Debug << "Getting Network data";
-#endif
-      m_game->notifyNetwork(getNetworkToSend());
+      // TODO: implement
 
       // Game loop
       m_game->process();
@@ -373,22 +363,6 @@ Nope::Log::Info << "Exiting the core";
     {
       m_sound->loadSounds(m_game->getSoundsToLoad());
     }
-    if (m_game->hasNetwork())
-      {
-	uint16_t	port;
-	std::string	host;
-
-	std::cout << "Host: ";
-	std::cin >> host;
-	std::cout << "Game Port: ";
-	std::cin >> port;
-	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
-	m_sock->openConnection();
-	if (!m_sock->isStarted())
-	  {
-	    throw std::exception(); // TODO: Change
-	  }
-      }
     m_gameState = INGAME;
   }
 
@@ -524,12 +498,18 @@ Nope::Log::Info << "Exiting the core";
           m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_LEFT:
+          if (m_menuLib == false)
+          {
+            m_soundsToPlay.emplace_back(1, PLAY);
+          }
           m_menuLib = true;
-          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_RIGHT:
+          if (m_menuLib == true)
+          {
+            m_soundsToPlay.emplace_back(1, PLAY);
+          }
           m_menuLib = false;
-          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ENTER:
           if (m_menuLib)
@@ -542,6 +522,7 @@ Nope::Log::Info << "Exiting the core";
           }
           else
           {
+            m_soundsToPlay.emplace_back(2, PLAY);
             m_currentGameId = m_selectedGameId;
             m_game.release();
             m_game = std::unique_ptr<IGame>(m_gameList[m_currentGameId].getFunction<IGame *()>("getGame")());
@@ -560,11 +541,17 @@ Nope::Log::Info << "Exiting the core";
   {
     std::vector<std::pair<std::string, SoundType>> s;
 
-    s.emplace_back("assets/sounds/menu_move.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_03.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_00.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_01.wav", SoundType::SOUND);
 
     // Init mode
     m_soundsToPlay.emplace_back(0, UNIQUE);
     m_soundsToPlay.emplace_back(0, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(1, UNIQUE);
+    m_soundsToPlay.emplace_back(1, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(2, UNIQUE);
+    m_soundsToPlay.emplace_back(2, VOLUME, 25.0);
     return (s);
   }
 
@@ -600,74 +587,6 @@ Nope::Log::Info << "Exiting the core";
       m_gui->at(4).setBackgroundColor(light);
     }
   }
-
-void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
-{
-  if (m_sock)
-    {
-      sock_t		socket = m_sock->getSocket();
-      fd_set		writefds;
-      struct timeval	tv;
-      int		ret;
-
-      FD_ZERO(&writefds);
-      FD_SET(socket, &writefds);
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-      ret = select(socket + 1, nullptr, &writefds, nullptr, &tv);
-      if (ret > 0)
-	{
-	  for (NetworkPacket const &pck : events)
-	    {
-	      // Convert packet to uint8_t *
-	      size_t len = sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck.len);
-	      std::unique_ptr<uint8_t[]>	data = std::make_unique<uint8_t[]>(len);
-
-	      std::memcpy(data.get(), &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	      std::memcpy(data.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t), pck.data, ntohl(pck.len));
-
-	      // Send
-	      m_sock->send(data.get(), len);
-	    }
-	}
-    }
-}
-
-std::vector<NetworkPacket> Core::getNetworkToSend()
-{
-  std::vector<NetworkPacket>	pcks;
-  uint8_t			*data;
-  size_t			maxSize = Core::pckBuffSize;
-  ssize_t			pckSize;
-
-  if (m_sock != nullptr)
-    {
-      sock_t		socket = m_sock->getSocket();
-      fd_set		readfds;
-      struct timeval	tv;
-      int	        ret;
-
-      FD_ZERO(&readfds);
-      FD_SET(socket, &readfds);
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-      ret = select(socket + 1, &readfds, nullptr, nullptr, &tv);
-      if (ret > 0 && FD_ISSET(socket, &readfds) &&
-	  m_sock->rec(reinterpret_cast<void **>(&data), maxSize, &pckSize) == true)
-	{
-	  // Build packet
-	  NetworkPacket			*tmp = reinterpret_cast<NetworkPacket *>(data);
-	  NetworkPacket			pck;
-
-	  std::memcpy(&pck, data, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	  pck.data = new uint8_t[ntohl(pck.len)];
-	  std::memcpy(pck.data, &tmp->data, ntohl(pck.len));
-	  delete [] data;
-	  pcks.push_back(pck);
-	}
-    }
-  return (std::move(pcks));
-}
 
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
   {
