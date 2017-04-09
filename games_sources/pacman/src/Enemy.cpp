@@ -46,9 +46,29 @@ void Enemy::setEatable(bool eat)
   m_eatable = eat;
 }
 
+void Enemy::setDead(bool dead)
+{
+  m_dead = dead;
+}
+
+void Enemy::setDeathTime(size_t time)
+{
+  m_deathTime = time;
+}
+
 bool Enemy::getEatable() const
 {
   return (m_eatable);
+}
+
+bool Enemy::getDead() const
+{
+  return (m_dead);
+}
+
+size_t Enemy::getDeathTime() const
+{
+  return (m_deathTime);
 }
 }
 }

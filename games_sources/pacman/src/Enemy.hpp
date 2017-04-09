@@ -24,10 +24,17 @@ public:
 
   void kill();
   void setEatable(bool eat);
+  void setDead(bool dead);
+  void setDeathTime(size_t time);
+
+  size_t getDeathTime() const;
   bool getEatable() const;
+  bool getDead() const;
 
 private:
   bool m_eatable;
+  bool m_dead;
+  size_t m_deathTime;
 };
 }
 }

@@ -1,5 +1,5 @@
-#ifndef OBSTACLES_HPP_
-#define OBSTACLES_HPP_
+#ifndef OBSTACLE_HPP_
+#define OBSTACLE_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
@@ -11,13 +11,13 @@ namespace game
 {
 namespace centipede
 {
-class Obstacles : public AEntity
+class Obstacle : public AEntity
 {
 
 public:
-  Obstacles();
-  Obstacles(Obstacles const &other) = default;
-  virtual ~Obstacles();
+  Obstacle();
+  Obstacle(Obstacle const &other) = default;
+  virtual ~Obstacle();
   virtual void display(Map &map, double ratio = 0.0) const;
 
   void hit();
@@ -31,4 +31,4 @@ private:
 }
 }
 }
-#endif // !OBSTACLES_HPP_
+#endif // !OBSTACLE_HPP_

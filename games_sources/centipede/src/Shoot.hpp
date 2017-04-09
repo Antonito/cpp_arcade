@@ -1,5 +1,5 @@
-#ifndef ENEMY_HPP_
-#define ENEMY_HPP_
+#ifndef SHOOT_HPP_
+#define SHOOT_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
@@ -12,20 +12,17 @@ namespace game
 {
 namespace centipede
 {
-class Enemy : public AMovable
+class Shoot : public AMovable
 {
 
 public:
-  Enemy();
-  Enemy(Enemy const &other) = default;
-  virtual ~Enemy();
+  Shoot();
+  Shoot(Shoot const &other) = default;
+  virtual ~Shoot();
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
-
-private:
-  Direction m_fallDir = Direction::DOWN;
 };
 }
 }
 }
-#endif // !ENEMY_HPP_
+#endif // !SHOOT_HPP_

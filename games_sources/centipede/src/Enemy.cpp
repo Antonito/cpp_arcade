@@ -37,7 +37,11 @@ void Enemy::move(Map &map)
   }
   if (!next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::OBSTACLE)
   {
-    m_dir = Direction::DOWN;
+    if (m_pos[0].y == map.getHeight() - 1)
+      m_fallDir = Direction::UP;
+    else if (m_pos[0].y == 0)
+      m_fallDir = Direction::DOWN;
+    m_dir = m_fallDir;
     m_pos.insert(m_pos.begin(), m_pos[0] + m_dir);
     m_pos.erase(m_pos.end() - 1);
     if (tmpDir == Direction::RIGHT)

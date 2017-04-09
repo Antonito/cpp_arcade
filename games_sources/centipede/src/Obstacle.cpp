@@ -1,4 +1,4 @@
-#include "Obstacles.hpp"
+#include "Obstacle.hpp"
 
 namespace arcade
 {
@@ -6,11 +6,11 @@ namespace game
 {
 namespace centipede
 {
-Obstacles::Obstacles()
+Obstacle::Obstacle()
 {
 }
 
-void Obstacles::display(Map &map, double ratio) const
+void Obstacle::display(Map &map, double ratio) const
 {
   for (Position const &p : m_pos)
   {
@@ -21,23 +21,23 @@ void Obstacles::display(Map &map, double ratio) const
   }
 }
 
-void Obstacles::hit()
+void Obstacle::hit()
 {
   if (m_pv > 0)
     m_pv -= 1;
 }
 
-size_t Obstacles::getPv() const
+size_t Obstacle::getPv() const
 {
   return (m_pv);
 }
 
-void Obstacles::setPv(size_t pv)
+void Obstacle::setPv(size_t pv)
 {
   m_pv = pv;
 }
 
-Obstacles::~Obstacles()
+Obstacle::~Obstacle()
 {
 }
 }

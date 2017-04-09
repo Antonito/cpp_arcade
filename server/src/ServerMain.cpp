@@ -18,16 +18,25 @@ int	main(int ac, char **av)
       std::string	input;
 
       std::cout << "> ";
-      std::cin >> input;
+      std::getline(std::cin, input);
       if (input == "stop")
 	{
 	  leave = true;
 	  std::cout << "Requested end of service." << std::endl;
 	  srv.stop();
 	}
+      else if (input == "list clients")
+	{
+	  std::vector<std::unique_ptr<arcade::GameClient>> const &clients = srv.getClients();
+	  std::cout << clients.size() << " clients" << std::endl;
+	  for (std::unique_ptr<arcade::GameClient> const &client : clients)
+	    {
+	      // TODO: Print client informations (ip ?)
+	    }
+	}
       else if (input == "help")
 	{
-	  std::cout << "Available commands: stop" << std::endl;
+	  std::cout << "Available commands: stop | list clients" << std::endl;
 	}
     } while (leave != true);
 
