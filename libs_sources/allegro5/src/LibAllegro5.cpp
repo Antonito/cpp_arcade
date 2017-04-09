@@ -7,6 +7,7 @@
 #include "WindowError.hpp"
 #include "AllocationError.hpp"
 #include "CapabilityError.hpp"
+#include "InitializationError.hpp"
 
 namespace arcade
 {
@@ -14,8 +15,7 @@ namespace arcade
   {
     if (!al_init())
     {
-      std::cerr << "Cannot initialize Lib Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw InitializationError("Cannot initialize Lib Allegro5");
     }
     m_win = al_create_display(width, height);
     if (!m_win)

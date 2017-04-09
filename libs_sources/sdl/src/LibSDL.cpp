@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "LibSDL.hpp"
 #include "WindowError.hpp"
+#include "InitializationError.hpp"
 
 namespace arcade
 {
@@ -12,30 +13,26 @@ namespace arcade
   {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-      std::cerr << "Error while initializing SDL2 : " << SDL_GetError() << std::endl;
-      throw std::exception(); // TODO: create a good exception
+      throw InitializationError("Error while initializing SDL2 : " + std::string(SDL_GetError()));
     }
 
     m_win = SDL_CreateWindow("Arcade sdl", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 
     if (m_win == NULL)
     {
-      std::cerr << "Error while creating SDL2 Window (1): " << SDL_GetError() << std::endl;
-      throw WindowError("Cannot create SDL2 Window");
+      throw WindowError("Cannot create SDL2 Window: " + std::string(SDL_GetError()));
     }
 
     m_winSurface = SDL_GetWindowSurface(m_win);
 
     if (m_winSurface == NULL)
     {
-      std::cerr << "Error while creating SDL2 Window (2): " << SDL_GetError() << std::endl;
-      throw WindowError("Cannot create SDL2 Window Surface");
+      throw WindowError("Cannot create SDL2 Window Surface: " + std::string(SDL_GetError()));
     }
 
     if (TTF_Init() == -1)
     {
-      std::cerr << "Error while initializing SDL ttf" << std::endl;
-      throw std::exception();
+      throw InitializationError("Error while initializing SDL ttf");
     }
 
     m_font = TTF_OpenFont("assets/fonts/arial.ttf", 30);
