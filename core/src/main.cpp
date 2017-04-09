@@ -57,10 +57,19 @@ int main(int ac, char **av)
 	arcade::Core core;
 	Nope::Log::Logger::start();
 #if defined(DEBUG)
-	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
+	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
 #else
 	Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 #endif
-	core.launch(lib);
+        try
+        {
+          core.launch(lib);
+        }
+        catch (std::exception const &e)
+        {
+          std::cerr << e.what() << std::endl;
+          Nope::Log::Error << e.what();
+          return (1);
+        }
 	return (0);
 }

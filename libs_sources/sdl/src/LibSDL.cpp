@@ -1,8 +1,12 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#if defined(_WIN32)
+#include <SDL.h>
+#else
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#endif
 #include "LibSDL.hpp"
 #include "WindowError.hpp"
 #include "InitializationError.hpp"
