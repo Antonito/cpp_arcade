@@ -9,6 +9,7 @@
 #include "IGfxLib.hpp"
 #include "GenLibrary.hpp"
 #include "AGame.hpp"
+#include "TCPSocket.hpp"
 
 namespace arcade
 {
@@ -72,6 +73,8 @@ namespace arcade
                 size_t m_selectedGameId;
 
                 bool m_menuLib;
+
+	  std::unique_ptr<Network::TCPSocket>	m_sock;
 	};
 }
 
