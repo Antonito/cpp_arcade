@@ -148,10 +148,9 @@ void Pacman::process()
 }
 
 #if defined(__linux__)
-WhereAmI *Pacman::getWhereAmI() const
+void Pacman::WhereAmI(std::ostream &) const
 {
   // TODO: implement
-  return (nullptr);
 }
 
 #endif

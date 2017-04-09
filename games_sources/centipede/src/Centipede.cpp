@@ -127,10 +127,9 @@ void Centipede::process()
 }
 
 #if defined(__linux__)
-WhereAmI *Centipede::getWhereAmI() const
+void Centipede::WhereAmI(std::ostream &) const
 {
   // TODO: implement
-  return (nullptr);
 }
 
 Position Centipede::placeObstacle(Map const &map) const

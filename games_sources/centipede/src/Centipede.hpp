@@ -2,6 +2,7 @@
 #define CENTIPEDE_HPP_
 
 #include <cstdlib>
+#include <ostream>
 #include "AGame.hpp"
 #include "Player.hpp"
 #include "Obstacles.hpp"
@@ -33,7 +34,7 @@ public:
   virtual void process();
 
 #if defined(__linux__)
-  virtual WhereAmI *getWhereAmI() const;
+  virtual void WhereAmI(std::ostream &) const;
 #endif
 private:
   Position placeObstacle(Map const &map) const;
