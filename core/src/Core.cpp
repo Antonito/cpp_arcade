@@ -24,8 +24,8 @@
 namespace arcade
 {
   Core::Core() :
-    m_currentGameId(0), 
-    m_currentLibId(0), 
+    m_currentGameId(0),
+    m_currentLibId(0),
     m_gameState(LOADING),
     m_selectedGameId(0),
     m_menuLib(true)
@@ -243,7 +243,7 @@ namespace arcade
           {
             throw std::exception();
           }
-          
+
           m_gui->push(game::Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
             0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
 
@@ -259,7 +259,7 @@ namespace arcade
       // Close the dir after using it because we are well educated people :)
       closedir(dir);
       Nope::Log::Info << "Closing dir 'lib'";
-      
+
       if (found == false)
       {
         throw std::exception();
@@ -485,7 +485,7 @@ namespace arcade
           }
           break;
         default:
-          break;  
+          break;
         }
       }
     }

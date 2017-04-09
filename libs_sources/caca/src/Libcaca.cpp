@@ -1,6 +1,8 @@
 #include <exception>
 #include <iostream>
 #include "Libcaca.hpp"
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
 
 namespace arcade
 {
@@ -10,14 +12,12 @@ namespace arcade
     m_canvas = caca_create_canvas(width, height);
     if (!m_canvas)
       {
-	std::cerr << "Cannot create libcaca canvas" << std::endl;
-	throw std::exception(); // TODO: Exception
+	throw AllocationError("Cannot create LibCaca Canvas");
       }
     m_win = caca_create_display(m_canvas);
     if (!m_win)
       {
-	std::cerr << "Cannot create libcaca window" << std::endl;
-	throw std::exception(); // TODO: Exception
+	throw WindowError("Cannot create LibCaca Window");
       }
     caca_set_display_title(m_win, "Arcade caca");
     m_width = caca_get_canvas_width(m_canvas);
@@ -132,8 +132,7 @@ namespace arcade
 	m_map = caca_create_canvas(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
 	if (!m_map)
 	  {
-	    std::cerr << "Cannot create libcaca canvas [map]" << std::endl;
-	    throw std::exception(); // TODO: Exception
+	    throw AllocationError("Cannot create LibCaca Canvas [map]");
 	  }
       }
 
@@ -261,5 +260,6 @@ namespace arcade
 	uint8_t b = color.b >> 3;
 
 	return ((a << 15) | (b << 10) | (g << 5) | (r));*/
+    // TODO: Clean
   }
 }

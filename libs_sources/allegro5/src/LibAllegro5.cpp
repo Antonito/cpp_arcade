@@ -4,6 +4,10 @@
 #include "LibAllegro5.hpp"
 #include "ITile.hpp"
 #include "IMap.hpp"
+#include "WindowError.hpp"
+#include "AllocationError.hpp"
+#include "CapabilityError.hpp"
+#include "InitializationError.hpp"
 
 namespace arcade
 {
@@ -11,37 +15,31 @@ namespace arcade
   {
     if (!al_init())
     {
-      std::cerr << "Cannot initialize Lib Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw InitializationError("Cannot initialize Lib Allegro5");
     }
     m_win = al_create_display(width, height);
     if (!m_win)
     {
-      std::cerr << "Cannot create Allegro5 window" << std::endl;
-      throw std::exception(); // TODO
+      throw WindowError("Cannot create Allegro5 window");
     }
     al_set_window_title(m_win, "Arcade allegro");
     if (!al_install_keyboard())
     {
-      std::cerr << "Cannot install keyboard handler Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw CapabilityError("Cannot install keyboard handler Allegro5"); // TODO
     }
     if (!al_install_mouse())
     {
-      std::cerr << "Cannot install mouse handler Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw CapabilityError("Cannot install mouse handler Allegro5");
     }
     m_timer = al_create_timer(1.0 / 60);
     if (!m_timer)
     {
-      std::cerr << "Cannot create timer Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw AllocationError("Cannot create timer Allegro5");
     }
     m_event = al_create_event_queue();
     if (!m_event)
     {
-      std::cerr << "Cannot get event queue Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw AllocationError("Cannot get event queue Allegro5");
     }
     al_register_event_source(m_event, al_get_timer_event_source(m_timer));
     al_register_event_source(m_event, al_get_keyboard_event_source());
@@ -51,8 +49,7 @@ namespace arcade
     m_gui = al_create_bitmap(m_width, m_height);
     if (!m_gui)
     {
-      std::cerr << "Cannot get bitmap Allegro5" << std::endl;
-      throw std::exception(); // TODO
+      throw AllocationError("Cannot get Allegro5 bitmap");
     }
     al_set_new_bitmap_flags(flags);
   }
@@ -144,8 +141,7 @@ namespace arcade
       m_map = al_create_bitmap(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
       if (!m_map)
       {
-        std::cerr << "Cannot get bitmap Allegro5" << std::endl;
-        throw std::exception(); // TODO
+        throw AllocationError("Cannot get Allegro5 bitmap");
       }
       al_set_new_bitmap_flags(flags);
     }
@@ -193,6 +189,7 @@ namespace arcade
 
   void LibAllegro5::updateGUI(IGUI & gui)
   {
+    // TODO: RM
     return;
     if (al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE))
     {
