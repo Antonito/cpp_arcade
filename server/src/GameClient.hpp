@@ -17,7 +17,7 @@ namespace arcade
     static size_t constexpr buffSize = 4096;
     static size_t constexpr timeOut = 60; // Seconds
 
-    GameClient(sock_t sock);
+    GameClient(sock_t sock, sockaddr_in_t const &in);
     virtual ~GameClient();
     virtual bool disconnect();
     virtual IClient::ClientAction write();
@@ -39,6 +39,7 @@ namespace arcade
 
   private:
     sock_t	m_sock;
+    sockaddr_in_t	m_in;
     size_t	m_buffSize;
     std::unique_ptr<uint8_t[]> m_buff;
     bool m_write;

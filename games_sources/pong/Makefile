@@ -20,7 +20,9 @@ SRC_FILES=	Pong.cpp	\
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR=	$(DIR_LIST)					\
-		$(ROOT_DIR)/common/src/			\
+		$(ROOT_DIR)/common/src/				\
+		$(ROOT_DIR)/network/src/			\
+		$(ROOT_DIR)/exceptions/src/			\
 		$(ROOT_DIR)/games_sources/games_common/src/
 
 # Rules

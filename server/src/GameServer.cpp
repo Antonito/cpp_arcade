@@ -194,7 +194,7 @@ namespace arcade
     sock = accept(m_sock.getSocket(), reinterpret_cast<sockaddr_t *>(&in), &len);
     if (sock != -1)
       {
-	m_clients.push_back(std::make_unique<GameClient>(sock));
+	m_clients.push_back(std::make_unique<GameClient>(sock, in));
 	return (true);
       }
     return (false);
@@ -246,6 +246,11 @@ namespace arcade
 				     return (*e == gclient);
 				   }));
     return (true);
+  }
+
+  std::vector<std::unique_ptr<GameClient>> const &GameServer::getClients() const
+  {
+    return (m_clients);
   }
 
   bool  GameServer::isRunning() const

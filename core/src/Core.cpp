@@ -153,7 +153,14 @@ namespace arcade
         return (QUIT);
       }
       // Network
-      // TODO: implement
+#ifdef DEBUG
+      Nope::Log::Debug << "Sending Network data";
+#endif
+      // TODO: Send network data
+#ifdef DEBUG
+      Nope::Log::Debug << "Getting Network data";
+#endif
+      // TODO: Read network data
 
       // Game loop
       m_game->process();

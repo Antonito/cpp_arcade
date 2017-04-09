@@ -11,8 +11,9 @@ namespace arcade
     namespace pong
     {
       Pong::Pong() :
+	m_lastTick(0),
         m_curTick(0),
-        m_lastTick(0)
+	m_state(PongState::AUTHENTICATING), m_fact()
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -114,24 +115,68 @@ namespace arcade
 
       void Pong::process()
       {
-        m_map->clearLayer(1);
+	// Treat input data
+	switch (m_state)
+	  {
+	  case PongState::AUTHENTICATING:
+	    for (NetworkPacket const &pck : m_received)
+	      {
+		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
+		if (ntohl(pck.header.magicNumber) && _pck &&
+		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
+		    NetworkAction::HELLO_EVENT && _pck->auth == true)
+		  {
+		    m_state = PongState::WAITING;
+		  }
+	      }
+	    break;
+	  default:
+	    break;
+	  }
 
-        m_curTick = this->getCurrentTick();
-        m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
-          (m_curTick - m_lastTick) / 1000.0);
-        if (m_ball[0].x < 0)
-        {
-          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
-        }
-        else if (m_ball[0].x > m_map->getWidth() - 1)
-        {
-          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
-        }
+	// Output data
+	switch (m_state)
+	  {
+	  case PongState::AUTHENTICATING:
+	    // We should authenticate
+	    std::cout << "Authenticating Pong" << std::endl;
+	    {
+	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p){
+		  p.action = NetworkAction::HELLO_EVENT;
+		  p.auth = false;
+		});
+	      NetworkPacket	pck = *createdPck;
+	      m_toSend.push_back(pck);
+	    }
+	    break;
 
-        m_player[0].display(*m_map);
-        m_player[1].display(*m_map);
-        m_ball.display(*m_map);
-        m_lastTick = m_curTick;
+	  case PongState::WAITING:
+	    // Waiting for other players
+	    std::cout << "Waiting for other players" << std::endl;
+	    break;
+	  case PongState::PLAYING:
+	    // The game is running
+	    m_map->clearLayer(1);
+
+	    m_curTick = this->getCurrentTick();
+	    m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
+				  (m_curTick - m_lastTick) / 1000.0);
+	    if (m_ball[0].x < 0)
+	      {
+		m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+	      }
+	    else if (m_ball[0].x > m_map->getWidth() - 1)
+	      {
+		m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+	      }
+	    m_player[0].display(*m_map);
+	    m_player[1].display(*m_map);
+	    m_ball.display(*m_map);
+	    m_lastTick = m_curTick;
+	    break;
+	  default:
+	    break;
+	  }
       }
 
 #if defined(__linux__)

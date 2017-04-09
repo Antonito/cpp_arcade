@@ -5,6 +5,7 @@
 #include "AGame.hpp"
 #include "Player.hpp"
 #include "Ball.hpp"
+#include "PacketFactory.hpp"
 
 namespace arcade
 {
@@ -36,6 +37,12 @@ namespace arcade
         virtual void WhereAmI(std::ostream &) const;
 #endif
       private:
+	enum PongState
+	  {
+	    AUTHENTICATING,
+	    WAITING,
+	    PLAYING
+	  };
 
         size_t m_lastTick;
         size_t m_curTick;
@@ -43,6 +50,8 @@ namespace arcade
         Ball m_ball;
         Player m_player[2];
         size_t m_id;
+	PongState m_state;
+	Network::PacketFactory m_fact;
       };
     }
   }

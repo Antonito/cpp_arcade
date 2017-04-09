@@ -199,6 +199,8 @@ namespace arcade
       if (str.length() > 0)
       {
         SDL_Color c = { 255, 255, 255, 255};
+	if (!m_font)
+	  continue;
         SDL_Surface *text = TTF_RenderText_Blended(m_font, str.c_str(), c);
         SDL_Rect pos;
 
