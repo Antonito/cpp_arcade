@@ -53,8 +53,9 @@ namespace arcade
 
     std::unique_ptr<sf::RenderWindow> m_win;
     std::vector<std::unique_ptr<sf::Music>> m_music;
-    std::vector<std::unique_ptr<sf::SoundBuffer>> m_soundBuffer;
-    std::vector<std::unique_ptr<sf::Sound>> m_sound;
+    std::vector<sf::SoundBuffer> m_soundBuffer;
+    std::vector<sf::Sound> m_sound;
+    std::vector<std::pair<SoundType, size_t>> m_soundIndex;
     sf::Vector2i m_mousePos;
 
     std::vector<std::vector<sf::Texture>> m_sprites;
