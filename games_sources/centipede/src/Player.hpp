@@ -23,7 +23,7 @@ public:
   virtual ~Player();
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
-  virtual std::unique_ptr<Shoot> shoot() const;
+  virtual std::unique_ptr<AEntity> shoot() const;
 };
 }
 }

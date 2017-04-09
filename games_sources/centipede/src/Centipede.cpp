@@ -89,7 +89,7 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
         if (!m_hasShot)
         {
           m_hasShot = true;
-          m_shoot = m_player.shoot();
+          m_shoot = *static_cast<Shoot *>(m_player.shoot().get());
           m_shoot.setDir(Direction::UP);
         }
         break;

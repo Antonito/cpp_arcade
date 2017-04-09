@@ -36,9 +36,12 @@ void Player::move(Map &map)
   m_pos.erase(m_pos.end() - 1);
 }
 
-std::unique_ptr<Shoot> Player::shoot() const
+std::unique_ptr<AEntity> Player::shoot() const
 {
-  return (std::make_unique<Shoot>(m_pos[0] + Direction::UP));
+  std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
+
+  shoot->push(m_pos[0] + Direction::UP);
+  return (shoot);
 }
 }
 }
