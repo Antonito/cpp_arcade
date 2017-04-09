@@ -69,11 +69,58 @@ namespace arcade
 
     if (type == SoundType::MUSIC)
     {
-      m_music[index]->play();
+      sf::Music &m = m_music[index];
+      switch (sound.action)
+      {
+      case UNIQUE:
+      case REPEAT:
+        m.setLoop(sound.action == REPEAT);
+        break;
+      case VOLUME:
+        m.setVolume(sound.volume);
+        break;
+      case PLAY:
+        m.stop();
+        m.play();
+        break;
+      case PAUSE:
+        m.play();
+        break;
+      case RESUME:
+        m.pause();
+        break;
+      case STOP:
+        m.stop();
+        break;
+      }
     }
     else
     {
-      m_sound[index].play();
+      sf::Sound &s = m_sound[index];
+
+      switch (sound.action)
+      {
+      case UNIQUE:
+      case REPEAT:
+        s.setLoop(sound.action == REPEAT);
+        break;
+      case VOLUME:
+        s.setVolume(sound.volume);
+        break;
+      case PLAY:
+        s.stop();
+        s.play();
+        break;
+      case PAUSE:
+        s.play();
+        break;
+      case RESUME:
+        s.pause();
+        break;
+      case STOP:
+        s.stop();
+        break;
+      }
     }
   }
 

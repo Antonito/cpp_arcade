@@ -40,13 +40,15 @@ namespace arcade
       // Game state
       virtual GameState getGameState() const;
 
+      // Tick rate
+      virtual tick_t getTickRate() const;
+
       // Events
       virtual void notifyEvent(std::vector<Event> &&events) = 0;
 
       // Network
       virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
-      virtual std::vector<NetworkPacket> getNetworkToSend();
-      virtual bool hasNetwork() const;
+      virtual std::vector<NetworkPacket> &&getNetworkToSend();
 
       // Sound
       virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
@@ -75,7 +77,7 @@ namespace arcade
       std::vector<NetworkPacket> m_toSend;
 
       // Sounds to play buffer
-      std::vector<Sound> m_soundsToPlay;
+      mutable std::vector<Sound> m_soundsToPlay;
 
       // Game map
       std::unique_ptr<Map> m_map;

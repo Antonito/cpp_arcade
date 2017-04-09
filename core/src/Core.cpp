@@ -476,7 +476,7 @@ Nope::Log::Info << "Exiting the core";
             }
             m_selectedGameId--;
           }
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_DOWN:
           if (m_menuLib)
@@ -495,15 +495,15 @@ Nope::Log::Info << "Exiting the core";
               m_selectedGameId = 0;
             }
           }
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_LEFT:
           m_menuLib = true;
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ARROW_RIGHT:
           m_menuLib = false;
-          m_soundsToPlay.emplace_back(0);
+          m_soundsToPlay.emplace_back(0, PLAY);
           break;
         case KB_ENTER:
           if (m_menuLib)
@@ -530,11 +530,15 @@ Nope::Log::Info << "Exiting the core";
     }
   }
 
-  std::vector<std::pair<std::string, SoundType > > Core::getSoundsToLoad() const
+  std::vector<std::pair<std::string, SoundType>> Core::getSoundsToLoad() const
   {
     std::vector<std::pair<std::string, SoundType>> s;
 
     s.emplace_back("assets/sounds/menu_move.wav", SoundType::SOUND);
+
+    // Init mode
+    m_soundsToPlay.emplace_back(0, UNIQUE);
+    m_soundsToPlay.emplace_back(0, VOLUME, 25.0);
     return (s);
   }
 
