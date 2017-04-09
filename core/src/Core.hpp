@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <cstring>
 #include "IGame.hpp"
 #include "IGfxLib.hpp"
 #include "GenLibrary.hpp"
@@ -53,6 +54,7 @@ namespace arcade
 		std::unique_ptr<IGfxLib> m_lib;
 		GameState m_gameState;
 		std::unique_ptr<IGfxLib> m_sound;
+		// std::unique_ptr<Network> m_network;
 
 		// Game implementation part (for main menu)
 		virtual void notifyEvent(std::vector<Event> &&events);
@@ -64,8 +66,7 @@ namespace arcade
 #endif
 	  virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
 	  virtual std::vector<NetworkPacket> getNetworkToSend();
-
-		// Main menu
+                // Main menu
                 size_t m_firstLibIndex;
                 size_t m_firstGameIndex;
 
@@ -73,7 +74,6 @@ namespace arcade
                 size_t m_selectedGameId;
 
                 bool m_menuLib;
-
 	  std::unique_ptr<Network::TCPSocket>	m_sock;
 	};
 }
