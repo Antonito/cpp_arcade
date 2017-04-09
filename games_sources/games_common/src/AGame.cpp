@@ -81,7 +81,7 @@ namespace arcade
           }
         }
       }
-      
+
       os.write(reinterpret_cast<char *>(&header), sizeof(GetMap));
       os.write(reinterpret_cast<char *>(map.get()), header.width * header.height * sizeof(TileType));
     }
