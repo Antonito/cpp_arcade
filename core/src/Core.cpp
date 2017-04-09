@@ -131,7 +131,10 @@ namespace arcade
       if (m_gameState != INGAME && m_gameState != LOADING)
       {
         if (m_gameState == QUIT)
-          std::cout << "QUIT #2" << std::endl;
+	  {
+	    std::cout << "QUIT #2" << std::endl;
+	  }
+	m_sock = nullptr;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -326,6 +329,22 @@ namespace arcade
   void Core::loadGame()
   {
     std::cout << "Loading GAME" << std::endl;
+    if (m_game->hasNetwork())
+      {
+	uint16_t	port;
+	std::string	host;
+
+	std::cout << "Host: ";
+	std::cin >> host;
+	std::cout << "Game Port: ";
+	std::cin >> port;
+	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
+	m_sock->openConnection();
+	if (!m_sock->isStarted())
+	  {
+	    throw std::exception(); // TODO: Change
+	  }
+      }
     m_lib->loadSounds(m_game->getSoundsToLoad());
     m_lib->loadSprites(m_game->getSpritesToLoad());
     m_gameState = INGAME;
