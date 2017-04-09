@@ -50,6 +50,8 @@ private:
 }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void);
+#endif
 
 #endif // !CENTIPEDE_HPP_

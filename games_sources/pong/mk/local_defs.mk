@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(ROOT_DIR)/games/libarcade_pong.so
+NAME=			$(ROOT_DIR)/games/lib_arcade_pong.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 

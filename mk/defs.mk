@@ -1,7 +1,7 @@
 # Commands definitions
 RM=		rm -f
 RM_DIR=		rm -rf
-ECHO=		echo -ne
+ECHO=		printf
 RANLIB=		ar rcs
 CP=		cp
 CHDIR=		cd

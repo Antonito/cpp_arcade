@@ -46,6 +46,8 @@ namespace arcade
   }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void);
+#endif
 
 #endif // !PONG_HPP_

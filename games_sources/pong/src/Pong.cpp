@@ -138,10 +138,11 @@ namespace arcade
   }
 }
 
-
+#if defined (__linux__)
 extern "C" void Play(void)
 {
   arcade::game::pong::Pong game;
 
   game.Play();
 }
+#endif

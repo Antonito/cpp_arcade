@@ -61,7 +61,9 @@ namespace arcade
       virtual IGUI &getGUI();
 
       // Play
+#if defined(__linux__)
       void Play();
+#endif
 
     protected:
 #if defined(__linux__)

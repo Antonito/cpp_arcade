@@ -158,9 +158,11 @@ void Pacman::WhereAmI(std::ostream &) const
 }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void)
 {
   arcade::game::pacman::Pacman game;
 
   game.Play();
 }
+#endif

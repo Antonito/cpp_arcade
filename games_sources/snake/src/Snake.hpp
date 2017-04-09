@@ -47,6 +47,8 @@ private:
 }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void);
+#endif
 
 #endif // !SNAKE_HPP_

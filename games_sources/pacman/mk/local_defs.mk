@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(ROOT_DIR)/games/libarcade_pacman.so
+NAME=			$(ROOT_DIR)/games/lib_arcade_pacman.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 

@@ -154,9 +154,11 @@ Position Centipede::placeObstacle(Map const &map) const
 }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void)
 {
   arcade::game::centipede::Centipede game;
 
   game.Play();
 }
+#endif
