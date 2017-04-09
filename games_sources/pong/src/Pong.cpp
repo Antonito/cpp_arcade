@@ -112,7 +112,17 @@ namespace arcade
         m_map->clearLayer(1);
 
         m_curTick = this->getCurrentTick();
-        m_ball.updatePosition(m_player[m_ball.getBallDir()], (m_curTick - m_lastTick) / 1000.0);
+        m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
+          (m_curTick - m_lastTick) / 1000.0);
+        if (m_ball[0].x < 0)
+        {
+          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+        }
+        else if (m_ball[0].x > m_map->getWidth() - 1)
+        {
+          m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+        }
+
         m_player[0].display(*m_map);
         m_player[1].display(*m_map);
         m_ball.display(*m_map);
