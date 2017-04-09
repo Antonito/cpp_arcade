@@ -41,8 +41,6 @@ Pacman::Pacman()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
-  std::cout << m_map->getHeight() << std::endl;
-  std::cout << m_map->getWidth() << std::endl;
   m_map->clearLayer(0, Color(50, 50, 50));
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
