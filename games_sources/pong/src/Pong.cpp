@@ -295,7 +295,7 @@ namespace arcade
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  updateBall = true;
 		}
-	      if (m_curTick - m_lastSendBallTick > 80)
+	      if (m_curTick - m_lastSendBallTick > 70)
 		{
 		  updateBall = true;
 		  m_lastSendBallTick = m_curTick;
