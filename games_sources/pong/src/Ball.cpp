@@ -110,6 +110,16 @@ void Ball::reset(Position const &p)
   {
     return (m_y);
   }
+
+  void Ball::setX(double x)
+  {
+    m_x = x;
+  }
+
+  void Ball::setY(double y)
+  {
+    m_y = y;
+  }
 }
 }
 }

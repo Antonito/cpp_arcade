@@ -23,6 +23,7 @@ namespace arcade
 	  float		y;
 	}		ball;
 	uint8_t	id;
+	uint32_t update;
       };
     }
   }

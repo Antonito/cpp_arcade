@@ -14,7 +14,8 @@ namespace arcade
       Pong::Pong() :
 	m_lastTick(0),
         m_curTick(0),
-	m_state(PongState::AUTHENTICATING), m_fact(), m_playerId(0)
+	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0),
+	m_lastUpTick(0), m_lastDownTick(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -80,17 +81,23 @@ namespace arcade
             switch (e.kb_key)
             {
             case KB_ARROW_UP:
-              if (m_player[m_id][0].y > 0)
+              if (m_curTick - m_lastUpTick > 40
+		  && m_player[m_id][0].y > 0)
               {
                 m_player[m_id].setDir(Direction::UP);
                 m_player[m_id].move();
+		++m_updatePos;
+		m_lastUpTick = m_curTick;
               }
               break;
             case KB_ARROW_DOWN:
-              if (m_player[m_id].last().y < m_map->getHeight() - 1)
+              if (m_curTick - m_lastDownTick > 40 &&
+		  m_player[m_id].last().y < m_map->getHeight() - 1)
               {
                 m_player[m_id].setDir(Direction::DOWN);
                 m_player[m_id].move();
+		++m_updatePos;
+		m_lastDownTick = m_curTick;
               }
               break;
             default:
@@ -117,7 +124,9 @@ namespace arcade
       void Pong::process()
       {
 	static bool	auth = false;
+	static bool	shouldSend = true;
 	bool	rec = false;
+	uint8_t	otherId = (m_id == 0);
 
 	// Treat input data
 	switch (m_state)
@@ -149,7 +158,7 @@ namespace arcade
 		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
 		    NetworkAction::ENTITY_EVENT)
 		  {
-		    m_playerId = _pck->entity.data.id;
+		    m_id = _pck->entity.data.id;
 		    m_state = PongState::WAITING;
 		  }
 	      }
@@ -176,19 +185,29 @@ namespace arcade
 	    // Get other player's events
 	    for (NetworkPacket const &pck : m_received)
 	      {
-		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
+		Network::NetworkPacketData<0, PongPacket>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, PongPacket> *>(pck.data);
 		if (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber && _pck &&
 		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
 		    NetworkAction::ENTITY_EVENT)
 		  {
-		    std::cout << "Playing." << std::endl;
-		    if (m_playerId == 0)
+		    for (uint32_t i = 0; i < ntohl(_pck->entity.data.update); ++i)
 		      {
-			std::cout << "I am master" << std::endl;
-		      }
-		    else
-		      {
-			std::cout << "I am slave" << std::endl;
+			if (ntohl(_pck->entity.data.pos.y) > m_player[otherId][0].y &&
+			    m_player[otherId].last().y < m_map->getHeight() - 1)
+			  {
+			    m_player[otherId].setDir(Direction::DOWN);
+			  }
+			else if (ntohl(_pck->entity.data.pos.y) < m_player[otherId][0].y &&
+				 m_player[otherId][0].y > 0)
+			  {
+			    m_player[otherId].setDir(Direction::UP);
+			  }
+			m_player[otherId].move();
+			if (m_id != 0)
+			  {
+			    m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
+			    m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
+			  }
 		      }
 		  }
 	      }
@@ -240,7 +259,9 @@ namespace arcade
 
 	  case PongState::WAITING:
 	    // Waiting for other players
+#if defined(DEBUG)
 	    std::cout << "Waiting for other players" << std::endl;
+#endif
 	    {
 	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p) {
 		  p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::GAME_EVENT)));
@@ -273,28 +294,31 @@ namespace arcade
 	    m_player[1].display(*m_map);
 	    m_ball.display(*m_map);
 	    m_lastTick = m_curTick;
-	    {
-	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, PongPacket>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, PongPacket> &p) {
-		  p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
-		  p.entity.data.pos.x = m_player[m_playerId][0].x;
-		  p.entity.data.pos.y = m_player[m_playerId][0].y;
-		  if (m_playerId == 0)
-		    {
-		      p.entity.data.ball.x = static_cast<float>(m_ball.getX());
-		      p.entity.data.ball.y = static_cast<float>(m_ball.getY());
-		    }
-		  else
-		    {
-		      p.entity.data.ball.x = 0;
-		      p.entity.data.ball.y = 0;
-		    }
-		  p.entity.data.id = m_playerId;
-		});
-	      NetworkPacket	*raw = createdPck.get();
-	      NetworkPacket	pck = *createdPck;
-	      createdPck.release();
-	      m_toSend.push_back(pck);
-	      delete raw;
+	    if (shouldSend)
+	      {
+		std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, PongPacket>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, PongPacket> &p) {
+		    p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
+		    p.entity.data.pos.x = htonl(m_player[m_id][0].x);
+		    p.entity.data.pos.y = htonl(m_player[m_id][0].y);
+		    if (m_id == 0)
+		      {
+			p.entity.data.ball.x = htonl(static_cast<float>(m_ball.getX()));
+			p.entity.data.ball.y = htonl(static_cast<float>(m_ball.getY()));
+		      }
+		    else
+		      {
+			p.entity.data.ball.x = 0;
+			p.entity.data.ball.y = 0;
+		      }
+		    p.entity.data.update = htonl(m_updatePos);
+		    p.entity.data.id = m_id;
+		  });
+		NetworkPacket	*raw = createdPck.get();
+		NetworkPacket	pck = *createdPck;
+		createdPck.release();
+		m_toSend.push_back(pck);
+		m_updatePos = 0;
+		delete raw;
 	    }
 	    break;
 
