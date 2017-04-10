@@ -143,6 +143,7 @@ Nope::Log::Info << "Exiting the core";
       {
         if (m_gameState == QUIT)
           std::cout << "QUIT #2" << std::endl;
+	m_sock = nullptr;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -357,7 +358,7 @@ Nope::Log::Info << "Exiting the core";
   {
     std::cout << "Loading GAME" << std::endl;
     m_lib->loadSprites(m_game->getSpritesToLoad());
-    
+
     std::vector<std::pair<std::string, SoundType>> s = m_game->getSoundsToLoad();
 
     if (m_lib->doesSupportSound())
@@ -368,6 +369,22 @@ Nope::Log::Info << "Exiting the core";
     {
       m_sound->loadSounds(s);
     }
+    if (m_game->hasNetwork())
+      {
+ 	uint16_t	port;
+ 	std::string	host;
+
+ 	std::cout << "Host: ";
+ 	std::cin >> host;
+ 	std::cout << "Game Port: ";
+ 	std::cin >> port;
+ 	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
+ 	m_sock->openConnection();
+ 	if (!m_sock->isStarted())
+ 	  {
+ 	    throw std::exception(); // TODO: Change
+ 	  }
+      }
     m_gameState = INGAME;
   }
 
