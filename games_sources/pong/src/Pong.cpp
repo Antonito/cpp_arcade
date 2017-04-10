@@ -295,17 +295,12 @@ namespace arcade
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  updateBall = true;
 		}
-	      if (m_curTick - m_lastSendBallTick > 35)
-		{
-		  updateBall = true;
-		  m_lastSendBallTick = m_curTick;
-		}
 	      m_player[0].display(*m_map);
 	      m_player[1].display(*m_map);
 	      m_ball.display(*m_map);
 	      m_lastTick = m_curTick;
 	      if (shouldSend &&
-		  m_curTick - m_lastSendTick > 60)
+		  (updateBall || m_curTick - m_lastSendTick > 60))
 		{
 		  std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, PongPacket>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, PongPacket> &p) {
 		      p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
