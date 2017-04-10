@@ -19,10 +19,12 @@ namespace arcade
 	}		pos;
 	struct
 	{
-	  int32_t	x;
-	  int32_t	y;
+	  float		x;
+	  float		y;
 	}		ball;
 	uint8_t	id;
+	uint32_t update;
+	uint8_t updateBall;
       };
     }
   }

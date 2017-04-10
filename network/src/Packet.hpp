@@ -25,12 +25,6 @@ namespace arcade
     template <typename T>
     struct NetworkEntityEvent
     {
-      struct
-      {
-	ssize_t	x;
-	ssize_t	y;
-      }		pos;
-      uint8_t	dir;
       T		data;
     };
 

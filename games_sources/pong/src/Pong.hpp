@@ -40,18 +40,25 @@ namespace arcade
 	enum PongState
 	  {
 	    AUTHENTICATING,
+	    SETTING,
 	    WAITING,
 	    PLAYING
 	  };
 
         size_t m_lastTick;
         size_t m_curTick;
+	size_t m_lastUpTick;
+	size_t m_lastDownTick;
+	size_t m_lastSendTick;
+	size_t m_lastSendBallTick;
+	size_t m_smoothTick;
 
         Ball m_ball;
         Player m_player[2];
-        size_t m_id;
+        uint8_t m_id;
 	PongState m_state;
 	Network::PacketFactory m_fact;
+	uint32_t m_updatePos;
       };
     }
   }
