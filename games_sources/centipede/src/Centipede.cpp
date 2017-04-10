@@ -143,6 +143,7 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
           m_hasShot = true;
           m_shoot = *static_cast<Shoot *>(m_player.shoot().get());
           m_shoot.setDir(Direction::UP);
+          m_shoot.setCurTile(m_map->at(0, m_shoot[0].x, m_shoot[0].y).getType());
         }
         break;
       case KB_ESCAPE:
@@ -238,12 +239,6 @@ void Centipede::process()
   }
 }
 
-#if defined(__linux__)
-void Centipede::WhereAmI(std::ostream &) const
-{
-  // TODO: implement
-}
-
 Position Centipede::placeObstacle(Map const &map) const
 {
   size_t width = map.getWidth();
@@ -267,6 +262,13 @@ Position Centipede::placeObstacle(Map const &map) const
   }
   return (Position(0, 0));
 }
+
+#if defined(__linux__)
+void Centipede::WhereAmI(std::ostream &) const
+{
+  // TODO: implement
+}
+
 #endif
 }
 }

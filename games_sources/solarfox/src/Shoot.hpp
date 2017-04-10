@@ -10,7 +10,7 @@ namespace arcade
 {
 namespace game
 {
-namespace centipede
+namespace solarfox
 {
 class Shoot : public AMovable
 {
@@ -24,9 +24,12 @@ public:
 
   void setCurTile(TileType);
   TileType getCurTile() const;
+  void setRange(size_t);
+  size_t getRange() const;
 
 private:
   TileType m_curTile;
+  size_t m_range;
 };
 }
 }

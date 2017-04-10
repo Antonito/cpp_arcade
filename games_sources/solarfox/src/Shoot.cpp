@@ -5,7 +5,7 @@ namespace arcade
 {
 namespace game
 {
-namespace centipede
+namespace solarfox
 {
 Shoot::Shoot()
 {
@@ -28,6 +28,8 @@ void Shoot::display(Map &map, double ratio) const
 
 void Shoot::move(Map &map)
 {
+  if (range > 0)
+    m_range -= 1;
   map.at(0, m_pos[0].x, m_pos[0].y).setType(m_curTile);
   if (m_pos.size() == 0 || !next().inMap(map))
   {
@@ -44,9 +46,19 @@ void Shoot::setCurTile(TileType tile)
   m_curTile = tile;
 }
 
+void Shoot::setRange(size_t range)
+{
+  m_range = range;
+}
+
 TileType Shoot::getCurTile() const
 {
   return (m_curTile);
+}
+
+size_t Shoot::getRange() const
+{
+  return (m_range);
 }
 }
 }
