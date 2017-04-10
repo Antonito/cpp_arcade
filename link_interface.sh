@@ -15,8 +15,8 @@ done
 echo " OK"
 
 echo -n "Linking assets ..."
-src="./deps/arcade_assets/assets"
-target="./assets";
+src="deps/arcade_assets/assets/"
+target="assets";
 ln -s "$src" "$target" 2> /dev/null
 if [[ $? -eq 1 ]]; then
     rm -rf "$target"

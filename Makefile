@@ -128,7 +128,7 @@ link:
 
 # Init submodules
 init:
-			git submodule init
+			git submodule update --init --recursive
 
 # Update every dependency
 update:

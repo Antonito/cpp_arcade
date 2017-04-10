@@ -1,6 +1,9 @@
-OBJ_DIR=	$(ROOT_DIR)/obj/
+MAIN_OBJ_DIR=	$(ROOT_DIR)/obj/
+EMPTY=
+OBJ_DIR=	$(MAIN_OBJ_DIR)$(shell basename $(CURDIR))/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
-OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
+OBJ_DIR_LIST=	$(MAIN_OBJ_DIR)				\
+		$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 NAME_EXTENSION=	$(suffix $(NAME))
 
@@ -50,4 +53,4 @@ re:		fclean all
 run:
 		./$(NAME)
 
-.PHONY: all clean fclean re run install prepare_obj_dir
+.PHONY: all clean fclean re infos run

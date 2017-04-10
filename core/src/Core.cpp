@@ -100,11 +100,11 @@ while (m_gameState != QUIT)
     m_gameState = QUIT;
     break;
   }
- }
+}
 // Log
- if (m_game.get() == this)
-   m_game.release();
- Nope::Log::Info << "Exiting the core";
+if (m_game.get() == this)
+m_game.release();
+Nope::Log::Info << "Exiting the core";
   }
 
   GameState Core::gameLoop()
@@ -143,7 +143,6 @@ while (m_gameState != QUIT)
       {
         if (m_gameState == QUIT)
           std::cout << "QUIT #2" << std::endl;
-	m_sock = nullptr;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -161,14 +160,7 @@ while (m_gameState != QUIT)
         return (QUIT);
       }
       // Network
-#ifdef DEBUG
-      Nope::Log::Debug << "Sending Network Data";
-#endif
-      notifyNetwork(m_game->getNetworkToSend());
-#ifdef DEBUG
-      Nope::Log::Debug << "Getting Network Data";
-#endif
-      m_game->notifyNetwork(getNetworkToSend());
+      // TODO: implement
 
       // Game loop
       m_game->process();
@@ -364,29 +356,18 @@ while (m_gameState != QUIT)
   void Core::loadGame()
   {
     std::cout << "Loading GAME" << std::endl;
-    m_lib->loadSounds(m_game->getSoundsToLoad());
     m_lib->loadSprites(m_game->getSpritesToLoad());
-    m_lib->loadSounds(m_game->getSoundsToLoad());
+    
+    std::vector<std::pair<std::string, SoundType>> s = m_game->getSoundsToLoad();
+
+    if (m_lib->doesSupportSound())
+    {
+      m_lib->loadSounds(s);
+    }
     if (m_sound.get())
     {
-      m_sound->loadSounds(m_game->getSoundsToLoad());
+      m_sound->loadSounds(s);
     }
-    if (m_game->hasNetwork())
-      {
- 	uint16_t	port;
- 	std::string	host;
-
- 	std::cout << "Host: ";
- 	std::cin >> host;
- 	std::cout << "Game Port: ";
- 	std::cin >> port;
- 	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
- 	m_sock->openConnection();
- 	if (!m_sock->isStarted())
- 	  {
- 	    throw std::exception(); // TODO: Change
- 	  }
-      }
     m_gameState = INGAME;
   }
 
@@ -542,6 +523,7 @@ while (m_gameState != QUIT)
             {
               m_currentLibId = m_selectedLibId;
               m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib *()>("getLib")());
+              this->loadGame();
             }   
           }
           else
@@ -565,17 +547,53 @@ while (m_gameState != QUIT)
   {
     std::vector<std::pair<std::string, SoundType>> s;
 
-    s.emplace_back("assets/sounds/Menu_Navigate_03.wav", SoundType::SOUND);
-    s.emplace_back("assets/sounds/Menu_Navigate_00.wav", SoundType::SOUND);
-    s.emplace_back("assets/sounds/Menu_Navigate_01.wav", SoundType::SOUND);
+    s.emplace_back("assets/sounds/Menu_Navigate_03.wav", SoundType::MUSIC);
+    s.emplace_back("assets/sounds/Menu_Navigate_00.wav", SoundType::MUSIC);
+    s.emplace_back("assets/sounds/Menu_Navigate_01.wav", SoundType::MUSIC);
+
+    size_t musicIndex = s.size();
+
+    s.emplace_back("assets/music/pizzadox.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/shooting_stars.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/class01.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/complication.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/dead_feelings.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/john_cena.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/knas.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/mask_of_sanity.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/massdownloader.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/mental_delivrance.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/nero_burning_rom.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/radioactive.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/razor1911.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/rickroll.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/unreeeal_superhero3.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/what_does_the_fox_say.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/what_is_love.ogg", SoundType::MUSIC);
+    s.emplace_back("assets/music/who_easy.ogg", SoundType::MUSIC);
+
+    size_t musicCount = s.size() - musicIndex;
 
     // Init mode
+    m_soundsToPlay.clear();
+
     m_soundsToPlay.emplace_back(0, UNIQUE);
-    m_soundsToPlay.emplace_back(0, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(0, VOLUME, 100.0);
     m_soundsToPlay.emplace_back(1, UNIQUE);
-    m_soundsToPlay.emplace_back(1, VOLUME, 25.0);
-    m_soundsToPlay.emplace_back(2, UNIQUE);
-    m_soundsToPlay.emplace_back(2, VOLUME, 25.0);
+    m_soundsToPlay.emplace_back(1, VOLUME, 100.0);
+    m_soundsToPlay.emplace_back(2, REPEAT);
+    m_soundsToPlay.emplace_back(2, VOLUME, 100.0);
+
+    for (size_t i = 0; i < musicCount; ++i)
+    {
+      m_soundsToPlay.emplace_back(i + musicIndex, REPEAT);
+      m_soundsToPlay.emplace_back(i + musicIndex, VOLUME, 50.0);
+    }
+
+    if (musicCount)
+    {
+      m_soundsToPlay.emplace_back(musicIndex + rand() % musicCount, PLAY);
+    }
     return (s);
   }
 
@@ -612,9 +630,9 @@ while (m_gameState != QUIT)
     }
   }
 
-void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
-{
-  if (m_sock)
+  void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
+  {
+    if (m_sock)
     {
       sock_t		socket = m_sock->getSocket();
       fd_set		writefds;
@@ -627,34 +645,34 @@ void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
       tv.tv_usec = 0;
       ret = select(socket + 1, nullptr, &writefds, nullptr, &tv);
       if (ret > 0)
-	{
-	  for (NetworkPacket const &pck : events)
-	    {
-	      // Convert packet to uint8_t *
-	      size_t len = sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck.len);
-	      std::unique_ptr<uint8_t[]>	data = std::make_unique<uint8_t[]>(len);
-	      uint8_t				*cur = data.get();
+      {
+        for (NetworkPacket const &pck : events)
+        {
+          // Convert packet to uint8_t *
+          size_t len = sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck.len);
+          std::unique_ptr<uint8_t[]>	data = std::make_unique<uint8_t[]>(len);
+          uint8_t				*cur = data.get();
 
-	      std::memcpy(cur, &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	      std::memcpy(cur + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
-			  pck.data, ntohl(pck.len));
+          std::memcpy(cur, &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+          std::memcpy(cur + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
+            pck.data, ntohl(pck.len));
 
-	      // Send
-	      m_sock->send(data.get(), len);
-	      delete pck.data;
-	    }
-	}
+          // Send
+          m_sock->send(data.get(), len);
+          delete pck.data;
+        }
+      }
     }
-}
+  }
 
-std::vector<NetworkPacket> Core::getNetworkToSend()
-{
-  std::vector<NetworkPacket>	pcks;
-  uint8_t			*data;
-  size_t			maxSize = Core::pckBuffSize;
-  ssize_t			pckSize;
+  std::vector<NetworkPacket> Core::getNetworkToSend()
+  {
+    std::vector<NetworkPacket>	pcks;
+    uint8_t			*data;
+    size_t			maxSize = Core::pckBuffSize;
+    ssize_t			pckSize;
 
-  if (m_sock != nullptr)
+    if (m_sock != nullptr)
     {
       sock_t		socket = m_sock->getSocket();
       fd_set		readfds;
@@ -667,21 +685,22 @@ std::vector<NetworkPacket> Core::getNetworkToSend()
       tv.tv_usec = 0;
       ret = select(socket + 1, &readfds, nullptr, nullptr, &tv);
       if (ret > 0 && FD_ISSET(socket, &readfds) &&
-	  m_sock->rec(reinterpret_cast<void **>(&data), maxSize, &pckSize) == true)
-	{
-	  // Build packet
-	  NetworkPacket			*tmp = reinterpret_cast<NetworkPacket *>(data);
-	  NetworkPacket			pck;
+        m_sock->rec(reinterpret_cast<void **>(&data), maxSize, &pckSize) == true)
+      {
+        // Build packet
+        NetworkPacket			*tmp = reinterpret_cast<NetworkPacket *>(data);
+        NetworkPacket			pck;
 
-	  std::memcpy(&pck, data, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	  pck.data = new uint8_t[ntohl(pck.len)];
-	  std::memcpy(pck.data, &tmp->data, ntohl(pck.len));
-	  delete [] data;
-	  pcks.push_back(pck);
-	}
+        std::memcpy(&pck, data, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+        pck.data = new uint8_t[ntohl(pck.len)];
+        std::memcpy(pck.data, &tmp->data, ntohl(pck.len));
+        delete[] data;
+        pcks.push_back(pck);
+      }
     }
-  return (std::move(pcks));
-}
+    return (std::move(pcks));
+  }
+
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
   {
     std::vector<std::unique_ptr<ISprite>> s;

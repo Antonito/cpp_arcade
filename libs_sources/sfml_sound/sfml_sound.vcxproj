@@ -139,6 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\EntryPoint.cpp" />
+    <ClCompile Include="src\LibSFMLSound.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\LibSFMLSound.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
