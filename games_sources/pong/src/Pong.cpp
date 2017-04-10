@@ -279,6 +279,7 @@ namespace arcade
 	  case PongState::PLAYING:
 	    {
 	      bool updateBall = false;
+	      static int ballCount = 0;
 	      // The game is running
 	      m_map->clearLayer(1);
 
@@ -288,12 +289,19 @@ namespace arcade
 	      if (m_ball[0].x < 0)
 		{
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+		  ballCount = 0;
 		  updateBall = true;
 		}
 	      else if (m_ball[0].x > m_map->getWidth() - 1)
 		{
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
+		  ballCount = 0;
 		  updateBall = true;
+		}
+	      if (updateBall < 10)
+		{
+		  updateBall = true;
+		  ++updateBall;
 		}
 	      m_player[0].display(*m_map);
 	      m_player[1].display(*m_map);
