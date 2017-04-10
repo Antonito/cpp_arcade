@@ -205,7 +205,6 @@ namespace arcade
 			    m_player[otherId].move();
 			  }
 		      }
-		    std::cout << (int)_pck->entity.data.updateBall << std::endl;
 		    if (m_id != 0 && _pck->entity.data.updateBall == true)
 		      {
 			m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
@@ -279,7 +278,7 @@ namespace arcade
 
 	  case PongState::PLAYING:
 	    {
-	      bool updateBall = true;
+	      bool updateBall = false;
 	      // The game is running
 	      m_map->clearLayer(1);
 
@@ -297,7 +296,10 @@ namespace arcade
 		  updateBall = true;
 		}
 	      if (m_curTick - m_lastSendTick > 80)
-		updateBall = true;
+		{
+		  updateBall = true;
+		  m_lastSendTick = m_curTick;
+		}
 	      m_player[0].display(*m_map);
 	      m_player[1].display(*m_map);
 	      m_ball.display(*m_map);
@@ -328,7 +330,6 @@ namespace arcade
 		  createdPck.release();
 		  m_toSend.push_back(pck);
 		  m_updatePos = 0;
-		  m_lastSendTick = m_curTick;
 		  delete raw;
 		}
 	    }
