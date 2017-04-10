@@ -7,6 +7,7 @@
 #include "Player.hpp"
 #include "Enemy.hpp"
 #include "Shoot.hpp"
+#include "EvilShoot.hpp"
 
 namespace arcade
 {
@@ -37,14 +38,25 @@ public:
 #endif
 private:
   void checkPowerUps();
+  bool checkShoot(Position);
+  void enemyShoot(size_t);
+  void moveEvilShoot(size_t);
+  void moveEvilDude(size_t);
+  void movePlayer(size_t);
+  void movePlayerShoot(size_t);
 
   Player m_player;
   PowerUps m_powerups;
   Shoot m_shoot;
   std::vector<Enemy> m_enemies;
+  std::vector<EvilShoot> m_evilShoot;
   bool m_hasShot;
 
   size_t m_lastTick;
+  size_t m_lastShootTick;
+  size_t m_lastEvilShootTick;
+  size_t m_lastEvilSalveTick;
+  size_t m_lastEvilTick;
   size_t m_curTick;
 };
 }

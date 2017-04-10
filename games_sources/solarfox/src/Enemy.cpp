@@ -28,7 +28,7 @@ void Enemy::display(Map &map, double ratio) const
 
 void Enemy::move(Map &map)
 {
-  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::BLOCK)
+  if (m_pos.size() == 0 || !next().inMap(map))
   {
     return;
   }
@@ -38,11 +38,21 @@ void Enemy::move(Map &map)
 
 std::unique_ptr<AEntity> Enemy::shoot() const
 {
-  std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
+  std::unique_ptr<EvilShoot> shoot = std::make_unique<EvilShoot>();
 
-  shoot->push(m_pos[0] + m_dir);
-  shoot->setDir(m_dir);
+  shoot->push(m_pos[0] + m_shootDir);
+  shoot->setDir(m_shootDir);
   return (shoot);
+}
+
+void Enemy::setShootDir(Direction dir)
+{
+  m_shootDir = dir;
+}
+
+Direction Enemy::getShootDir() const
+{
+  return (m_shootDir);
 }
 }
 }

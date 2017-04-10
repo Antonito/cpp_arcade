@@ -28,7 +28,7 @@ void Player::display(Map &map, double ratio) const
 
 void Player::move(Map &map)
 {
-  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::BLOCK)
+  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::BLOCK || map.at(0, next().x, next().y).getType() == TileType::MY_SHOOT)
   {
     return;
   }

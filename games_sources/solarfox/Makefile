@@ -16,6 +16,7 @@ SRC_FILES=	SolarFox.cpp	\
 		Enemy.cpp	\
 		PowerUps.cpp 	\
 		Shoot.cpp	\
+		EvilShoot.cpp	\
 		Player.cpp 	\
 		EntryPoint.cpp
 

@@ -11,12 +11,11 @@ namespace solarfox
 {
 SolarFox::SolarFox()
 {
-  Enemy new_enemy;
   Position tmp;
 
   std::vector<std::string> m =
       {
-          "111111111111E111111111111",
+          "111111111111D111111111111",
           "1111111111111111111111111",
           "1111111111111111111111111",
           "1110000000000000000000111",
@@ -28,7 +27,7 @@ SolarFox::SolarFox()
           "1110000x0x00000x0x0000111",
           "1110000x0x0xxx0x0x0000111",
           "1110000x0x0x0x0x0x0000111",
-          "E110000x0x0xSx0x0x000011E",
+          "R110000x0x0xSx0x0x000011L",
           "1110000x0x0x0x0x0x0000111",
           "1110000x0x0xxx0x0x0000111",
           "1110000x0x00000x0x0000111",
@@ -40,7 +39,7 @@ SolarFox::SolarFox()
           "1110000000000000000000111",
           "1111111111111111111111111",
           "1111111111111111111111111",
-          "111111111111E111111111111"};
+          "111111111111U111111111111"};
 
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
@@ -68,12 +67,51 @@ SolarFox::SolarFox()
         type = TileType::POWERUP;
         m_powerups.push(Position(x, y));
         break;
-      case 'E':
+      case 'U':
+      {
+        Enemy enemy_up;
+
         type = TileType::BLOCK;
-        new_enemy.push(Position(x, y), 3);
-        new_enemy.setDir(Direction::RIGHT);
-        m_enemies.push_back(new_enemy);
+        enemy_up.push(Position(x, y));
+        enemy_up.setShootDir(Direction::UP);
+        enemy_up.setDir(Direction::LEFT);
+        m_enemies.push_back(enemy_up);
+
         break;
+      }
+      case 'D':
+      {
+        Enemy enemy_down;
+
+        type = TileType::BLOCK;
+        enemy_down.push(Position(x, y));
+        enemy_down.setShootDir(Direction::DOWN);
+        enemy_down.setDir(Direction::RIGHT);
+        m_enemies.push_back(enemy_down);
+        break;
+      }
+      case 'L':
+      {
+        Enemy enemy_left;
+
+        type = TileType::BLOCK;
+        enemy_left.push(Position(x, y));
+        enemy_left.setShootDir(Direction::LEFT);
+        enemy_left.setDir(Direction::UP);
+        m_enemies.push_back(enemy_left);
+        break;
+      }
+      case 'R':
+      {
+        Enemy enemy_right;
+
+        type = TileType::BLOCK;
+        enemy_right.push(Position(x, y));
+        enemy_right.setShootDir(Direction::RIGHT);
+        enemy_right.setDir(Direction::DOWN);
+        m_enemies.push_back(enemy_right);
+        break;
+      }
       }
       m_map->at(0, x, y).setType(type);
     }
@@ -83,6 +121,10 @@ SolarFox::SolarFox()
 
   m_hasShot = false;
   m_lastTick = 0;
+  m_lastShootTick = 0;
+  m_lastEvilShootTick = 0;
+  m_lastEvilSalveTick = 0;
+  m_lastEvilTick = 0;
   m_curTick = 0;
 }
 
@@ -93,8 +135,12 @@ SolarFox::SolarFox(SolarFox const &other)
   m_enemies = other.m_enemies;
   m_powerups = other.m_powerups;
   m_lastTick = other.m_lastTick;
+  m_lastShootTick = other.m_lastShootTick;
   m_curTick = other.m_curTick;
   m_hasShot = other.m_hasShot;
+  m_lastEvilShootTick = other.m_lastEvilShootTick;
+  m_lastEvilSalveTick = other.m_lastEvilSalveTick;
+  m_lastEvilTick = other.m_lastEvilTick;
 }
 
 SolarFox::~SolarFox()
@@ -142,7 +188,7 @@ void SolarFox::notifyEvent(std::vector<Event> &&events)
           m_shoot = *static_cast<Shoot *>(m_player.shoot().get());
           m_shoot.setDir(m_player.getDir());
           m_shoot.setCurTile(m_map->at(0, m_shoot[0].x, m_shoot[0].y).getType());
-          m_shoot.setRange(2);
+          m_shoot.setRange(3);
         }
         break;
       case KB_ESCAPE:
@@ -176,7 +222,98 @@ void SolarFox::checkPowerUps()
   {
     // up score
     m_hasShot = false;
+    m_map->at(0, m_shoot[0].x, m_shoot[0].y).setType(m_shoot.getCurTile());
     m_powerups.erase(m_shoot[0]);
+  }
+}
+
+bool SolarFox::checkShoot(Position pos)
+{
+  if (pos == m_player[0])
+  {
+    m_state = MENU;
+    return true;
+  }
+  if (m_hasShot && pos == m_shoot[0])
+    return true;
+  return false;
+}
+
+void SolarFox::moveEvilShoot(size_t speed)
+{
+  if (m_curTick - m_lastEvilShootTick > speed)
+  {
+    for (std::vector<EvilShoot>::iterator it = m_evilShoot.begin(); it != m_evilShoot.end();)
+    {
+      if (checkShoot((*it)[0]) || !it->next().inMap(*m_map))
+        it = m_evilShoot.erase(it);
+      else
+      {
+        it->move(*m_map);
+        it++;
+      }
+    }
+    m_lastEvilShootTick = m_curTick;
+  }
+}
+
+void SolarFox::moveEvilDude(size_t speed)
+{
+  if (m_curTick - m_lastEvilTick > speed)
+  {
+    for (Enemy &e : m_enemies)
+    {
+      if (e.getShootDir() == Direction::UP || e.getShootDir() == Direction::DOWN)
+        e.setDir(static_cast<Direction>(2 + rand() % 2));
+      else
+        e.setDir(static_cast<Direction>(rand() % 2));
+      e.move(*m_map);
+    }
+    m_lastEvilTick = m_curTick;
+  }
+}
+
+void SolarFox::movePlayer(size_t speed)
+{
+  if (m_curTick - m_lastTick > speed)
+  {
+    m_player.move(*m_map);
+
+    m_lastTick = m_curTick;
+  }
+}
+
+void SolarFox::movePlayerShoot(size_t speed)
+{
+  if (m_curTick - m_lastShootTick > speed)
+  {
+    checkPowerUps();
+    if (m_hasShot)
+    {
+      m_shoot.move(*m_map);
+      if (m_shoot.getRange() <= 0)
+      {
+        m_hasShot = false;
+        m_map->at(0, m_shoot[0].x, m_shoot[0].y).setType(m_shoot.getCurTile());
+      }
+    }
+    m_lastShootTick = m_curTick;
+  }
+}
+
+void SolarFox::enemyShoot(size_t speed)
+{
+  if (m_curTick - m_lastEvilSalveTick > speed)
+  {
+    for (Enemy &e : m_enemies)
+    {
+      EvilShoot new_shoot;
+
+      new_shoot = *static_cast<EvilShoot *>(e.shoot().get());
+      new_shoot.setCurTile(m_map->at(0, new_shoot[0].x, new_shoot[0].y).getType());
+      m_evilShoot.push_back(new_shoot);
+      m_lastEvilSalveTick = m_curTick;
+    }
   }
 }
 
@@ -193,19 +330,24 @@ void SolarFox::process()
   {
     e.display(*m_map);
   }
-
-  if (m_curTick - m_lastTick > 100)
+  for (EvilShoot const &es : m_evilShoot)
   {
-    checkPowerUps();
-    if (m_hasShot)
-    {
-      m_shoot.move(*m_map);
-      if (m_shoot.getRange() == 0)
-        m_hasShot = false;
-    }
-    m_player.move(*m_map);
-    m_lastTick = m_curTick;
+    es.display(*m_map);
   }
+  for (std::vector<EvilShoot>::iterator it = m_evilShoot.begin(); it != m_evilShoot.end();)
+  {
+    if (checkShoot((*it)[0]) || !it->next().inMap(*m_map))
+      it = m_evilShoot.erase(it);
+    else
+    {
+      it++;
+    }
+  }
+  enemyShoot(3000);
+  moveEvilShoot(150);
+  moveEvilDude(400);
+  movePlayer(200);
+  movePlayerShoot(50);
 }
 
 #if defined(__linux__)

@@ -5,7 +5,7 @@
 #include "AGame.hpp"
 #include "AEntity.hpp"
 #include "IShooter.hpp"
-#include "Shoot.hpp"
+#include "EvilShoot.hpp"
 #include "AMovable.hpp"
 
 namespace arcade
@@ -24,6 +24,12 @@ public:
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
   virtual std::unique_ptr<AEntity> shoot() const;
+
+  Direction getShootDir() const;
+  void setShootDir(Direction);
+
+private:
+  Direction m_shootDir;
 };
 }
 }
