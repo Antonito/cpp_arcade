@@ -641,6 +641,7 @@ void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
 
 	      // Send
 	      m_sock->send(data.get(), len);
+	      delete pck.data;
 	    }
 	}
     }

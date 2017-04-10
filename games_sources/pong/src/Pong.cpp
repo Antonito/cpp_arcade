@@ -126,15 +126,45 @@ namespace arcade
 	      {
 		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
 		rec = true;
-		std::cout << "Action: " << _pck->action << _pck->auth << std::endl;
 		if (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber && _pck &&
 		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
 		    NetworkAction::HELLO_EVENT && _pck->auth == true)
 		  {
+#if defined(DEBUG)
+		    std::cout << "Client Authenticated" << std::endl;
+#endif
 		    m_state = PongState::WAITING;
 		  }
 	      }
 	    break;
+
+	  case PongState::WAITING:
+	    // Waiting for a second player
+	    for (NetworkPacket const &pck : m_received)
+	      {
+		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
+		std::cout << "Got a packet." << std::endl;
+		std::cout << "Magic correct ? " << (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber) <<  std::endl;
+		std::cout << "Data? " << (_pck != nullptr) << std::endl;
+		std::cout << "Event: " << ntohl(static_cast<uint32_t>(_pck->action)) << "[Expected: " << NetworkAction::GAME_EVENT << "]" << std::endl;
+		std::cout << "Auth? " << (_pck->auth == true) << std::endl;
+		if (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber && _pck &&
+		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
+		    NetworkAction::GAME_EVENT && _pck->auth == true)
+		  {
+#if defined(DEBUG)
+		    std::cout << "Other player connected" << std::endl;
+#endif
+		    m_state = PongState::PLAYING;
+		  }
+	      }
+	    break;
+
+	  case PongState::PLAYING:
+	    // Get other player's events
+	    std::cout << "Playing." << std::endl;
+	    break;
+
 	  default:
 	    break;
 	  }
@@ -146,13 +176,18 @@ namespace arcade
 	    // We should authenticate
 	    if (!auth || rec)
 	    {
+#if defined(DEBUG)
 	      std::cout << "Authenticating Pong" << std::endl;
-	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p){
-		  p.action = NetworkAction::HELLO_EVENT;
+#endif
+	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p) {
+		  p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
 		  p.auth = false;
 		});
+	      NetworkPacket	*raw = createdPck.get();
 	      NetworkPacket	pck = *createdPck;
+	      createdPck.release();
 	      m_toSend.push_back(pck);
+	      delete raw;
 	      auth = true;
 	    }
 	    break;
@@ -160,7 +195,19 @@ namespace arcade
 	  case PongState::WAITING:
 	    // Waiting for other players
 	    std::cout << "Waiting for other players" << std::endl;
+	    {
+	      std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, bool>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, bool> &p) {
+		  p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::GAME_EVENT)));
+		  p.auth = true;
+		});
+	      NetworkPacket	*raw = createdPck.get();
+	      NetworkPacket	pck = *createdPck;
+	      createdPck.release();
+	      m_toSend.push_back(pck);
+	      delete raw;
+	    }
 	    break;
+
 	  case PongState::PLAYING:
 	    // The game is running
 	    m_map->clearLayer(1);
@@ -181,6 +228,7 @@ namespace arcade
 	    m_ball.display(*m_map);
 	    m_lastTick = m_curTick;
 	    break;
+
 	  default:
 	    break;
 	  }
