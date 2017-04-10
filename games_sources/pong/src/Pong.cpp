@@ -196,18 +196,19 @@ namespace arcade
 			    m_player[otherId].last().y < m_map->getHeight() - 1)
 			  {
 			    m_player[otherId].setDir(Direction::DOWN);
+			    m_player[otherId].move();
 			  }
 			else if (ntohl(_pck->entity.data.pos.y) < m_player[otherId][0].y &&
 				 m_player[otherId][0].y > 0)
 			  {
 			    m_player[otherId].setDir(Direction::UP);
+			    m_player[otherId].move();
 			  }
-			m_player[otherId].move();
-			if (m_id != 0)
-			  {
-			    m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
-			    m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
-			  }
+		      }
+		    if (m_id != 0)
+		      {
+			m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
+			m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
 		      }
 		  }
 	      }
