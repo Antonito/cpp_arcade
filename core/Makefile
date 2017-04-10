@@ -25,7 +25,7 @@ LOGGER_FILES=	Logger.cpp		\
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))		\
 		$(addprefix $(LOGGER_DIR), $(LOGGER_FILES))
 
-INC_DIR=	$(DIR_LIST)					\
+INC_DIR=	$(DIR_LIST)				\
 		$(ROOT_DIR)/common/src/			\
 		$(ROOT_DIR)/network/src/			\
 		$(ROOT_DIR)/games_sources/games_common/src/	\
