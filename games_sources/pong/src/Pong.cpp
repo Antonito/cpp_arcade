@@ -15,8 +15,7 @@ namespace arcade
 	m_lastTick(0),
         m_curTick(0),
 	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0),
-	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0),
-	m_smoothTick(0)
+	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -31,6 +30,7 @@ namespace arcade
 
         for (size_t player = 0; player < 2; ++player)
         {
+          m_smoothTick[player] = 0;
           for (size_t i = 0; i < size; ++i)
           {
             m_player[player].push(Position(player * (m_map->getWidth() - 3) + 1, y + i));
@@ -88,7 +88,8 @@ namespace arcade
                 m_player[m_id].setDir(Direction::UP);
                 m_player[m_id].move();
 		++m_updatePos;
-		m_lastUpTick = m_curTick;
+                m_smoothTick[m_id] = this->getCurrentTick();
+                m_lastUpTick = m_curTick;
               }
               break;
             case KB_ARROW_DOWN:
@@ -98,7 +99,8 @@ namespace arcade
                 m_player[m_id].setDir(Direction::DOWN);
                 m_player[m_id].move();
 		++m_updatePos;
-		m_lastDownTick = m_curTick;
+                m_smoothTick[m_id] = this->getCurrentTick();
+                m_lastDownTick = m_curTick;
               }
               break;
             default:
@@ -198,13 +200,15 @@ namespace arcade
 			  {
 			    m_player[otherId].setDir(Direction::DOWN);
 			    m_player[otherId].move();
+                            m_smoothTick[otherId] = this->getCurrentTick();
 			  }
 			else if (ntohl(_pck->entity.data.pos.y) < m_player[otherId][0].y &&
 				 m_player[otherId][0].y > 0)
 			  {
 			    m_player[otherId].setDir(Direction::UP);
 			    m_player[otherId].move();
-			  }
+                            m_smoothTick[otherId] = this->getCurrentTick();
+                        }
 		      }
 		    if (m_id != 0 && _pck->entity.data.updateBall == true)
 		      {
@@ -283,12 +287,6 @@ namespace arcade
 	      static int ballCount = 0;
 	      // The game is running
 	      m_map->clearLayer(1);
-	      if (m_curTick - m_smoothTick > 60)
-		{
-		  m_player[0].setDir(Direction::RIGHT);
-		  m_player[1].setDir(Direction::RIGHT);
-		  m_smoothTick = m_curTick;
-		}
 
 	      m_curTick = this->getCurrentTick();
 	      m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
@@ -310,9 +308,13 @@ namespace arcade
 		  updateBall = true;
 		  ++ballCount;
 		}
-	      m_player[0].display(*m_map, (m_curTick - m_smoothTick) / 60.0);
-	      m_player[1].display(*m_map, (m_curTick - m_smoothTick) / 60.0);
 	      m_ball.display(*m_map);
+
+              for (size_t i = 0; i < 2; ++i)
+              {
+                m_player[i].display(*m_map, (m_curTick - m_smoothTick[i]) / 60.0);
+              }
+
 	      m_lastTick = m_curTick;
 	      if (shouldSend &&
 		  (updateBall || m_curTick - m_lastSendTick > 60))
