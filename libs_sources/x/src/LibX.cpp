@@ -30,6 +30,7 @@ namespace arcade
       {
 	throw CapabilityError("TrueColor not supported");
       }
+
     // Set up a window
     m_screen = DefaultScreen(m_disp);
     m_gc = DefaultGC(m_disp, m_screen);
@@ -46,7 +47,7 @@ namespace arcade
 
     // Create an image
     m_guiData = static_cast<uint32_t *>(Xmalloc(m_width * m_height * sizeof(uint32_t)));
-    memset(m_guiData, 0, m_width * m_height * sizeof(Color));
+    std::memset(m_guiData, 0, m_width * m_height * sizeof(Color));
     m_gui = XCreateImage(m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
 			 reinterpret_cast<char *>(m_guiData), m_width, m_height, 32, 0);
     if (!m_gui)
@@ -227,13 +228,14 @@ namespace arcade
   void LibX::updateGUI(IGUI & gui)
   {
     Color *pixels = reinterpret_cast<Color *>(m_guiData);
+    std::memset(pixels, 0, m_width * m_height * sizeof(Color));
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
 	size_t x = comp.getX() * m_width;
 	size_t y = comp.getY() * m_height;
 	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getWidth() * m_height;
+	size_t height = comp.getHeight() * m_height;
 	Color color = comp.getBackgroundColor();
 	double a(color.a / 255.0);
 
@@ -261,7 +263,7 @@ namespace arcade
       {
 	if (m_map)
 	  XPutImage(m_disp, m_win, m_gc, m_map, 0, 0, 0, 0, m_width, m_height); // TODO : Check positiiiioooonn
-	//XPutImage(m_disp, m_win, m_gc, m_gui, 0, 0, 0, 0, m_width, m_height);
+	XPutImage(m_disp, m_win, m_gc, m_gui, 0, 0, 0, 0, m_width, m_height);
 	XFlush(m_disp);
 	m_canDraw = false;
       }
