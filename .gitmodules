@@ -1,3 +1,6 @@
 [submodule "deps/interface"]
 	path = deps/interface
 	url = https://github.com/Ludonope/ArcadeInterfaces.git
+[submodule "deps/arcade_assets"]
+	path = deps/arcade_assets
+	url = https://github.com/Ludonope/ArcadeRessources

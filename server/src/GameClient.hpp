@@ -14,6 +14,13 @@ namespace arcade
   class GameClient : public Network::IClient
   {
   public:
+    enum State
+      {
+	AUTHENTICATING,
+	WAITING,
+	PLAYING
+      };
+
     static size_t constexpr buffSize = 4096;
     static size_t constexpr timeOut = 60; // Seconds
 
@@ -31,6 +38,8 @@ namespace arcade
 
     NetworkGames	getGame() const;
     void		setGame(NetworkGames game);
+    State		getState() const;
+    void		setState(State state);
 
     bool operator==(GameClient const &);
     sock_t getSock() const;
@@ -48,6 +57,7 @@ namespace arcade
     std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	m_sendQueue;
     bool	m_authenticated;
     NetworkGames	m_game;
+    State		m_state;
   };
 }
 

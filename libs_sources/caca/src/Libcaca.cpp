@@ -119,60 +119,60 @@ namespace arcade
   {
     // TODO: Blit on canvas, how ??
     if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+    {
+      if (m_map)
       {
-	if (m_map)
-	  {
-	    caca_free_canvas(m_map);
-	    m_map = nullptr;
-	  }
-	m_mapWidth = map.getWidth();
-	m_mapHeight = map.getHeight();
-	if (!m_mapWidth || !m_mapHeight)
-	  return ;
-	m_map = caca_create_canvas(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
-	if (!m_map)
-	  {
-	    throw AllocationError("Cannot create LibCaca Canvas [map]");
-	  }
+        caca_free_canvas(m_map);
+        m_map = nullptr;
       }
+      m_mapWidth = map.getWidth();
+      m_mapHeight = map.getHeight();
+      if (!m_mapWidth || !m_mapHeight)
+        return;
+      m_map = caca_create_canvas(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
+      if (!m_map)
+      {
+        throw AllocationError("Cannot create LibCaca Canvas [map]");
+      }
+    }
 
     // Loop on every tile
     for (size_t l = 0; l < map.getLayerNb(); ++l)
+    {
+      for (size_t y = 0; y < m_mapHeight; ++y)
       {
-	for (size_t y = 0; y < m_mapHeight; ++y)
-	  {
-	    for (size_t x = 0; x < m_mapWidth; ++x)
-	      {
-		ITile const &tile = map.at(l, x, y);
+        for (size_t x = 0; x < m_mapWidth; ++x)
+        {
+          ITile const &tile = map.at(l, x, y);
 
-                // In case of sprite
-		if (tile.getSpriteId() != 0 && false) // TODO: Enable
-		  {
-		  }
-                // Display color
-		else
-		  {
-		    Color color = tile.getColor();
+          // In case of sprite
+          if (tile.getSpriteId() != 0 && false) // TODO: Enable
+          {
+          }
+          // Display color
+          else
+          {
+            Color color = tile.getColor();
 
-                    // Check if there is alpha
-                    if (color.a != 0)
-                    {
-                      double a(color.a / 255.0);
-                      uint32_t attr = caca_get_attr(m_canvas, x, y);
-                      uint8_t old[sizeof(uint64_t)];
-                      caca_attr_to_argb64(attr, old);
-                      Color bg(color.r * a + old[1] * (1 - a),
-                        color.g * a + old[2] * (1 - a),
-                        color.b * a + old[3] * (1 - a),
-                        color.a + old[0] * (1 - a));
-                      uint16_t _bg = convert32bitsColorTo16Bits(bg);
-                      caca_set_color_argb(m_canvas, 0xffff, _bg);
-                      caca_printf(m_canvas, x, y, " ");
-                    }
-		  }
-	      }
-	  }
+            // Check if there is alpha
+            if (color.a != 0)
+            {
+              double a(color.a / 255.0);
+              uint32_t attr = caca_get_attr(m_canvas, x, y);
+              uint8_t old[sizeof(uint64_t)];
+              caca_attr_to_argb64(attr, old);
+              Color bg(color.r * a + old[1] * (1 - a),
+                color.g * a + old[2] * (1 - a),
+                color.b * a + old[3] * (1 - a),
+                color.a + old[0] * (1 - a));
+              uint16_t _bg = convert32bitsColorTo16Bits(bg);
+              caca_set_color_argb(m_canvas, 0xffff, _bg);
+              caca_printf(m_canvas, x, y, " ");
+            }
+          }
+        }
       }
+    }
   }
 
   void Libcaca::updateGUI(IGUI & gui)
@@ -217,6 +217,7 @@ namespace arcade
 
   void Libcaca::clear()
   {
+    caca_set_color_argb(m_canvas, 0xffff, 0);
     if (m_map)
       caca_clear_canvas(m_map);
     caca_clear_canvas(m_canvas);

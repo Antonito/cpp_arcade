@@ -4,6 +4,8 @@
 #include "LibSFMLSound.hpp"
 #include "RessourceError.hpp"
 
+#define DEBUG
+
 namespace arcade
 {
   LibSFMLSound::LibSFMLSound()
@@ -12,6 +14,21 @@ namespace arcade
 
   LibSFMLSound::~LibSFMLSound()
   {
+    for (std::unique_ptr<sf::Sound> &s : m_sound)
+    {
+      if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
+      {
+        s->stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
   }
 
   bool LibSFMLSound::pollEvent(Event &)
@@ -28,6 +45,22 @@ namespace arcade
   {
     size_t index;
 
+    for (std::unique_ptr<sf::Sound> &s : m_sound)
+    {
+      if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
+      {
+        s->stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
+
     m_sound.clear();
     m_soundBuffer.clear();
     m_music.clear();
@@ -40,24 +73,27 @@ namespace arcade
 	    if (!cur.openFromFile(p.first))
 	      {
 		std::cerr << "Cannot open music: " << p.first << std::endl;
-		throw RessourceError("Error loading music");
+                m_music.back().reset();
 	      }
             index = m_music.size() - 1;
 	  }
-	else
-	  {
-	  m_soundBuffer.emplace_back();
+        else
+        {
+          m_soundBuffer.emplace_back();
           sf::SoundBuffer &buf = m_soundBuffer.back();
-	    if (!buf.loadFromFile(p.first))
-	      {
-		std::cerr << "Cannot open sound: " << p.first << std::endl;
-		throw RessourceError("Error loading sound");
-	      }
-	    m_sound.emplace_back();
-            sf::Sound &sound = m_sound.back();
+          if (!buf.loadFromFile(p.first))
+          {
+            std::cerr << "Cannot open sound: " << p.first << std::endl;
+            m_sound.emplace_back(nullptr);
+          }
+          else
+          {
+            m_sound.push_back(std::make_unique<sf::Sound>());
+            sf::Sound &sound = *m_sound.back();
             sound.setBuffer(buf);
-            index = m_sound.size() - 1;
-	  }
+          }
+          index = m_sound.size() - 1;
+        }
         m_soundIndex.emplace_back(p.second, index);
       }
   }
@@ -69,6 +105,11 @@ namespace arcade
 
     if (type == SoundType::MUSIC)
     {
+      if (!m_music[index].get())
+      {
+        return;
+      }
+
       sf::Music &m = *m_music[index];
       switch (sound.mode)
       {
@@ -77,7 +118,7 @@ namespace arcade
         m.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
-        m.setVolume(sound.volume);
+        m.setVolume(static_cast<int>(sound.volume));
         break;
       case PLAY:
         m.stop();
@@ -96,7 +137,12 @@ namespace arcade
     }
     else
     {
-      sf::Sound &s = m_sound[index];
+      if (!m_sound[index].get())
+      {
+        return;
+      }
+
+      sf::Sound &s = *m_sound[index];
 
       switch (sound.mode)
       {
@@ -105,7 +151,7 @@ namespace arcade
         s.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
-        s.setVolume(sound.volume);
+        s.setVolume(static_cast<int>(sound.volume));
         break;
       case PLAY:
         s.stop();

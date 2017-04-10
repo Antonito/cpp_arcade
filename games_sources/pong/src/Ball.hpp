@@ -23,6 +23,12 @@ public:
   int getBallDir() const;
   void setBallPos(Position const &p);
   void reset(Position const &p);
+
+  double getX() const;
+  void setX(double x);
+  double getY() const;
+  void setY(double y);
+
 private:
   double m_x;
   double m_y;
