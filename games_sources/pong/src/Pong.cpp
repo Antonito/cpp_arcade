@@ -15,7 +15,7 @@ namespace arcade
 	m_lastTick(0),
         m_curTick(0),
 	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0),
-	m_lastUpTick(0), m_lastDownTick(0)
+	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -295,7 +295,8 @@ namespace arcade
 	    m_player[1].display(*m_map);
 	    m_ball.display(*m_map);
 	    m_lastTick = m_curTick;
-	    if (shouldSend)
+	    if (shouldSend &&
+		m_curTick - m_lastSendTick > 60)
 	      {
 		std::unique_ptr<NetworkPacket>	createdPck = m_fact.create<1, PongPacket>(NetworkGames::PONG, [&](Network::NetworkPacketData<1, PongPacket> &p) {
 		    p.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
@@ -319,6 +320,7 @@ namespace arcade
 		createdPck.release();
 		m_toSend.push_back(pck);
 		m_updatePos = 0;
+		m_lastSendTick = m_curTick;
 		delete raw;
 	    }
 	    break;
