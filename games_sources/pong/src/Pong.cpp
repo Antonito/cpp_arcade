@@ -303,7 +303,7 @@ namespace arcade
 		  ballCount = 0;
 		  updateBall = true;
 		}
-	      if (ballCount < 30)
+	      if (ballCount < 40)
 		{
 		  updateBall = true;
 		  ++ballCount;
