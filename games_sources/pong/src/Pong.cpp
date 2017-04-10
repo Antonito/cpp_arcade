@@ -205,7 +205,7 @@ namespace arcade
 			    m_player[otherId].move();
 			  }
 		      }
-		    if (m_id != 0 && _pck->entity.data.updateBall == true)
+		    if (m_id != 0)
 		      {
 			m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
 			m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
