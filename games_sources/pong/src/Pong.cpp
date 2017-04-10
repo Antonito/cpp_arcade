@@ -290,18 +290,20 @@ namespace arcade
 		{
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  ballCount = 0;
+		  std::cout << "RESET" << std::endl;
 		  updateBall = true;
 		}
 	      else if (m_ball[0].x > m_map->getWidth() - 1)
 		{
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  ballCount = 0;
+		  std::cout << "RESET" << std::endl;
 		  updateBall = true;
 		}
-	      if (updateBall < 10)
+	      if (ballCount < 10)
 		{
 		  updateBall = true;
-		  ++updateBall;
+		  ++ballCount;
 		}
 	      m_player[0].display(*m_map);
 	      m_player[1].display(*m_map);
