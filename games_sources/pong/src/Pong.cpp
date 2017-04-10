@@ -285,6 +285,8 @@ namespace arcade
 	      m_map->clearLayer(1);
 	      if (m_curTick - m_smoothTick > 60)
 		{
+		  m_player[0].setDir(Direction::RIGHT);
+		  m_player[1].setDir(Direction::RIGHT);
 		  m_smoothTick = m_curTick;
 		}
 
