@@ -80,14 +80,14 @@ namespace arcade
 
 			    // Send player ID
 			    std::unique_ptr<arcade::NetworkPacket> pck =
-			      m_fact.create<0, arcade::game::pong::PongPacket>(client.getGame(),
+			      m_fact.create<0, arcade::game::pong::PongPacket>(client->getGame(),
 									       [&](Network::NetworkPacketData<0, arcade::game::pong::PongPacket> &packet)
 									       {
 										 packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
 
 									       });
 
-			    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
+			    uint32_t pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
 			    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.get());
 			    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
 
