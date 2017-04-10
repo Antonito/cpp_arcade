@@ -205,7 +205,8 @@ namespace arcade
 			    m_player[otherId].move();
 			  }
 		      }
-		    if (m_id != 0)
+		    std::cout << (int)_pck->entity.data.updateBall << std::endl;
+		    if (m_id != 0 && _pck->entity.data.updateBall == true)
 		      {
 			m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
 			m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
@@ -278,7 +279,7 @@ namespace arcade
 
 	  case PongState::PLAYING:
 	    {
-	      bool updateBall = false;
+	      bool updateBall = true;
 	      // The game is running
 	      m_map->clearLayer(1);
 
