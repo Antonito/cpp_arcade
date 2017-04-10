@@ -143,11 +143,6 @@ namespace arcade
 	    for (NetworkPacket const &pck : m_received)
 	      {
 		Network::NetworkPacketData<0, uint8_t>	*_pck = reinterpret_cast<Network::NetworkPacketData<0, uint8_t> *>(pck.data);
-		std::cout << "Got a packet." << std::endl;
-		std::cout << "Magic correct ? " << (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber) <<  std::endl;
-		std::cout << "Data? " << (_pck != nullptr) << std::endl;
-		std::cout << "Event: " << ntohl(static_cast<uint32_t>(_pck->action)) << "[Expected: " << NetworkAction::GAME_EVENT << "]" << std::endl;
-		std::cout << "Auth? " << (_pck->auth == true) << std::endl;
 		if (ntohl(pck.header.magicNumber) == NetworkPacketHeader::packetMagicNumber && _pck &&
 		    static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(_pck->action))) ==
 		    NetworkAction::GAME_EVENT && _pck->auth == true)

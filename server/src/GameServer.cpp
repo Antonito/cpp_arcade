@@ -3,6 +3,7 @@
 #include <iostream>
 #include "GameServer.hpp"
 #include "Packet.hpp"
+#include "PongPacket.hpp"
 
 namespace arcade
 {
@@ -69,11 +70,48 @@ namespace arcade
 		  {
 		    // Send data to every players
 		    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
-		    for (std::unique_ptr<GameClient> const &_client : m_clients)
+		    switch (client->getGame())
 		      {
-			// Send packets to players on the same game
-			if (client != _client && _client->getGame() == client->getGame())
-			  _client->sendData(queue.back());
+		      case arcade::NetworkGames::PONG:
+			// Pong game
+			if (client->getState() == GameClient::State::AUTHENTICATING)
+			  {
+			    static uint32_t	id = 0;
+
+			    // Send player ID
+			    std::unique_ptr<arcade::NetworkPacket> pck =
+			      m_fact.create<0, arcade::game::pong::PongPacket>(client.getGame(),
+									       [&](Network::NetworkPacketData<0, arcade::game::pong::PongPacket> &packet)
+									       {
+										 packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
+
+									       });
+
+			    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
+			    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.get());
+			    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
+
+			    std::memset(shPck.get(), 0, pckLen);
+			    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+			    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
+					pck->data, ntohl(pck->len));
+			    pck.release();
+			    // Update ID
+			    ++id;
+			    if (id > 1)
+			      id = 0;
+			    client->setState(GameClient::State::WAITING);
+			    break;
+			  }
+
+		      default:
+			for (std::unique_ptr<GameClient> const &_client : m_clients)
+			  {
+			    // Send packets to players on the same game
+			    if (client != _client && _client->getGame() == client->getGame())
+			      _client->sendData(queue.back());
+			  }
+			break;
 		      }
 		    queue.pop();
 		  }

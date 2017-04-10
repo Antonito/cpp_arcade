@@ -126,6 +126,10 @@ infos:
 link:
 			@$(LINK_INTERFACE)
 
+# Init submodules
+init:
+			git submodule init
+
 # Update every dependency
 update:
 			git submodule foreach git pull origin master
