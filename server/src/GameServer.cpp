@@ -218,20 +218,19 @@ namespace arcade
 	    client.setGame(static_cast<NetworkGames>(ntohl(static_cast<uint32_t>(pck->header.game))));
 	    std::unique_ptr<arcade::NetworkPacket> pck =
 	      m_fact.create<0, uint8_t>(client.getGame(), [&](Network::NetworkPacketData<0, uint8_t> &packet){
-		  packet.action = static_cast<NetworkAction>(ntohl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
+		  packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
 		  packet.auth = true;
 		});
-	    std::cout << "sizeof: " << sizeof(Network::NetworkPacketData<0, uint8_t>) << std::endl;
-	    std::cout << "Len: " << ntohl(pck->len) << std::endl;
+
 	    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
-	    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.release());
+	    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.get());
 	    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
 
-						       std::memset(shPck.get(), 0, pckLen);
-						       // TODO: Fix
+	    std::memset(shPck.get(), 0, pckLen);
 	    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
 	    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
 			pck->data, ntohl(pck->len));
+	    pck.release();
 	    client.sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(pckLen, shPck));
 	    queue.pop();
 #if defined(DEBUG)

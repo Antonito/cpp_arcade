@@ -100,11 +100,11 @@ while (m_gameState != QUIT)
     m_gameState = QUIT;
     break;
   }
-}
+ }
 // Log
-if (m_game.get() == this)
-m_game.release();
-Nope::Log::Info << "Exiting the core";
+ if (m_game.get() == this)
+   m_game.release();
+ Nope::Log::Info << "Exiting the core";
   }
 
   GameState Core::gameLoop()
