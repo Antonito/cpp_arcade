@@ -161,7 +161,14 @@ Nope::Log::Info << "Exiting the core";
         return (QUIT);
       }
       // Network
-      // TODO: implement
+#ifdef DEBUG
+      Nope::Log::Debug << "Sending Network Data";
+#endif
+      notifyNetwork(m_game->getNetworkToSend());
+#ifdef DEBUG
+      Nope::Log::Debug << "Getting Network Data";
+#endif
+      _game->notifyNetwork(getNetworkToSend());
 
       // Game loop
       m_game->process();

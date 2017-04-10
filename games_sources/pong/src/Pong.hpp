@@ -55,7 +55,7 @@ namespace arcade
         uint8_t m_id;
 	PongState m_state;
 	Network::PacketFactory m_fact;
-	bool m_updatePos;
+	uint32_t m_updatePos;
       };
     }
   }
