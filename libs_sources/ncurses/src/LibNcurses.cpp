@@ -50,7 +50,7 @@ namespace arcade
 
     fds.fd = fd;
     fds.events = POLLIN;
-    switch(poll(&fds, 1, 0))
+    switch (poll(&fds, 1, 0))
       {
       case -1:
 	refresh();

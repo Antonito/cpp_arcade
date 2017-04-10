@@ -5,7 +5,7 @@
 int	main(int ac, char **av)
 {
   arcade::GameServer	srv(0, 64);
-  bool			leave;
+  bool			leave = false;
 
   static_cast<void>(ac);
   static_cast<void>(av);
