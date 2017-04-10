@@ -42,8 +42,6 @@ Snake::Snake()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
-  std::cout << m_map->getHeight() << std::endl;
-  std::cout << m_map->getWidth() << std::endl;
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)

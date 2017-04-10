@@ -84,7 +84,8 @@ namespace arcade
 									       [&](Network::NetworkPacketData<0, arcade::game::pong::PongPacket> &packet)
 									       {
 										 packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
-
+										 std::memset(&packet.entity.data, 0, sizeof(arcade::game::pong::PongPacket));
+										 packet.entity.data.id = id;
 									       });
 
 			    uint32_t pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
@@ -95,6 +96,7 @@ namespace arcade
 			    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
 			    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
 					pck->data, ntohl(pck->len));
+			    client->sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck->len), shPck));
 			    pck.release();
 			    // Update ID
 			    ++id;
@@ -253,7 +255,7 @@ namespace arcade
 	    static_cast<arcade::NetworkAction>(ntohl(static_cast<uint32_t>(data->action))) == arcade::NetworkAction::HELLO_EVENT)
 	  {
 	    uint32_t	pckLen = 0;
-	    client.setGame(static_cast<NetworkGames>(ntohl(static_cast<uint32_t>(pck->header.game))));
+	    client.setGame(static_cast<NetworkGames>(ntohs(static_cast<uint16_t>(pck->header.game))));
 	    std::unique_ptr<arcade::NetworkPacket> pck =
 	      m_fact.create<0, uint8_t>(client.getGame(), [&](Network::NetworkPacketData<0, uint8_t> &packet){
 		  packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
