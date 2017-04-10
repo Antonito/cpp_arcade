@@ -5,10 +5,12 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <cstring>
 #include "IGame.hpp"
 #include "IGfxLib.hpp"
 #include "GenLibrary.hpp"
 #include "AGame.hpp"
+#include "TCPSocket.hpp"
 
 namespace arcade
 {
@@ -24,6 +26,7 @@ namespace arcade
 		void launch(std::string const &lib);
 
 	private:
+	  static size_t constexpr pckBuffSize = 4096;
 		GameState gameLoop();
 		GameState menuLoop();
 
@@ -61,7 +64,8 @@ namespace arcade
 #if defined(__linux__)
 		virtual void WhereAmI(std::ostream &os) const;
 #endif
-
+	  virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
+	  virtual std::vector<NetworkPacket> getNetworkToSend();
                 // Main menu
                 size_t m_firstLibIndex;
                 size_t m_firstGameIndex;
@@ -70,6 +74,7 @@ namespace arcade
                 size_t m_selectedGameId;
 
                 bool m_menuLib;
+	  std::unique_ptr<Network::TCPSocket>	m_sock;
 	};
 }
 

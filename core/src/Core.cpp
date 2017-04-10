@@ -100,11 +100,11 @@ while (m_gameState != QUIT)
     m_gameState = QUIT;
     break;
   }
-}
+ }
 // Log
-if (m_game.get() == this)
-m_game.release();
-Nope::Log::Info << "Exiting the core";
+ if (m_game.get() == this)
+   m_game.release();
+ Nope::Log::Info << "Exiting the core";
   }
 
   GameState Core::gameLoop()
@@ -143,6 +143,7 @@ Nope::Log::Info << "Exiting the core";
       {
         if (m_gameState == QUIT)
           std::cout << "QUIT #2" << std::endl;
+	m_sock = nullptr;
         std::cout << "Quit 2" << std::endl;
         break;
       }
@@ -160,7 +161,14 @@ Nope::Log::Info << "Exiting the core";
         return (QUIT);
       }
       // Network
-      // TODO: implement
+#ifdef DEBUG
+      Nope::Log::Debug << "Sending Network Data";
+#endif
+      notifyNetwork(m_game->getNetworkToSend());
+#ifdef DEBUG
+      Nope::Log::Debug << "Getting Network Data";
+#endif
+      m_game->notifyNetwork(getNetworkToSend());
 
       // Game loop
       m_game->process();
@@ -363,6 +371,22 @@ Nope::Log::Info << "Exiting the core";
     {
       m_sound->loadSounds(m_game->getSoundsToLoad());
     }
+    if (m_game->hasNetwork())
+      {
+ 	uint16_t	port;
+ 	std::string	host;
+
+ 	std::cout << "Host: ";
+ 	std::cin >> host;
+ 	std::cout << "Game Port: ";
+ 	std::cin >> port;
+ 	m_sock = std::make_unique<Network::TCPSocket>(port, host, false, Network::TCPSocket::SocketType::BLOCKING);
+ 	m_sock->openConnection();
+ 	if (!m_sock->isStarted())
+ 	  {
+ 	    throw std::exception(); // TODO: Change
+ 	  }
+      }
     m_gameState = INGAME;
   }
 
@@ -588,6 +612,76 @@ Nope::Log::Info << "Exiting the core";
     }
   }
 
+void Core::notifyNetwork(std::vector<NetworkPacket> &&events)
+{
+  if (m_sock)
+    {
+      sock_t		socket = m_sock->getSocket();
+      fd_set		writefds;
+      struct timeval	tv;
+      int		ret;
+
+      FD_ZERO(&writefds);
+      FD_SET(socket, &writefds);
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      ret = select(socket + 1, nullptr, &writefds, nullptr, &tv);
+      if (ret > 0)
+	{
+	  for (NetworkPacket const &pck : events)
+	    {
+	      // Convert packet to uint8_t *
+	      size_t len = sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck.len);
+	      std::unique_ptr<uint8_t[]>	data = std::make_unique<uint8_t[]>(len);
+	      uint8_t				*cur = data.get();
+
+	      std::memcpy(cur, &pck, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	      std::memcpy(cur + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
+			  pck.data, ntohl(pck.len));
+
+	      // Send
+	      m_sock->send(data.get(), len);
+	      delete pck.data;
+	    }
+	}
+    }
+}
+
+std::vector<NetworkPacket> Core::getNetworkToSend()
+{
+  std::vector<NetworkPacket>	pcks;
+  uint8_t			*data;
+  size_t			maxSize = Core::pckBuffSize;
+  ssize_t			pckSize;
+
+  if (m_sock != nullptr)
+    {
+      sock_t		socket = m_sock->getSocket();
+      fd_set		readfds;
+      struct timeval	tv;
+      int	        ret;
+
+      FD_ZERO(&readfds);
+      FD_SET(socket, &readfds);
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      ret = select(socket + 1, &readfds, nullptr, nullptr, &tv);
+      if (ret > 0 && FD_ISSET(socket, &readfds) &&
+	  m_sock->rec(reinterpret_cast<void **>(&data), maxSize, &pckSize) == true)
+	{
+	  // Build packet
+	  NetworkPacket			*tmp = reinterpret_cast<NetworkPacket *>(data);
+	  NetworkPacket			pck;
+
+	  std::memcpy(&pck, data, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	  pck.data = new uint8_t[ntohl(pck.len)];
+	  std::memcpy(pck.data, &tmp->data, ntohl(pck.len));
+	  delete [] data;
+	  pcks.push_back(pck);
+	}
+    }
+  return (std::move(pcks));
+}
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
   {
     std::vector<std::unique_ptr<ISprite>> s;
