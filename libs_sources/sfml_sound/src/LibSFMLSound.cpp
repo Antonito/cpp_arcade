@@ -4,6 +4,8 @@
 #include "LibSFMLSound.hpp"
 #include "RessourceError.hpp"
 
+#define DEBUG
+
 namespace arcade
 {
   LibSFMLSound::LibSFMLSound()
@@ -12,6 +14,21 @@ namespace arcade
 
   LibSFMLSound::~LibSFMLSound()
   {
+    for (sf::Sound &s : m_sound)
+    {
+      if (s.getStatus() != sf::Sound::Status::Stopped)
+      {
+        s.stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
   }
 
   bool LibSFMLSound::pollEvent(Event &)
@@ -27,6 +44,22 @@ namespace arcade
   void LibSFMLSound::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
   {
     size_t index;
+
+    for (sf::Sound &s : m_sound)
+    {
+      if (s.getStatus() != sf::Sound::Status::Stopped)
+      {
+        s.stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
 
     m_sound.clear();
     m_soundBuffer.clear();
@@ -77,7 +110,7 @@ namespace arcade
         m.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
-        m.setVolume(sound.volume);
+        m.setVolume(static_cast<int>(sound.volume));
         break;
       case PLAY:
         m.stop();
@@ -105,7 +138,7 @@ namespace arcade
         s.setLoop(sound.mode == REPEAT);
         break;
       case VOLUME:
-        s.setVolume(sound.volume);
+        s.setVolume(static_cast<int>(sound.volume));
         break;
       case PLAY:
         s.stop();

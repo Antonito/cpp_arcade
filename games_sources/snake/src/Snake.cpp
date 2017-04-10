@@ -137,7 +137,11 @@ void Snake::notifyEvent(std::vector<Event> &&events)
 std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
 {
   std::vector<std::pair<std::string, SoundType>> s;
-  // TODO: implement
+
+  s.emplace_back("assets/sounds/Collect_Point_00.wav", SoundType::MUSIC);
+
+  m_soundsToPlay.emplace_back(0, VOLUME, 25.0);
+
   return (s);
 }
 
@@ -167,6 +171,7 @@ void Snake::process()
       m_player.setDir(m_tmpDir);
     if (m_fruit[0] == m_player.next())
     {
+      m_soundsToPlay.emplace_back(0, PLAY);
       m_fruit[0] = placeFood(*m_map);
       m_fruit.updateSprite();
       m_player.push(m_player.last());

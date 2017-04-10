@@ -18,6 +18,22 @@ namespace arcade
 
   LibSFML::~LibSFML()
   {
+    for (sf::Sound &s : m_sound)
+    {
+      if (s.getStatus() != sf::Sound::Status::Stopped)
+      {
+        s.stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
+
     m_win->close();
   }
 
@@ -104,6 +120,22 @@ namespace arcade
   {
     size_t index;
 
+    for (sf::Sound &s : m_sound)
+    {
+      if (s.getStatus() != sf::Sound::Status::Stopped)
+      {
+        s.stop();
+      }
+    }
+
+    for (std::unique_ptr<sf::Music> &m : m_music)
+    {
+      if (m->getStatus() != sf::Music::Status::Stopped)
+      {
+        m->stop();
+      }
+    }
+
     m_sound.clear();
     m_soundBuffer.clear();
     m_music.clear();
@@ -145,11 +177,58 @@ namespace arcade
 
     if (type == SoundType::MUSIC)
     {
-      m_music[index]->play();
+      sf::Music &m = *m_music[index];
+      switch (sound.mode)
+      {
+      case UNIQUE:
+      case REPEAT:
+        m.setLoop(sound.mode == REPEAT);
+        break;
+      case VOLUME:
+        m.setVolume(static_cast<int>(sound.volume));
+        break;
+      case PLAY:
+        m.stop();
+        m.play();
+        break;
+      case PAUSE:
+        m.pause();
+        break;
+      case RESUME:
+        m.play();
+        break;
+      case STOP:
+        m.stop();
+        break;
+      }
     }
     else
     {
-      m_sound[index].play();
+      sf::Sound &s = m_sound[index];
+
+      switch (sound.mode)
+      {
+      case UNIQUE:
+      case REPEAT:
+        s.setLoop(sound.mode == REPEAT);
+        break;
+      case VOLUME:
+        s.setVolume(static_cast<int>(sound.volume));
+        break;
+      case PLAY:
+        s.stop();
+        s.play();
+        break;
+      case PAUSE:
+        s.pause();
+        break;
+      case RESUME:
+        s.play();
+        break;
+      case STOP:
+        s.stop();
+        break;
+      }
     }
   }
 
