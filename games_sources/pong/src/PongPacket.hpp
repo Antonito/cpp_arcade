@@ -24,6 +24,7 @@ namespace arcade
 	}		ball;
 	uint8_t	id;
 	uint32_t update;
+	uint8_t updateBall;
       };
     }
   }
