@@ -50,6 +50,7 @@ namespace arcade
 	size_t m_lastUpTick;
 	size_t m_lastDownTick;
 	size_t m_lastSendTick;
+	size_t m_lastSendBallTick;
 
         Ball m_ball;
         Player m_player[2];

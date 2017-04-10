@@ -15,7 +15,7 @@ namespace arcade
 	m_lastTick(0),
         m_curTick(0),
 	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0),
-	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0)
+	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -295,10 +295,10 @@ namespace arcade
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  updateBall = true;
 		}
-	      if (m_curTick - m_lastSendTick > 80)
+	      if (m_curTick - m_lastSendBallTick > 80)
 		{
 		  updateBall = true;
-		  m_lastSendTick = m_curTick;
+		  m_lastSendBallTick = m_curTick;
 		}
 	      m_player[0].display(*m_map);
 	      m_player[1].display(*m_map);
@@ -330,6 +330,7 @@ namespace arcade
 		  createdPck.release();
 		  m_toSend.push_back(pck);
 		  m_updatePos = 0;
+		  m_lastSendTick = m_curTick;
 		  delete raw;
 		}
 	    }
