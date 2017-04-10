@@ -49,13 +49,13 @@ bool LibLapin::pollEvent(Event &e)
   bool ret = false;
 
   bunny_set_key_response(&LibLapin::_keyHandler);
-  bunny_set_click_response(&LibLapin::_clickHandler);
+  /*bunny_set_click_response(&LibLapin::_clickHandler);
   bunny_set_move_response(&LibLapin::_moveHandler);
   bunny_set_wheel_response(&LibLapin::_wheelHandler);
   bunny_set_lost_focus_response(&LibLapin::_lostFocusHandler);
   bunny_set_get_focus_response(&LibLapin::_gotFocusHandler);
   bunny_set_resize_response(&LibLapin::_resizeHandler);
-  bunny_set_close_response(&LibLapin::_closeHandler);
+  bunny_set_close_response(&LibLapin::_closeHandler);*/
   bunny_set_loop_main_function(&LibLapin::_eventLoop);
   if (bunny_loop(m_win, 60, &e) == EXIT_ON_SUCCESS)
   {
@@ -63,13 +63,13 @@ bool LibLapin::pollEvent(Event &e)
   }
   bunny_set_loop_main_function(&LibLapin::_mainLoop);
   bunny_set_key_response(nullptr);
-  bunny_set_click_response(nullptr);
+  /*bunny_set_click_response(nullptr);
   bunny_set_move_response(nullptr);
   bunny_set_wheel_response(nullptr);
   bunny_set_lost_focus_response(nullptr);
   bunny_set_get_focus_response(nullptr);
   bunny_set_resize_response(nullptr);
-  bunny_set_close_response(nullptr);
+  bunny_set_close_response(nullptr);*/
   return (ret);
 }
 
@@ -150,6 +150,8 @@ void LibLapin::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
 
 void LibLapin::updateMap(IMap const &map)
 {
+  if (map.getWidth() == 0 || map.getHeight() == 0)
+    return;
   if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
   {
     bunny_free(m_map);
@@ -184,6 +186,7 @@ void LibLapin::updateMap(IMap const &map)
         else
         {
           Color color = tile.getColor();
+           double a(color.a / 255.0);
           if (color.a != 0)
           {
             for (size_t _y = 0; _y < m_tileSize; ++_y)
@@ -193,7 +196,6 @@ void LibLapin::updateMap(IMap const &map)
                 size_t X = x * m_tileSize + _x;
                 size_t Y = y * m_tileSize + _y;
                 size_t pix = Y * (m_mapWidth * m_tileSize) + X;
-                double a(color.a / 255.0);
                 Color old(pixels[pix]);
                 Color merged(color.r * a + old.r * (1 - a),
                              color.g * a + old.g * (1 - a),
@@ -219,49 +221,30 @@ void LibLapin::updateGUI(IGUI &gui)
     size_t x = comp.getX() * m_width;
     size_t y = comp.getY() * m_height;
     size_t width = comp.getWidth() * m_width;
-    size_t height = comp.getWidth() * m_height;
+    size_t height = comp.getHeight() * m_height;
     Color color = comp.getBackgroundColor();
     double a(color.a / 255.0);
     if (color.a != 0)
     {
       for (size_t _y = 0; _y < height; ++_y)
       {
-	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * m_width;
-	size_t y = comp.getY() * m_height;
-	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getHeight() * m_height;
-	Color color = comp.getBackgroundColor();
-	double a(color.a / 255.0);
-	if (color.a != 0)
-	  {
-	    for (size_t _y = 0; _y < height; ++_y)
-	      {
-		for (size_t _x = 0; _x < width; ++_x)
-		  {
-		    size_t pix = (y + _y) * m_width + (x + _x);
-		    Color old(pixels[pix]);
-		    Color merged(color.r * a + old.r * (1 - a),
-				 color.g * a + old.g * (1 - a),
-				 color.b * a + old.b * (1 - a),
-				 color.a + old.a * (1 - a));
-		    pixels[pix] = merged.full;
-		  }
-	      }
-	  }
+        for (size_t _x = 0; _x < width; ++_x)
+        {
+          size_t pix = (y + _y) * m_width + (x + _x);
+          Color old(pixels[pix]);
+          Color merged(color.r * a + old.r * (1 - a),
+            color.g * a + old.g * (1 - a),
+            color.b * a + old.b * (1 - a),
+            color.a + old.a * (1 - a));
+          pixels[pix] = merged.full;
+        }
       }
     }
   }
 }
-
   void LibLapin::display()
   {
-    if (m_map)
-      _blit(m_render, m_map);
-    if (m_gui)
-      _blit(m_render, m_gui);
-    bunny_blit(&m_win->buffer, &m_render->clipable, NULL);
-    bunny_display(m_win);
+    bunny_loop(m_win, 60, this);
   }
 
 void LibLapin::clear()
@@ -308,18 +291,33 @@ t_bunny_pixelarray *LibLapin::getGui() const
   return (m_gui);
 }
 
+t_bunny_pixelarray * LibLapin::getRender() const
+{
+  return (m_render);
+}
+
 // LibLapin Handlers
 t_bunny_response LibLapin::_mainLoop(void *data)
 {
   LibLapin *lib = static_cast<LibLapin *>(data);
-  (void)lib;
+  t_bunny_pixelarray *map = nullptr;// lib->getMap();
+  t_bunny_pixelarray *gui = lib->getGui();
+  t_bunny_pixelarray *render = lib->getRender();
+  t_bunny_window *win = lib->getWin();
+
+  if (map)
+      _blit(render, map);
+    if (gui)
+      _blit(render, gui);
+    bunny_blit(&win->buffer, &render->clipable, NULL);
+    bunny_display(win);
   return (EXIT_ON_SUCCESS);
 }
 
 t_bunny_response LibLapin::_eventLoop(void *data)
 {
   static_cast<void>(data);
-  return (SWITCH_CONTEXT);
+  return (EXIT_ON_ERROR);
 }
 
 t_bunny_response LibLapin::_keyHandler(t_bunny_event_state state, t_bunny_keysym key,

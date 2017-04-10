@@ -43,6 +43,7 @@ namespace arcade
     t_bunny_window	*getWin() const;
     t_bunny_pixelarray	*getMap() const;
     t_bunny_pixelarray	*getGui() const;
+    t_bunny_pixelarray	*getRender() const;
 
   private:
     // LibLapin handlers
