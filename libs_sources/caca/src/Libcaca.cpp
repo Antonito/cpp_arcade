@@ -6,8 +6,12 @@
 
 namespace arcade
 {
-  Libcaca::Libcaca(size_t width, size_t height) : m_win(nullptr), m_canvas(nullptr), m_map(nullptr),
-						  m_mapWidth(0), m_mapHeight(0)
+  Libcaca::Libcaca(size_t width, size_t height) :
+    m_win(nullptr),
+    m_canvas(nullptr),
+    m_map(nullptr),
+    m_mapWidth(0),
+    m_mapHeight(0)
   {
     m_canvas = caca_create_canvas(width, height);
     if (!m_canvas)
@@ -177,16 +181,19 @@ namespace arcade
 
   void Libcaca::updateGUI(IGUI & gui)
   {
-    return;
     for (size_t i = 0; i < gui.size(); ++i)
       {
+      double rx = 5.3;
+      double ry = 11.2;
 	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * m_width;
-	size_t y = comp.getY() * m_height;
-	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getWidth() * m_height;
+	size_t x = comp.getX() * m_width / rx;
+	size_t y = comp.getY() * m_height / ry;
+	size_t width = comp.getWidth() * m_width / rx;
+	size_t height = comp.getHeight() * m_height / ry;
 	Color color = comp.getBackgroundColor();
 	double a(color.a / 255.0);
+
+
 
 	if (color.a != 0)
 	  {
@@ -195,18 +202,23 @@ namespace arcade
 		for (size_t _x = 0; _x < width; ++_x)
 		  {
 		    uint32_t attr = caca_get_attr(m_canvas, x + _x, y + _y);
-		    uint8_t old[sizeof(uint64_t)];
-		    caca_attr_to_argb64(attr, old);
-		    Color bg(color.r * a + old[1] * (1 - a),
-			     color.g * a + old[2] * (1 - a),
-			     color.b * a + old[3] * (1 - a),
-			     color.a + old[0] * (1 - a));
+		    uint8_t old_[sizeof(uint64_t)];
+		    caca_attr_to_argb64(attr, old_);
+                    Color old(old_[3], old_[5], old_[7], old_[1]);
+		    Color bg(color.r * a + old.r * (1 - a),
+			     color.g * a + old.g * (1 - a),
+			     color.b * a + old.b * (1 - a),
+			     color.a + old.a * (1 - a));
 		    uint16_t _bg = convert32bitsColorTo16Bits(bg);
 		    caca_set_color_argb(m_canvas, 0xffff, _bg);
 		    caca_printf(m_canvas, x + _x, y + _y, "  ");
 		  }
 	      }
 	  }
+        if (comp.getText().size() != 0)
+        {
+          caca_printf(m_canvas, x, y, comp.getText().c_str());
+        }
       }
   }
 
@@ -254,7 +266,8 @@ namespace arcade
     uint8_t g = color.g >> 4;
     uint8_t b = color.b >> 4;
 
-    return ((a << 12) | (b << 8) | (g << 4) | (r));
+    
+    return ((a << 12) | (r << 8) | (g << 4) | (b));
 	/*uint8_t a = color.a >> 3;
 	uint8_t r = color.r >> 3;
 	uint8_t g = color.g >> 3;

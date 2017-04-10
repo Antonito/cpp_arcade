@@ -22,6 +22,7 @@ public:
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move();
 private:
+  mutable int m_mult;
 };
 }
 }
