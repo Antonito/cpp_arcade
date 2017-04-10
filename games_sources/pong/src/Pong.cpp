@@ -81,7 +81,7 @@ namespace arcade
             switch (e.kb_key)
             {
             case KB_ARROW_UP:
-              if (m_curTick - m_lastUpTick > 40
+              if (m_curTick - m_lastUpTick > 60
 		  && m_player[m_id][0].y > 0)
               {
                 m_player[m_id].setDir(Direction::UP);
@@ -91,7 +91,7 @@ namespace arcade
               }
               break;
             case KB_ARROW_DOWN:
-              if (m_curTick - m_lastDownTick > 40 &&
+              if (m_curTick - m_lastDownTick > 60 &&
 		  m_player[m_id].last().y < m_map->getHeight() - 1)
               {
                 m_player[m_id].setDir(Direction::DOWN);
