@@ -22,6 +22,7 @@ namespace arcade
           Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
 
           tile.setColor(Color::White);
+	  tile.setShiftY((m_pos[0].y - (m_pos[0] - m_dir).y) * ratio);
         }
       }
 
