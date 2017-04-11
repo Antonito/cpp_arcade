@@ -223,7 +223,7 @@ namespace arcade
 						 cur.g * a + old.g * (1 - a),
 						 cur.b * a + old.b * (1 - a),
 						 cur.a + old.a * (1 - a));
-				    pixels[pix] = merged.full;
+				    pixels[pix] = cur.full;
 				  }
 			      }
 			    al_unlock_bitmap(bm);
