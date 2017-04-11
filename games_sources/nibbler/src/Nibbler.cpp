@@ -1,41 +1,41 @@
 #include <iostream>
 #include <sstream>
-#include "Snake.hpp"
+#include "Nibbler.hpp"
 #include "Sprite.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace snake
+namespace nibbler
 {
-Snake::Snake()
+Nibbler::Nibbler()
 {
   std::vector<std::string> m =
       {
           "0000000000000000000000000",
+          "00000000xxxxxxxxx00000000",
+          "0000000000000000000000000",
+          "000x0000000000000000x0000",
+          "00xx0000000000000000xx00",
+          "0000000000000000000000000",
+          "000000xxxxxxxxxxxxx000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
+          "000000x00000000000x000000",
+          "000000x00000000000x000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
+          "000000x00000000000x000000",
+          "000000x00000S00000x000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
+          "000000xxxxxxxxxxxxx000000",
+          "0000000000000000000000000",
+          "0000xx000000000000000xx00",
           "0000000000000000000000000",
           "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
+          "00000000xxxxxxxxx00000000",
           "0000000000000000000000000",
           "0000000000000000000000000"};
 
@@ -53,6 +53,15 @@ Snake::Snake()
       case '0':
         type = TileType::EMPTY;
         break;
+      case 'x':
+        type = TileType::OBSTACLE;
+        m_obstacles.push(Position(x, y));
+        break;
+      case 'S':
+        type = TileType::EMPTY;
+        m_player.push(Position(x, y), 5);
+        m_player.setDir(Direction::UP);
+        break;
       }
       m_map->at(0, x, y).setType(type);
     }
@@ -60,15 +69,13 @@ Snake::Snake()
 
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
-  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 5);
-  m_player.setDir(Direction::LEFT);
   m_fruit.push(placeFood(*m_map));
   m_lastTick = 0;
   m_curTick = 0;
-  m_tmpDir = Direction::LEFT;
+  m_tmpDir = Direction::UP;
 }
 
-  Snake::Snake(Snake const &other) : AGame()
+Nibbler::Nibbler(Nibbler const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -78,11 +85,11 @@ Snake::Snake()
   m_tmpDir = other.m_tmpDir;
 }
 
-Snake::~Snake()
+Nibbler::~Nibbler()
 {
 }
 
-Snake &Snake::operator=(Snake const &other)
+Nibbler &Nibbler::operator=(Nibbler const &other)
 {
   if (this != &other)
   {
@@ -96,7 +103,7 @@ Snake &Snake::operator=(Snake const &other)
   return (*this);
 }
 
-void Snake::notifyEvent(std::vector<Event> &&events)
+void Nibbler::notifyEvent(std::vector<Event> &&events)
 {
   std::vector<Event> ev = events;
 
@@ -131,7 +138,7 @@ void Snake::notifyEvent(std::vector<Event> &&events)
   }
 }
 
-std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
+std::vector<std::pair<std::string, SoundType>> Nibbler::getSoundsToLoad() const
 {
   std::vector<std::pair<std::string, SoundType>> s;
 
@@ -142,7 +149,7 @@ std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
   return (s);
 }
 
-std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Nibbler::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
@@ -156,11 +163,12 @@ std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
   return (s);
 }
 
-void Snake::process()
+void Nibbler::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
+  m_obstacles.display(*m_map);
   m_fruit.display(*m_map);
 
   if (m_curTick - m_lastTick > 100)
@@ -174,7 +182,7 @@ void Snake::process()
       m_player.push(m_player.last());
       m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
     }
-    if (m_player.next().inMap(*m_map) && (!m_player.isTouch(m_player.next()) || m_player.next() == m_player.last()))
+    if (m_player.next().inMap(*m_map) && !m_obstacles.isTouch(m_player.next()) && (!m_player.isTouch(m_player.next()) || m_player.next() == m_player.last()))
     {
       m_player.move(*m_map);
     }
@@ -185,7 +193,7 @@ void Snake::process()
 }
 
 #if defined(__linux__)
-void Snake::WhereAmI(std::ostream &os) const
+void Nibbler::WhereAmI(std::ostream &os) const
 {
   uint16_t size = static_cast<uint16_t>(m_player.size() - 1);
   arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
@@ -202,7 +210,7 @@ void Snake::WhereAmI(std::ostream &os) const
 }
 #endif
 
-Position Snake::placeFood(Map const &map) const
+Position Nibbler::placeFood(Map const &map) const
 {
   size_t width = map.getWidth();
   size_t height = map.getHeight();
@@ -213,7 +221,7 @@ Position Snake::placeFood(Map const &map) const
     Position p(rand() % width, rand() % height);
 
     if (map.at(0, p.x, p.y).getType() != TileType::BLOCK &&
-        m_player.isTouch(p) == false)
+        !m_player.isTouch(p) && !m_obstacles.isTouch(p))
     {
       return (p);
     }
@@ -242,7 +250,7 @@ Position Snake::placeFood(Map const &map) const
 #if defined(__linux__)
 extern "C" void Play(void)
 {
-  arcade::game::snake::Snake game;
+  arcade::game::nibbler::Nibbler game;
 
   game.Play();
 }

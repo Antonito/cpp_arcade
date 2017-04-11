@@ -4,7 +4,7 @@ namespace arcade
 {
 namespace game
 {
-namespace snake
+namespace blockade
 {
 Fruit::Fruit()
 {

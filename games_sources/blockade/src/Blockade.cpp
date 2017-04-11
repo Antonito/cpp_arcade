@@ -1,15 +1,15 @@
 #include <iostream>
 #include <sstream>
-#include "Snake.hpp"
+#include "Blockade.hpp"
 #include "Sprite.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace snake
+namespace blockade
 {
-Snake::Snake()
+Blockade::Blockade()
 {
   std::vector<std::string> m =
       {
@@ -25,7 +25,7 @@ Snake::Snake()
           "0000000000000000000000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
-          "0000000000000000000000000",
+          "000000F00000000000S000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
           "0000000000000000000000000",
@@ -53,6 +53,16 @@ Snake::Snake()
       case '0':
         type = TileType::EMPTY;
         break;
+      case 'F':
+        type = TileType::EMPTY;
+        m_player1.push(Position(x, y), 5);
+        m_player1.setDir(Direction::UP);
+        break;
+      case 'S':
+        type = TileType::EMPTY;
+        m_player2.push(Position(x, y), 5);
+        m_player2.setDir(Direction::DOWN);
+        break;
       }
       m_map->at(0, x, y).setType(type);
     }
@@ -60,43 +70,44 @@ Snake::Snake()
 
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
-  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 5);
-  m_player.setDir(Direction::LEFT);
-  m_fruit.push(placeFood(*m_map));
+
   m_lastTick = 0;
   m_curTick = 0;
-  m_tmpDir = Direction::LEFT;
+  m_tmpDir1 = Direction::UP;
+  m_tmpDir2 = Direction::DOWN;
 }
 
-  Snake::Snake(Snake const &other) : AGame()
+Blockade::Blockade(Blockade const &other) : AGame()
 {
   *m_map = *other.m_map;
-  m_player = other.m_player;
-  m_fruit = other.m_fruit;
+  m_player1 = other.m_player1;
+  m_player2 = other.m_player2;
   m_lastTick = other.m_lastTick;
   m_curTick = other.m_curTick;
-  m_tmpDir = other.m_tmpDir;
+  m_tmpDir1 = other.m_tmpDir1;
+  m_tmpDir2 = other.m_tmpDir2;
 }
 
-Snake::~Snake()
+Blockade::~Blockade()
 {
 }
 
-Snake &Snake::operator=(Snake const &other)
+Blockade &Blockade::operator=(Blockade const &other)
 {
   if (this != &other)
   {
     *m_map = *other.m_map;
-    m_player = other.m_player;
-    m_fruit = other.m_fruit;
+    m_player1 = other.m_player1;
+    m_player2 = other.m_player2;
     m_lastTick = other.m_lastTick;
     m_curTick = other.m_curTick;
-    m_tmpDir = other.m_tmpDir;
+    m_tmpDir1 = other.m_tmpDir1;
+    m_tmpDir2 = other.m_tmpDir2;
   }
   return (*this);
 }
 
-void Snake::notifyEvent(std::vector<Event> &&events)
+void Blockade::notifyEvent(std::vector<Event> &&events)
 {
   std::vector<Event> ev = events;
 
@@ -107,21 +118,38 @@ void Snake::notifyEvent(std::vector<Event> &&events)
       switch (e.kb_key)
       {
       case KB_ARROW_UP:
-        if (m_player.getDir() != Direction::DOWN)
-          m_tmpDir = Direction::UP;
+        if (m_player1.getDir() != Direction::DOWN)
+          m_tmpDir1 = Direction::UP;
         break;
       case KB_ARROW_DOWN:
-        if (m_player.getDir() != Direction::UP)
-          m_tmpDir = Direction::DOWN;
+        if (m_player1.getDir() != Direction::UP)
+          m_tmpDir1 = Direction::DOWN;
         break;
       case KB_ARROW_LEFT:
-        if (m_player.getDir() != Direction::RIGHT)
-          m_tmpDir = Direction::LEFT;
+        if (m_player1.getDir() != Direction::RIGHT)
+          m_tmpDir1 = Direction::LEFT;
         break;
       case KB_ARROW_RIGHT:
-        if (m_player.getDir() != Direction::LEFT)
-          m_tmpDir = Direction::RIGHT;
+        if (m_player1.getDir() != Direction::LEFT)
+          m_tmpDir1 = Direction::RIGHT;
         break;
+      case KB_W:
+        if (m_player2.getDir() != Direction::DOWN)
+          m_tmpDir2 = Direction::UP;
+        break;
+      case KB_S:
+        if (m_player2.getDir() != Direction::UP)
+          m_tmpDir2 = Direction::DOWN;
+        break;
+      case KB_A:
+        if (m_player2.getDir() != Direction::RIGHT)
+          m_tmpDir2 = Direction::LEFT;
+        break;
+      case KB_D:
+        if (m_player2.getDir() != Direction::LEFT)
+          m_tmpDir2 = Direction::RIGHT;
+        break;
+
       case KB_ESCAPE:
         m_state = MENU;
       default:
@@ -131,7 +159,7 @@ void Snake::notifyEvent(std::vector<Event> &&events)
   }
 }
 
-std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
+std::vector<std::pair<std::string, SoundType>> Blockade::getSoundsToLoad() const
 {
   std::vector<std::pair<std::string, SoundType>> s;
 
@@ -142,7 +170,7 @@ std::vector<std::pair<std::string, SoundType>> Snake::getSoundsToLoad() const
   return (s);
 }
 
-std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Blockade::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
@@ -156,27 +184,28 @@ std::vector<std::unique_ptr<ISprite>> Snake::getSpritesToLoad() const
   return (s);
 }
 
-void Snake::process()
+void Blockade::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
-  m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
-  m_fruit.display(*m_map);
+  m_player1.display(*m_map, (m_curTick - m_lastTick) / 100.0);
+  m_player2.display(*m_map, (m_curTick - m_lastTick) / 100.0);
 
   if (m_curTick - m_lastTick > 100)
   {
-    m_player.setDir(m_tmpDir);
-    if (m_fruit[0] == m_player.next())
+    m_player1.setDir(m_tmpDir1);
+    m_player2.setDir(m_tmpDir2);
+
+    if (m_player1.next().inMap(*m_map) && !m_player2.isTouch(m_player1.next()) && (!m_player1.isTouch(m_player1.next()) || m_player1.next() == m_player1.last()))
     {
-      m_soundsToPlay.emplace_back(0, PLAY);
-      m_fruit[0] = placeFood(*m_map);
-      m_fruit.updateSprite();
-      m_player.push(m_player.last());
-      m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
+      m_player1.move(*m_map);
     }
-    if (m_player.next().inMap(*m_map) && (!m_player.isTouch(m_player.next()) || m_player.next() == m_player.last()))
+    else
+      m_state = MENU;
+
+    if (m_player2.next().inMap(*m_map) && !m_player1.isTouch(m_player2.next()) && (!m_player2.isTouch(m_player2.next()) || m_player2.next() == m_player2.last()))
     {
-      m_player.move(*m_map);
+      m_player2.move(*m_map);
     }
     else
       m_state = MENU;
@@ -185,56 +214,22 @@ void Snake::process()
 }
 
 #if defined(__linux__)
-void Snake::WhereAmI(std::ostream &os) const
+void Blockade::WhereAmI(std::ostream &os) const
 {
-  uint16_t size = static_cast<uint16_t>(m_player.size() - 1);
+  uint16_t size = static_cast<uint16_t>(m_player1.size() - 1);
   arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
 
   for (size_t i = 0; i < size; ++i)
   {
-    pos[i].x = m_player[i].x;
-    pos[i].y = m_player[i].y;
+    pos[i].x = m_player1[i].x;
+    pos[i].y = m_player1[i].y;
   }
 
   os.write(reinterpret_cast<char *>(&header), sizeof(arcade::WhereAmI));
   os.write(reinterpret_cast<char *>(pos.get()), size * sizeof(::arcade::Position));
 }
 #endif
-
-Position Snake::placeFood(Map const &map) const
-{
-  size_t width = map.getWidth();
-  size_t height = map.getHeight();
-
-  // Try to place random
-  for (size_t i = 0; i < 10000; ++i)
-  {
-    Position p(rand() % width, rand() % height);
-
-    if (map.at(0, p.x, p.y).getType() != TileType::BLOCK &&
-        m_player.isTouch(p) == false)
-    {
-      return (p);
-    }
-  }
-
-  // Search the first spot
-  for (size_t y = 0; y < height; ++y)
-  {
-    for (size_t x = 0; x < width; ++x)
-    {
-      Position p(x, y);
-
-      if (map.at(0, x, y).getType() != TileType::BLOCK &&
-          m_player.isTouch(p) == false)
-      {
-        return (p);
-      }
-    }
-  }
-  return (Position(0, 0));
-}
 }
 }
 }
@@ -242,7 +237,7 @@ Position Snake::placeFood(Map const &map) const
 #if defined(__linux__)
 extern "C" void Play(void)
 {
-  arcade::game::snake::Snake game;
+  arcade::game::blockade::Blockade game;
 
   game.Play();
 }
