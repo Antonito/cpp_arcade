@@ -187,6 +187,7 @@ namespace arcade
     ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
     if (lr)
       {
+	al_set_target_bitmap(m_gui);
 	Color *pixels = reinterpret_cast<Color *>(lr->data);
 	for (size_t l = 0; l < map.getLayerNb(); ++l)
 	  {
@@ -231,6 +232,7 @@ namespace arcade
 		  }
 	      }
 	  }
+	al_set_target_bitmap(al_get_backbuffer(m_win));
 	al_unlock_bitmap(m_gui);
       }
   }
