@@ -1,5 +1,5 @@
-#ifndef BLOCKADE_HPP_
-#define BLOCKADE_HPP_
+#ifndef BLOCKADELOCAL_HPP_
+#define BLOCKADELOCAL_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
@@ -11,22 +11,21 @@ namespace arcade
 {
 namespace game
 {
-namespace blockade
+namespace blockade_local
 {
-class Blockade : public AGame
+class BlockadeLocal : public AGame
 {
 
 public:
-  Blockade();
-  Blockade(Blockade const &other);
-  ~Blockade();
+  BlockadeLocal();
+  BlockadeLocal(BlockadeLocal const &other);
+  ~BlockadeLocal();
 
-  Blockade &operator=(Blockade const &other);
+  BlockadeLocal &operator=(BlockadeLocal const &other);
 
   virtual void notifyEvent(std::vector<Event> &&events);
 
-  virtual std::vector<std::pair<std::string, SoundType>>
-  getSoundsToLoad() const;
+  virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
 
   virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
@@ -36,11 +35,12 @@ public:
   virtual void WhereAmI(std::ostream &os) const;
 #endif
 private:
-  Position placeFood(Map const &map) const;
-
-  Player m_player;
+  Player m_player1;
+  Player m_player2;
   Fruit m_fruit;
-  Direction m_tmpDir;
+  Direction m_tmpDir1;
+  Direction m_tmpDir2;
+
   size_t m_lastTick;
   size_t m_curTick;
 };
@@ -52,4 +52,4 @@ private:
 extern "C" void Play(void);
 #endif
 
-#endif // !BLOCKADE_HPP_
+#endif // !BLOCKADELOCAL_HPP_

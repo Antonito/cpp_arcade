@@ -29,10 +29,12 @@ void Player::display(Map &map, double ratio) const
 
 void Player::move(Map &map)
 {
-  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::OBSTACLE || map.at(0, next().x, next().y).getType() == TileType::BLOCK)
+  map.at(0, m_pos[0].x, m_pos[0].y).setType(TileType::OTHER);
+  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::BLOCK)
   {
     return;
   }
+  map.at(0, m_pos[0].x, m_pos[0].y).setColor(Color::White);
   m_pos.insert(m_pos.begin(), m_pos[0] + m_dir);
   m_pos.erase(m_pos.end() - 1);
 }
