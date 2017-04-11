@@ -1,5 +1,6 @@
 #include <exception>
 #include <iostream>
+#include <cstring>
 #include "Libcaca.hpp"
 #include "WindowError.hpp"
 #include "AllocationError.hpp"
@@ -90,7 +91,7 @@ namespace arcade
 	    e.type = EventType::ET_NONE;
 	    e.action = ActionType::AT_NONE;
 	    e.kb_key = KeyboardKey::KB_NONE;
-	    break;
+            return (false);
 	  }
 	return (true);
       }
@@ -121,31 +122,15 @@ namespace arcade
 
   void Libcaca::updateMap(IMap const & map)
   {
-    // TODO: Blit on canvas, how ??
-    if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
-    {
-      if (m_map)
-      {
-        caca_free_canvas(m_map);
-        m_map = nullptr;
-      }
-      m_mapWidth = map.getWidth();
-      m_mapHeight = map.getHeight();
-      if (!m_mapWidth || !m_mapHeight)
-        return;
-      m_map = caca_create_canvas(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
-      if (!m_map)
-      {
-        throw AllocationError("Cannot create LibCaca Canvas [map]");
-      }
-    }
+    size_t posX = m_width / 2 - map.getWidth();
+    size_t posY = m_height / 2 - map.getHeight();
 
     // Loop on every tile
     for (size_t l = 0; l < map.getLayerNb(); ++l)
     {
-      for (size_t y = 0; y < m_mapHeight; ++y)
+      for (size_t y = 0; y < map.getHeight(); ++y)
       {
-        for (size_t x = 0; x < m_mapWidth; ++x)
+        for (size_t x = 0; x < map.getWidth(); ++x)
         {
           ITile const &tile = map.at(l, x, y);
 
@@ -161,17 +146,18 @@ namespace arcade
             // Check if there is alpha
             if (color.a != 0)
             {
-              double a(color.a / 255.0);
-              uint32_t attr = caca_get_attr(m_canvas, x, y);
+              //double a(color.a / 255.0);
+              /*uint32_t attr = caca_get_attr(m_canvas, x, y);
               uint8_t old[sizeof(uint64_t)];
               caca_attr_to_argb64(attr, old);
               Color bg(color.r * a + old[1] * (1 - a),
                 color.g * a + old[2] * (1 - a),
                 color.b * a + old[3] * (1 - a),
-                color.a + old[0] * (1 - a));
-              uint16_t _bg = convert32bitsColorTo16Bits(bg);
+                color.a + old[0] * (1 - a));*/
+              uint16_t _bg = convert32bitsColorTo16Bits(color);
               caca_set_color_argb(m_canvas, 0xffff, _bg);
-              caca_printf(m_canvas, x, y, " ");
+              caca_put_char(m_canvas, 2 * x + posX, y + posY, ' ');
+              caca_put_char(m_canvas, 2 * x + posX + 1, y + posY, ' ');
             }
           }
         }
@@ -183,13 +169,11 @@ namespace arcade
   {
     for (size_t i = 0; i < gui.size(); ++i)
       {
-      double rx = 5.3;
-      double ry = 11.2;
 	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * m_width / rx;
-	size_t y = comp.getY() * m_height / ry;
-	size_t width = comp.getWidth() * m_width / rx;
-	size_t height = comp.getHeight() * m_height / ry;
+	size_t x = comp.getX() * m_width;
+	size_t y = comp.getY() * m_height;
+	size_t width = comp.getWidth() * m_width;
+	size_t height = comp.getHeight() * m_height;
 	Color color = comp.getBackgroundColor();
 	double a(color.a / 255.0);
 
@@ -197,21 +181,21 @@ namespace arcade
 
 	if (color.a != 0)
 	  {
+          uint16_t _bg = convert32bitsColorTo16Bits(color);
+          caca_set_color_argb(m_canvas, 0xffff, _bg);
 	    for (size_t _y = 0; _y < height; ++_y)
 	      {
 		for (size_t _x = 0; _x < width; ++_x)
 		  {
-		    uint32_t attr = caca_get_attr(m_canvas, x + _x, y + _y);
-		    uint8_t old_[sizeof(uint64_t)];
-		    caca_attr_to_argb64(attr, old_);
-                    Color old(old_[3], old_[5], old_[7], old_[1]);
-		    Color bg(color.r * a + old.r * (1 - a),
+		    /*uint32_t attr = caca_get_attr(m_canvas, x + _x, y + _y);
+		    uint8_t old[sizeof(uint64_t)];
+		    caca_attr_to_argb64(attr, old);
+		    Color bg(color.r * a + old * (1 - a),
 			     color.g * a + old.g * (1 - a),
 			     color.b * a + old.b * (1 - a),
-			     color.a + old.a * (1 - a));
-		    uint16_t _bg = convert32bitsColorTo16Bits(bg);
-		    caca_set_color_argb(m_canvas, 0xffff, _bg);
-		    caca_printf(m_canvas, x + _x, y + _y, "  ");
+			     color.a + old.a * (1 - a));*/
+		    
+		    caca_put_char(m_canvas, x + _x, y + _y, ' ');
 		  }
 	      }
 	  }
@@ -230,8 +214,6 @@ namespace arcade
   void Libcaca::clear()
   {
     caca_set_color_argb(m_canvas, 0xffff, 0);
-    if (m_map)
-      caca_clear_canvas(m_map);
     caca_clear_canvas(m_canvas);
   }
 
