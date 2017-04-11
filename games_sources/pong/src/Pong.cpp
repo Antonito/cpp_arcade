@@ -214,6 +214,8 @@ namespace arcade
 		      {
 			m_ball.setX(static_cast<double>(ntohl(_pck->entity.data.ball.x)));
 			m_ball.setY(static_cast<double>(ntohl(_pck->entity.data.ball.y)));
+			m_ball.updatePosition(m_player[m_ball.getBallDir()], m_map->getHeight(),
+					      (m_curTick - m_lastTick) / 1000.0);
 		      }
 		  }
 	      }
