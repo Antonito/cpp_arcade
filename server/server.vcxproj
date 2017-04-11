@@ -74,25 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)common\src;$(SolutionDir)games_sources\pong\src;$(SolutionDir)exceptions\src;$(SolutionDir)network\src;$(SolutionDir)server\src;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>server_arcade.exe</TargetName>
+    <TargetName>server_arcade</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)common\src;$(SolutionDir)games_sources\pong\src;$(SolutionDir)exceptions\src;$(SolutionDir)network\src;$(SolutionDir)server\src;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>server_arcade.exe</TargetName>
+    <TargetName>server_arcade</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)common\src;$(SolutionDir)games_sources\pong\src;$(SolutionDir)exceptions\src;$(SolutionDir)network\src;$(SolutionDir)server\src;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>server_arcade.exe</TargetName>
+    <TargetName>server_arcade</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)common\src;$(SolutionDir)games_sources\pong\src;$(SolutionDir)exceptions\src;$(SolutionDir)network\src;$(SolutionDir)server\src;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
-    <TargetName>server_arcade.exe</TargetName>
+    <TargetName>server_arcade</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
