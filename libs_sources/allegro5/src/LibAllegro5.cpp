@@ -244,7 +244,9 @@ namespace arcade
 
 void LibAllegro5::clear()
   {
-    al_clear_to_color(al_map_rgb(0, 0, 0));
+    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
+    std::memset(lr->data, 0, m_width * m_height * sizeof(Color));
+    al_unlock_bitmap(m_gui);
   }
 
   KeyboardKey LibAllegro5::getKeyboardKey(int code)
