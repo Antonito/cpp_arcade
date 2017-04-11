@@ -134,7 +134,7 @@ SolarFox::SolarFox()
   m_curTick = 0;
 }
 
-  SolarFox::SolarFox(SolarFox const &other) : AGame()
+SolarFox::SolarFox(SolarFox const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -369,15 +369,15 @@ void SolarFox::process()
 
 void SolarFox::WhereAmI(std::ostream &os) const
 {
-  uint16_t size = static_cast<uint16_t>(m_player.size() - 1);
+  uint16_t size = static_cast<uint16_t>(m_player.size());
   arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
 
   for (size_t i = 0; i < size; ++i)
-    {
-      pos[i].x = m_player[i].x;
-      pos[i].y = m_player[i].y;
-    }
+  {
+    pos[i].x = m_player[i].x;
+    pos[i].y = m_player[i].y;
+  }
 
   os.write(reinterpret_cast<char *>(&header), sizeof(arcade::WhereAmI));
   os.write(reinterpret_cast<char *>(pos.get()), size * sizeof(::arcade::Position));

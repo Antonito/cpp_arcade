@@ -60,7 +60,7 @@ Snake::Snake()
 
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
-  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 5);
+  m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 4);
   m_player.setDir(Direction::LEFT);
   m_fruit.push(placeFood(*m_map));
   m_lastTick = 0;
@@ -68,7 +68,7 @@ Snake::Snake()
   m_tmpDir = Direction::LEFT;
 }
 
-  Snake::Snake(Snake const &other) : AGame()
+Snake::Snake(Snake const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -187,7 +187,7 @@ void Snake::process()
 #if defined(__linux__)
 void Snake::WhereAmI(std::ostream &os) const
 {
-  uint16_t size = static_cast<uint16_t>(m_player.size() - 1);
+  uint16_t size = static_cast<uint16_t>(m_player.size());
   arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
 
