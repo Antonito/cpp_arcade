@@ -88,7 +88,7 @@ Centipede::Centipede()
   m_hasShot = false;
 }
 
-  Centipede::Centipede(Centipede const &other) : AGame()
+Centipede::Centipede(Centipede const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -231,7 +231,7 @@ void Centipede::process()
     m_lastShootTick = m_curTick;
   }
 
-  if (m_curTick - m_lastTick > 100)
+  if (m_curTick - m_lastTick > 5)
   {
     for (Enemy &e : m_enemy)
     {
