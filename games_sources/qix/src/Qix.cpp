@@ -124,6 +124,11 @@ void Qix::notifyEvent(std::vector<Event> &&events)
         break;
       case KB_ESCAPE:
         m_state = MENU;
+        break;
+      case KB_ENTER:
+        if (m_finished)
+          m_state = MENU;
+        break;
       default:
         break;
       }
@@ -147,6 +152,8 @@ std::vector<std::unique_ptr<ISprite>> Qix::getSpritesToLoad() const
 
 void Qix::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
 

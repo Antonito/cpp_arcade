@@ -147,6 +147,10 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
           m_shoot.setCurTile(m_map->at(0, m_shoot[0].x, m_shoot[0].y).getType());
         }
         break;
+      case KB_ENTER:
+        if (m_finished)
+          m_state = MENU;
+        break;
       case KB_ESCAPE:
         m_state = MENU;
       default:
@@ -178,6 +182,7 @@ void Centipede::checkShoot()
   {
     if (e.isTouch(m_shoot[0]))
     {
+      m_score += 1;
       added.push_back(e.split(m_shoot[0]));
       m_obstacles.emplace_back();
       m_obstacles.back().push(m_shoot[0]);
@@ -224,6 +229,8 @@ void Centipede::checkShoot()
 
 void Centipede::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
 
@@ -278,7 +285,7 @@ void Centipede::process()
     {
       e.move(*m_map);
       if (e.isTouch(m_player[0]))
-        m_state = MENU;
+        m_finished = true;
     }
     m_lastTick = m_curTick;
   }

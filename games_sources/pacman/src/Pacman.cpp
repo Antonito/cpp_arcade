@@ -254,6 +254,8 @@ void Pacman::unsetSuperPowers()
 
 void Pacman::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
 
@@ -282,12 +284,14 @@ void Pacman::process()
     m_lastGhostTick = m_curTick;
   }
 
+  // Check colision
+  checkEnemy();
+  checkPowerUps();
+  checkSuperPowers();
+
   if (m_curTick - m_lastTick > 200)
   {
-    // Check colision
-    checkEnemy();
-    checkPowerUps();
-    checkSuperPowers();
+
     if (m_hasEat && m_curTick - m_eatTime > 10000)
       unsetSuperPowers();
     m_player.setNextDir(m_nextDir);
