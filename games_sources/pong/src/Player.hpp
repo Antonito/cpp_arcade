@@ -20,7 +20,7 @@ public:
   Player(Player const &other) = default;
   virtual ~Player();
   virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move();
+  virtual void move(Map &);
 private:
   mutable int m_mult;
 };

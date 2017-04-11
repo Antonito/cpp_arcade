@@ -14,7 +14,7 @@ namespace arcade
       Pong::Pong() :
 	m_lastTick(0),
         m_curTick(0),
-	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0),
+	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0),
 	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0)
       {
         m_map = std::make_unique<Map>(80, 50);
@@ -86,7 +86,7 @@ namespace arcade
 		  && m_player[m_id][0].y > 0)
               {
                 m_player[m_id].setDir(Direction::UP);
-                m_player[m_id].move();
+                m_player[m_id].move(*m_map);
 		++m_updatePos;
                 m_smoothTick[m_id] = this->getCurrentTick();
                 m_lastUpTick = m_curTick;
@@ -98,7 +98,7 @@ namespace arcade
 		  m_map->getHeight() - 1)
               {
                 m_player[m_id].setDir(Direction::DOWN);
-                m_player[m_id].move();
+                m_player[m_id].move(*m_map);
 		++m_updatePos;
                 m_smoothTick[m_id] = this->getCurrentTick();
                 m_lastDownTick = m_curTick;
@@ -201,14 +201,14 @@ namespace arcade
 			    < m_map->getHeight() - 1)
 			  {
 			    m_player[otherId].setDir(Direction::DOWN);
-			    m_player[otherId].move();
+			    m_player[otherId].move(*m_map);
                             m_smoothTick[otherId] = this->getCurrentTick();
 			  }
 			else if (ntohl(_pck->entity.data.pos.y) < m_player[otherId][0].y &&
 				 m_player[otherId][0].y > 0)
 			  {
 			    m_player[otherId].setDir(Direction::UP);
-			    m_player[otherId].move();
+			    m_player[otherId].move(*m_map);
                             m_smoothTick[otherId] = this->getCurrentTick();
                         }
 		      }

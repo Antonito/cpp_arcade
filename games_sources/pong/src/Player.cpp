@@ -18,7 +18,7 @@ namespace arcade
       void Player::display(Map &map, double ratio) const
       {
         ratio -= 1.0;
-        
+
         if (ratio >= 0.0)
         {
           m_mult = 0;
@@ -33,8 +33,9 @@ namespace arcade
         }
       }
 
-      void Player::move()
+      void Player::move(Map &m)
       {
+	static_cast<void>(m);
         m_mult = 0;
 
         if (m_dir == Direction::UP)
