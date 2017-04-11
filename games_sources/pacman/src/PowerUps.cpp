@@ -2,29 +2,29 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace pacman
-{
-PowerUps::PowerUps()
-{
-}
-
-void PowerUps::display(Map &map, double ratio) const
-{
-  static_cast<void>(ratio);
-  for (Position const &p : m_pos)
+  namespace game
   {
-    Tile &tile = map.at(1, p.x, p.y);
+    namespace pacman
+    {
+      PowerUps::PowerUps()
+      {
+      }
 
-    tile.setColor(Color::Green);
-    // tile.setSprite(m_sprite);
+      void PowerUps::display(Map &map, double ratio) const
+      {
+	static_cast<void>(ratio);
+	for (Position const &p : m_pos)
+	  {
+	    Tile &tile = map.at(1, p.x, p.y);
+
+	    tile.setColor(Color::Green);
+	    tile.setSprite(3);
+	  }
+      }
+
+      PowerUps::~PowerUps()
+      {
+      }
+    }
   }
-}
-
-PowerUps::~PowerUps()
-{
-}
-}
-}
 }

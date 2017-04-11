@@ -7,20 +7,20 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace pacman
-{
-class PowerUps : public AEntity
-{
+  namespace game
+  {
+    namespace pacman
+    {
+      class PowerUps : public AEntity
+      {
 
-public:
-  PowerUps();
-  PowerUps(PowerUps const &other) = default;
-  virtual ~PowerUps();
-  virtual void display(Map &map, double ratio = 0.0) const;
-};
-}
-}
+      public:
+	PowerUps();
+	PowerUps(PowerUps const &other) = default;
+	virtual ~PowerUps();
+	virtual void display(Map &map, double ratio = 0.0) const;
+      };
+    }
+  }
 }
 #endif // !POWERUPS_HPP_
