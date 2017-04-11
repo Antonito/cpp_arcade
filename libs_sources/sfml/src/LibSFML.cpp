@@ -374,14 +374,14 @@ namespace arcade
 	  }
 
 	// Create and display text if there is one
-	/*if (str.length() > 0)
-	{
-	  sf::Text text(str, m_font);
+	if (str.length() > 0)
+	  {
+	    sf::Text text(str, m_font);
 
-	  text.setPosition(x, y);
+	    text.setPosition(x, y);
 
-	  m_win->draw(text);
-	}*/
+	    m_win->draw(text);
+	  }
       }
   }
 
