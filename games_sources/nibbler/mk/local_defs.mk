@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(ROOT_DIR)/games/lib_arcade_solarfox.so
+NAME=			$(ROOT_DIR)/games/lib_arcade_nibbler.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 

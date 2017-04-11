@@ -23,6 +23,8 @@ GAMES_DIR=		./games_sources/
 
 GAMES=			games_common	\
 			snake		\
+			nibbler		\
+			blockade	\
 			centipede	\
 			pacman		\
 			solarfox	\
