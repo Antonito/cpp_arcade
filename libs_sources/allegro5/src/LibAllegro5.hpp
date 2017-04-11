@@ -3,6 +3,8 @@
 
 #define ALLEGRO_STATICLINK
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <map>
 #include "IGfxLib.hpp"
 
@@ -49,7 +51,7 @@ namespace arcade
     static std::map<int, KeyboardKey> m_kb_keys;
     static std::map<int, MouseKey> m_mouse_keys;
 
-    static constexpr size_t m_tileSize = 24;
+    static constexpr size_t m_maxTileSize = 24;
     size_t m_width;
     size_t m_height;
 
@@ -58,6 +60,7 @@ namespace arcade
     ALLEGRO_TIMER	*m_timer;
     ALLEGRO_BITMAP	*m_gui;
     ALLEGRO_BITMAP	*m_map;
+    ALLEGRO_FONT	*m_font;
 
     size_t m_mapWidth;
     size_t m_mapHeight;

@@ -99,7 +99,7 @@ namespace arcade
   void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
-    
+
     for (std::unique_ptr<ISprite> const &sp : s)
     {
       m_sprites.emplace_back();
@@ -177,29 +177,29 @@ namespace arcade
 	size_t width = comp.getWidth() * w;
 	size_t height = comp.getWidth() * h;
 	size_t color = getColor(comp.getBackgroundColor());
-	
-        if (color)
-        {
-          attron(COLOR_PAIR(color));
-          for (size_t _y = 0; _y < height; ++_y)
-          {
-            for (size_t _x = 0; _x < width; ++_x)
-            {
-              mvprintw(y + _y, x + _x, " ");
-            }
-          }
-          attroff(COLOR_PAIR(color));
-        }
-        if (comp.getText().size())
-        {
-          size_t c = getColor(comp.getTextColor());
 
-          if (c)
-            attron(COLOR_PAIR(color));
-          mvprintw(y, x, comp.getText().c_str());
-          if (c)
-attroff(COLOR_PAIR(color));
-        }
+        if (color)
+	  {
+	    attron(COLOR_PAIR(color));
+	    for (size_t _y = 0; _y < height; ++_y)
+	      {
+		for (size_t _x = 0; _x < width; ++_x)
+		  {
+		    mvprintw(y + _y, x + _x, " ");
+		  }
+	      }
+	    attroff(COLOR_PAIR(color));
+	  }
+        if (comp.getText().size())
+	  {
+	    size_t c = getColor(comp.getTextColor());
+
+	    if (c)
+	      attron(COLOR_PAIR(color));
+	    mvprintw(y, x, comp.getText().c_str());
+	    if (c)
+	      attroff(COLOR_PAIR(color));
+	  }
       }
   }
 
