@@ -290,10 +290,9 @@ Nope::Log::Info << "Exiting the core";
           // If same file inode
           if (search.st_ino == file.st_ino)
 #elif defined(_WIN32)
-          std::cout << lib << " vs " << libPath << std::endl;
           if (lib == libPath)
-          {
 #endif
+          {
             found = true;
             m_currentLibId = m_libList.size() - 1;
             m_selectedLibId = m_currentLibId;
