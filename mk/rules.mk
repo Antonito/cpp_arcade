@@ -2,12 +2,11 @@ MAIN_OBJ_DIR=	$(ROOT_DIR)/obj/
 EMPTY=
 OBJ_DIR=	$(MAIN_OBJ_DIR)$(shell basename $(CURDIR))/
 OBJ=		$(SRC:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
-OBJ_DIR_LIST=	$(MAIN_OBJ_DIR)				\
-		$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
+OBJ_DIR_LIST=	$(DIR_LIST:$(SRC_DIR)%=$(OBJ_DIR)%)
 
 NAME_EXTENSION=	$(suffix $(NAME))
 
-$(NAME):	$(OBJ_DIR_LIST) $(OBJ)
+$(NAME):	$(MAIN_OBJ_DIR) $(OBJ_DIR_LIST) $(OBJ)
 ifeq ($(NAME_EXTENSION),.a)
 		@$(RANLIB) $(NAME) $(OBJ) && \
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Generated $(CYAN)"$(NAME)"\n$(CLEAR)" || \
@@ -23,7 +22,7 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp
 		$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Compiled "$<"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Compiled "$<"\n$(CLEAR)"
 
-$(OBJ_DIR_LIST):
+$(MAIN_OBJ_DIR) $(OBJ_DIR_LIST):
 		@$(MKDIR) $@ && \
 		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$@"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$@"\n$(CLEAR)"
@@ -41,7 +40,7 @@ endif
 
 clean:
 		@$(RM) $(OBJ)
-		@$(RM_DIR) $(OBJ_DIR)
+		@$(RM_DIR) $(MAIN_OBJ_DIR)
 		@$(ECHO) "$(WHITE)[$(YELLOW)RM$(WHITE)] Removed OBJs files and directory\n$(CLEAR)"
 
 fclean:		clean

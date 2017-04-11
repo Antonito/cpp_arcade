@@ -13,7 +13,7 @@ INSTALL_PATH=	$(ROOT_DIR)/$(INSTALL_DIR)
 UNAME_S:=	$(shell uname -s)
 
 # Compilation and link definitions
-CXX=		clang++
+CXX=		g++
 CPP_VER=	c++14
 
 # Debug Infos
