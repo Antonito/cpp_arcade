@@ -304,8 +304,10 @@ void Pacman::process()
 void Pacman::WhereAmI(std::ostream &os) const
 {
   uint16_t size = static_cast<uint16_t>(m_player.size());
-  arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
+  arcade::WhereAmI header = {};
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
+  header.type = CommandType::WHERE_AM_I;
+  header.lenght = size;
 
   for (size_t i = 0; i < size; ++i)
   {

@@ -40,7 +40,6 @@ namespace arcade
 	Direction m_dir;
 
 	size_t m_lastTick;
-	size_t m_lastShootTick;
 	size_t m_curTick;
       };
     }

@@ -30,6 +30,7 @@ namespace arcade
       : AGame(""), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
         m_selectedGameId(0), m_menuLib(true)
   {
+    static_cast<void>(m_inMenu);
     m_state = INGAME;
 
     m_map = std::make_unique<game::Map>(0, 0);
@@ -817,7 +818,7 @@ namespace arcade
 	    pcks.push_back(pck);
 	  }
       }
-    return (std::move(pcks));
+    return (pcks);
   }
 
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
