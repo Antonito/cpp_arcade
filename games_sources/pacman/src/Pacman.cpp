@@ -23,8 +23,8 @@ Pacman::Pacman()
           "####.###.#.###.####",
           "####.#.......#.####",
           "####.#.## ##.#.####",
-          "    ...# E #...    ",
-          "####.#.#   #.#.####",
+          "    ...#xEx#...    ",
+          "####.#.#xxx#.#.####",
           "####.#.#####.#.####",
           "####.#...S...#.####",
           "####.#.#####.#.####",
@@ -41,6 +41,7 @@ Pacman::Pacman()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
+  m_map->clearLayer(0, Color(50, 50, 50));
 
   //Parse map and set powerups, player and enemies position and direction
   for (size_t y = 0; y < m_map->getHeight(); ++y)
@@ -57,6 +58,9 @@ Pacman::Pacman()
       case '#':
         type = TileType::BLOCK;
         m_map->at(0, x, y).setColor(Color::Black);
+        break;
+      case 'x':
+        type = TileType::BLOCK;
         break;
       case '.':
         type = TileType::POWERUP;
@@ -85,10 +89,11 @@ Pacman::Pacman()
     }
   }
   //Clear layer 1 and 2
-  m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
 
   m_lastTick = 0;
+  m_lastGhostTick = 0;
+  m_startTick = 0;
   m_nextDir = Direction::RIGHT;
   m_curTick = 0;
   m_eatTime = 0;
@@ -101,7 +106,9 @@ Pacman::Pacman(Pacman const &other) : AGame()
   m_player = other.m_player;
   m_powerups = other.m_powerups;
   m_enemy = other.m_enemy;
+  m_lastGhostTick = other.m_lastGhostTick;
   m_lastTick = other.m_lastTick;
+  m_startTick = other.m_startTick;
   m_curTick = other.m_curTick;
   m_nextDir = other.m_nextDir;
   m_hasEat = other.m_hasEat;
@@ -250,7 +257,22 @@ void Pacman::process()
     e.display(*m_map);
   }
 
-  if (m_curTick - m_lastTick > 130)
+  if (!m_start && m_curTick - m_startTick > 10000)
+  {
+    m_start = true;
+    m_startTick = m_curTick;
+  }
+
+  if (m_start && m_curTick - m_lastGhostTick > 300)
+  {
+    for (Enemy &e : m_enemy)
+    {
+      e.move(*m_map);
+    }
+    m_lastGhostTick = m_curTick;
+  }
+
+  if (m_curTick - m_lastTick > 200)
   {
     // Check colision
     checkEnemy();
