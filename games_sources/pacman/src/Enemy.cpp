@@ -18,6 +18,7 @@ Enemy::~Enemy()
 void Enemy::display(Map &map, double ratio) const
 {
   //ratio = 1 / (1 + std::exp(-ratio + 1.0));
+  static_cast<void>(ratio);
   for (size_t i = 0; i < m_pos.size(); ++i)
   {
     Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
@@ -28,7 +29,7 @@ void Enemy::display(Map &map, double ratio) const
 
 void Enemy::move(Map &map)
 {
-  if (m_pos.size() == 0)
+  if (m_pos.size() == 0 || !m_pos[0].inMap(map))
   {
     return;
   }

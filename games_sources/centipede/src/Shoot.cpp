@@ -18,6 +18,8 @@ Shoot::~Shoot()
 void Shoot::display(Map &map, double ratio) const
 {
   //ratio = 1 / (1 + std::exp(-ratio + 1.0));
+  static_cast<void>(ratio);
+
   for (size_t i = 0; i < m_pos.size(); ++i)
   {
     Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);

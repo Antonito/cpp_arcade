@@ -13,9 +13,9 @@ AMovable::~AMovable()
 {
 }
 
-void AMovable::move()
+void AMovable::move(Map &map)
 {
-  if (m_pos.size() == 0)
+  if (m_pos.size() == 0 || !m_pos[0].inMap(map))
   {
     return;
   }

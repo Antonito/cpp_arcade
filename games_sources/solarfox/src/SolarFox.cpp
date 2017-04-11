@@ -44,6 +44,8 @@ SolarFox::SolarFox()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
+
+  //Parse map and set powerups, player and enemies position and direction
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)
@@ -116,10 +118,14 @@ SolarFox::SolarFox()
       m_map->at(0, x, y).setType(type);
     }
   }
+
+  //Clear layer 1 and 2
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
 
   m_hasShot = false;
+
+  // Set all tick handler
   m_lastTick = 0;
   m_lastShootTick = 0;
   m_lastEvilShootTick = 0;
@@ -184,6 +190,7 @@ void SolarFox::notifyEvent(std::vector<Event> &&events)
       case KB_SPACE:
         if (!m_hasShot)
         {
+          // Set the shoot his direction and range
           m_hasShot = true;
           m_shoot = *static_cast<Shoot *>(m_player.shoot().get());
           m_shoot.setDir(m_player.getDir());
@@ -320,7 +327,11 @@ void SolarFox::enemyShoot(size_t speed)
 void SolarFox::process()
 {
   m_curTick = this->getCurrentTick();
+
+  // Clear the map
   m_map->clearLayer(1);
+
+  // Display player, powerups, enemies and every shoots
   m_powerups.display(*m_map);
   if (m_hasShot)
     m_shoot.display(*m_map);
@@ -334,6 +345,8 @@ void SolarFox::process()
   {
     es.display(*m_map);
   }
+
+  // Check collision of ennemy obstacle
   for (std::vector<EvilShoot>::iterator it = m_evilShoot.begin(); it != m_evilShoot.end();)
   {
     if (checkShoot((*it)[0]) || !it->next().inMap(*m_map))
@@ -343,6 +356,8 @@ void SolarFox::process()
       it++;
     }
   }
+
+  // Movement of player ,enemies and shoots
   enemyShoot(3000);
   moveEvilShoot(150);
   moveEvilDude(400);

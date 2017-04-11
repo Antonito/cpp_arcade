@@ -45,8 +45,8 @@ Centipede::Centipede()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
-  std::cout << m_map->getHeight() << std::endl;
-  std::cout << m_map->getWidth() << std::endl;
+
+  //Parse map and set player and enemies position and direction
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)
@@ -81,6 +81,7 @@ Centipede::Centipede()
     m_obstacles[i].setPv(5);
     m_map->at(0, tmp.x, tmp.y).setType(TileType::OBSTACLE);
   }
+
   m_lastTick = 0;
   m_lastShootTick = 0;
   m_curTick = 0;
@@ -207,6 +208,8 @@ void Centipede::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
+
+  //Display player, obstacles and enemies
   m_player.display(*m_map);
   if (m_hasShot)
     m_shoot.display(*m_map);
@@ -221,6 +224,7 @@ void Centipede::process()
     e.display(*m_map);
   }
 
+  //Movement of the shoot ,enemy and check of collision
   if (m_hasShot && m_curTick - m_lastShootTick > 40)
   {
     checkShoot();

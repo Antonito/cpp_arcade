@@ -41,7 +41,8 @@ Pacman::Pacman()
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
   m_map->addLayer();
-  m_map->clearLayer(0, Color(50, 50, 50));
+
+  //Parse map and set powerups, player and enemies position and direction
   for (size_t y = 0; y < m_map->getHeight(); ++y)
   {
     for (size_t x = 0; x < m_map->getWidth(); ++x)
@@ -83,7 +84,10 @@ Pacman::Pacman()
       m_map->at(0, x, y).setType(type);
     }
   }
+  //Clear layer 1 and 2
+  m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
+
   m_lastTick = 0;
   m_nextDir = Direction::RIGHT;
   m_curTick = 0;
@@ -235,6 +239,8 @@ void Pacman::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
+
+  // Display player, and powerups
   m_powerups.display(*m_map);
   m_superPowers.display(*m_map);
   m_player.display(*m_map);
@@ -246,6 +252,7 @@ void Pacman::process()
 
   if (m_curTick - m_lastTick > 130)
   {
+    // Check colision
     checkEnemy();
     checkPowerUps();
     checkSuperPowers();

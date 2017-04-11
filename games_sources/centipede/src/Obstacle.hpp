@@ -25,7 +25,6 @@ public:
   void setPv(size_t pv);
 
 private:
-  size_t m_sprite;
   size_t m_pv;
 };
 }
