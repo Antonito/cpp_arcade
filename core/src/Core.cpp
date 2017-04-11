@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <utility>
 #include <sys/stat.h>
+#include <fstream>
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
@@ -26,7 +27,7 @@
 namespace arcade
 {
   Core::Core()
-      : m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
+      : AGame(""), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
         m_selectedGameId(0), m_menuLib(true)
   {
     m_state = INGAME;
@@ -41,8 +42,9 @@ namespace arcade
     m_gui->push(game::Component(0.3, 0.1, 0.4, 0.1, dark));
     m_gui->push(
         game::Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
-    m_gui->push(game::Component(0.1, 0.3, 0.35, 0.6));
-    m_gui->push(game::Component(0.55, 0.3, 0.35, 0.6));
+    m_gui->push(game::Component(0.1, 0.3, 0.3, 0.6));
+    m_gui->push(game::Component(0.5, 0.3, 0.3, 0.6));
+    m_gui->push(game::Component(0.8, 0.3, 0.12, 0.6));
 
     m_firstLibIndex = m_gui->size();
 
@@ -282,10 +284,12 @@ namespace arcade
 		    throw RessourceError("Error while accessing " + libPath);
 		  }
 #endif
-
+                std::string name(ent->d_name);
+                name = name.substr(11);
+                name = name.substr(0, name.size() - 3);
 		m_gui->push(game::Component(
-		    0.12, 0.35 + 0.07 * (m_libList.size() - 1), 0.3, 0.05,
-		    Color::Transparent, std::string(ent->d_name)));
+		    0.12, 0.35 + 0.04 * (m_libList.size() - 1), 0.25, 0.05,
+		    Color::Transparent, name));
 
 #if defined(__linux__) || (__APPLE__)
 		// If same file inode
@@ -340,11 +344,21 @@ namespace arcade
 #endif
 	      {
 		Nope::Log::Info << "Adding library '" << ent->d_name << "'";
+                std::string name = std::string(ent->d_name);
+                name = name.substr(11);
+                name = name.substr(0, name.size() - 3);
 		m_gameList.emplace_back(std::string("games/") + ent->d_name);
 
 		m_gui->push(game::Component(
-		    0.57, 0.35 + 0.07 * (m_gameList.size() - 1), 0.3, 0.05,
-		    Color::Transparent, std::string(ent->d_name)));
+		    0.52, 0.35 + 0.05 * (m_gameList.size() - 1), 0.25, 0.05,
+		    Color::Transparent, name));
+                std::stringstream ss;
+
+                ss << getScore(name);
+
+                m_gui->push(game::Component(
+                  0.82, 0.35 + 0.05 * (m_gameList.size() - 1), 0.1, 0.05,
+                  Color::Transparent, ss.str()));
 	      }
 	  }
 	// Close the dir after using it because we are well educated people
@@ -377,11 +391,21 @@ namespace arcade
 
   void Core::loadGame()
   {
+#ifdef DEBUG
     std::cout << "Loading GAME" << std::endl;
+#endif
     m_lib->loadSprites(m_game->getSpritesToLoad());
 
     std::vector<std::pair<std::string, SoundType>> s =
         m_game->getSoundsToLoad();
+
+    for (size_t i = 0; i < m_gameList.size(); ++i)
+    {
+      std::stringstream ss;
+
+      ss << getScore(m_gameList[i].getName());
+      m_gui->at(m_firstGameIndex + 2 * m_selectedGameId + 1).setText(ss.str());
+    }
 
     if (m_lib->doesSupportSound())
       {
@@ -463,22 +487,30 @@ namespace arcade
 	  {
 	    if (m_game.get() == this)
 	      m_game.release();
+#ifdef DEBUG
 	    std::cout << "Using game " << m_currentGameId << std::endl;
+#endif
 	    m_game = std::unique_ptr<IGame>(
 	        m_gameList[m_currentGameId].getFunction<IGame *()>(
 	            "getGame")());
-	    std::cout << "Done." << std::endl;
-	    m_gameState = LOADING;
+#ifdef DEBUG
+            std::cout << "Done." << std::endl;
+#endif
+            m_gameState = LOADING;
 	    this->loadGame();
 	  }
 	if (m_currentLibId != static_cast<unsigned>(lib))
 	  {
-	    std::cout << "Using lib " << m_currentLibId << std::endl;
-	    m_lib = std::unique_ptr<IGfxLib>(
+#ifdef DEBUG
+          std::cout << "Using lib " << m_currentLibId << std::endl;
+#endif
+          m_lib = std::unique_ptr<IGfxLib>(
 	        m_libList[m_currentLibId].getFunction<IGfxLib *()>(
 	            "getLib")());
-	    std::cout << "Done." << std::endl;
-	    this->loadGame();
+#ifdef DEBUG
+            std::cout << "Done." << std::endl;
+#endif
+            this->loadGame();
 	  }
 
 	return;
@@ -658,12 +690,20 @@ namespace arcade
 
     for (size_t i = 0; i < m_gameList.size(); ++i)
       {
-	if (i == m_selectedGameId)
-	  m_gui->at(m_firstGameIndex + i)
-	      .setBackgroundColor(Color(60, 60, 60));
-	else
-	  m_gui->at(m_firstGameIndex + i)
-	      .setBackgroundColor(Color::Transparent);
+      if (i == m_selectedGameId)
+      {
+        m_gui->at(m_firstGameIndex + 2 * i)
+          .setBackgroundColor(Color(60, 60, 60));
+        m_gui->at(m_firstGameIndex + 2 * i + 1)
+          .setBackgroundColor(Color(60, 60, 60));
+      }
+      else
+      {
+        m_gui->at(m_firstGameIndex + 2 * i)
+          .setBackgroundColor(Color::Transparent);
+        m_gui->at(m_firstGameIndex + 2 * i + 1)
+          .setBackgroundColor(Color::Transparent);
+      }
       }
 
     Color dark(10, 10, 10);
@@ -767,6 +807,22 @@ namespace arcade
     std::vector<std::unique_ptr<ISprite>> s;
 
     return (s);
+  }
+
+  size_t Core::getScore(std::string const &game)
+  {
+    size_t score = 0;
+    if (game != "")
+    {
+      std::fstream fs("scores/" + game + ".txt", std::ios::in);
+
+      std::cout << "Reading from scores/" << game << ".txt" << std::endl;
+      if (fs.is_open())
+      {
+        fs >> score;
+      }
+    }
+    return (score);
   }
 
 #if defined(__linux__)

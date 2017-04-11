@@ -9,7 +9,7 @@ namespace arcade
   {
     namespace snake
     {
-      Snake::Snake()
+      Snake::Snake() : AGame("snake")
       {
 	// clang-format off
   std::vector<std::string> m =
@@ -71,7 +71,7 @@ namespace arcade
 	m_tmpDir = Direction::LEFT;
       }
 
-      Snake::Snake(Snake const &other) : AGame()
+      Snake::Snake(Snake const &other) : AGame("snake")
       {
 	*m_map = *other.m_map;
 	m_player = other.m_player;
@@ -125,6 +125,9 @@ namespace arcade
 		    if (m_player.getDir() != Direction::LEFT)
 		      m_tmpDir = Direction::RIGHT;
 		    break;
+                  case KB_ENTER:
+                    if (m_finished)
+                      m_state = MENU;
 		  case KB_ESCAPE:
 		    m_state = MENU;
 		  default:
@@ -168,6 +171,11 @@ namespace arcade
 
       void Snake::process()
       {
+        if (m_finished)
+        {
+          return;
+        }
+
 	m_curTick = this->getCurrentTick();
 	m_map->clearLayer(1);
 	m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
@@ -183,6 +191,7 @@ namespace arcade
 		m_fruit.updateSprite();
 		m_player.push(m_player.last());
 		m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
+                m_score++;
 	      }
 	    if (m_player.next().inMap(*m_map) &&
 	        (!m_player.isTouch(m_player.next()) ||
@@ -190,8 +199,8 @@ namespace arcade
 	      {
 		m_player.move(*m_map);
 	      }
-	    else
-	      m_state = MENU;
+            else
+              m_finished = true;
 	    m_lastTick = m_curTick;
 	  }
       }

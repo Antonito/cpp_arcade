@@ -25,7 +25,7 @@ namespace arcade
   {
   public:
     GenLibrary();
-    GenLibrary(std::string const &filename);
+    GenLibrary(std::string const &filename, std::string const &name = "");
     GenLibrary(GenLibrary const &);
     ~GenLibrary();
     GenLibrary &operator=(GenLibrary const &);
@@ -46,8 +46,11 @@ namespace arcade
       return (func);
     }
 
+    std::string getName() const;
+
   private:
     std::string m_filename;
+    std::string m_name;
     gen_lib_t   m_libPtr;
   };
 }
