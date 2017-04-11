@@ -95,7 +95,7 @@ Pacman::Pacman()
   m_hasEat = false;
 }
 
-Pacman::Pacman(Pacman const &other)
+  Pacman::Pacman(Pacman const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

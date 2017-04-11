@@ -22,6 +22,7 @@ void Ball::display(Map &map, double ratio) const
 {
   Tile &tile = map.at(1, m_pos[0].x, m_pos[0].y);
 
+  static_cast<void>(ratio);
   tile.setColor(Color::White);
 
   double tmp;

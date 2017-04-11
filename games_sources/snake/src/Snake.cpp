@@ -68,7 +68,7 @@ Snake::Snake()
   m_tmpDir = Direction::LEFT;
 }
 
-Snake::Snake(Snake const &other)
+  Snake::Snake(Snake const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

@@ -15,8 +15,8 @@
 // https://raw.githubusercontent.com/tronkko/dirent/master/include/dirent.h
 //
 // Then move it in your Visual Studio include directory:
-// VS 17 (on two lines): C:\Program Files (x86)\Microsoft Visual Studio\
-// 2017\Enterprise\VC\Tools\MSVC\14.10.25017\include
+// VS 17 (on two lines): C:\Program Files (x86)\Microsoft Visual Studio
+// \2017\Enterprise\VC\Tools\MSVC\14.10.25017\include
 // VS 14: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include
 //
 // To finish relaunch your Visual Studio and it should be ok :)
@@ -443,7 +443,7 @@ Nope::Log::Info << "Exiting the core";
         break;
       }
 
-      if (m_currentGameId != game)
+      if (m_currentGameId != static_cast<unsigned>(game))
       {
         if (m_game.get() == this)
           m_game.release();
@@ -453,7 +453,7 @@ Nope::Log::Info << "Exiting the core";
         m_gameState = LOADING;
         this->loadGame();
       }
-      if (m_currentLibId != lib)
+      if (m_currentLibId != static_cast<unsigned>(lib))
       {
         std::cout << "Using lib " << m_currentLibId << std::endl;
         m_lib = std::unique_ptr<IGfxLib>(m_libList[m_currentLibId].getFunction<IGfxLib* ()>("getLib")());

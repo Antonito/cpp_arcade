@@ -134,7 +134,7 @@ SolarFox::SolarFox()
   m_curTick = 0;
 }
 
-SolarFox::SolarFox(SolarFox const &other)
+  SolarFox::SolarFox(SolarFox const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
