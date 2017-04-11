@@ -206,9 +206,7 @@ namespace arcade
 			ALLEGRO_BITMAP *bm = m_sprites[tile.getSpriteId()][tile.getSpritePos()];
 			int width = al_get_bitmap_width(bm);
 			int height = al_get_bitmap_height(bm);
-			int g_width = al_get_bitmap_width(m_gui);
-			int g_height = al_get_bitmap_height(m_gui);
-			al_draw_scaled_bitmap(bm, 0, 0, width, height, 0, 0, g_width, g_height, 0);
+			al_draw_scaled_bitmap(bm, 0, 0, width, height, posX, posY, tileSize, tileSize, 0);
 		      }
 		    else if (color.a != 0)
 		      {
