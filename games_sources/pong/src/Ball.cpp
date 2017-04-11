@@ -66,7 +66,7 @@ void arcade::game::pong::Ball::updatePosition(Player const &p, size_t mapHeight,
     if (m_x > p[0].x - 1 && m_y > p[0].y - 1 && m_y < p.last().y + 1)
     {
       m_dirX *= -1;
-      m_x = 2 * (p[1].x - 1) - m_x;
+      m_x = 2 * (p[1].x + 1) - m_x;
     }
   }
   m_pos[0].x = static_cast<ssize_t>(m_x + 0.5);
