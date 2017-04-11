@@ -24,7 +24,7 @@ $(OBJ_DIR)%.o:	$(SRC_DIR)%.cpp
 		$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Compiled "$<"\n$(CLEAR)"
 
 $(OBJ_DIR_LIST):
-		$(MKDIR) $@ && \
+		@$(MKDIR) $@ && \
 		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Created obj directory $(CYAN)"$@"\n$(CLEAR)" || \
 		$(ECHO) "$(WHITE)[$(PURPLE)MKDIR$(WHITE)] Cannot create obj directory $(CYAN)"$@"\n$(CLEAR)"
 
