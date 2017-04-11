@@ -72,6 +72,10 @@ namespace arcade
 
   Core::~Core()
   {
+    if (m_game.get() == this)
+      {
+	m_game.release();
+      }
 #ifdef DEBUG
     Nope::Log::Debug << "Core destructed";
 #endif

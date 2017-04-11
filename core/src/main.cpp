@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "TCPSocket.hpp"
 #include "GenLibrary.hpp"
 #include "Core.hpp"
@@ -27,7 +28,7 @@ int main(int ac, char **av)
   // Launching of the Core
   try
     {
-      arcade::Core core;
+      std::unique_ptr<arcade::Core> core = std::make_unique<arcade::Core>();
       Nope::Log::Logger::start();
 
 #if defined(DEBUG)
@@ -38,12 +39,12 @@ int main(int ac, char **av)
       Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_WARNING;
 #endif
 
-      core.launch(lib);
+      core->launch(lib);
     }
-  catch (std::exception const &e)
+  catch (std::exception e)
     {
       std::cerr << "Fatal error : " << e.what() << std::endl;
-      return (1);
+      exit(1);
     }
   return (0);
 }

@@ -260,7 +260,7 @@ namespace arcade
 	    std::cout << "Loaded " << surface->w << "x" << surface->h
 	              << std::endl;
 #endif
-	    // SDL_FillRect(surface, NULL, Color::Black.full);
+
 	    images.push_back(surface);
 	  }
 	m_sprites.push_back(images);
