@@ -16,7 +16,7 @@ extern "C"
 {
 	GFXLIB_API arcade::IGfxLib* getLib()
 	{
-		return (new arcade::Libcaca(1280, 720));
+		return (new arcade::Libcaca(242, 65));
 	}
 
 #if defined(_WIN32)

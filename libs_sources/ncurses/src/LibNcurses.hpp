@@ -43,11 +43,13 @@ namespace arcade
     static KeyboardKey getKeyboardKey(int code);
     static MouseKey getMouseKey(int code);
     MousePos getMousePos();
+    static size_t getColor(Color c);
 
     static std::map<int, KeyboardKey> m_kb_keys;
     static std::map<int, MouseKey> m_mouse_keys;
 
-    static constexpr size_t m_tileSize = 24;
+    std::vector<std::string> m_sprites;
+
     size_t m_width;
     size_t m_height;
 
