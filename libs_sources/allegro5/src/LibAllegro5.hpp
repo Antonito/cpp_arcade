@@ -61,13 +61,9 @@ namespace arcade
     ALLEGRO_EVENT_QUEUE *m_event;
     ALLEGRO_TIMER *      m_timer;
     ALLEGRO_BITMAP *     m_gui;
-    ALLEGRO_BITMAP *     m_map;
     ALLEGRO_FONT *       m_font;
 
     std::vector<std::vector<ALLEGRO_BITMAP *>> m_sprites;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 

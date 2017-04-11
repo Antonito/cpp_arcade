@@ -62,9 +62,6 @@ namespace arcade
     std::vector<std::vector<sf::Texture>> m_sprites;
 
     sf::Font m_font;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 

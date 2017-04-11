@@ -13,8 +13,8 @@
 namespace arcade
 {
   LibAllegro5::LibAllegro5(size_t width, size_t height)
-      : m_width(width), m_height(height), m_gui(nullptr), m_map(nullptr),
-        m_font(nullptr), m_mapWidth(0), m_mapHeight(0)
+      : m_width(width), m_height(height), m_gui(nullptr),
+        m_font(nullptr)
   {
     if (!al_init())
       {

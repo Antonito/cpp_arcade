@@ -8,8 +8,7 @@
 namespace arcade
 {
   LibNcurses::LibNcurses(size_t width, size_t height)
-      : m_win(nullptr), m_map(nullptr), m_gui(nullptr), m_mapWidth(0),
-        m_mapHeight(0)
+      : m_win(nullptr)
   {
     initscr();
     clear();

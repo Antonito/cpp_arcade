@@ -8,8 +8,7 @@
 namespace arcade
 {
   Libcaca::Libcaca(size_t width, size_t height)
-      : m_win(nullptr), m_canvas(nullptr), m_map(nullptr), m_mapWidth(0),
-        m_mapHeight(0)
+      : m_win(nullptr), m_canvas(nullptr), m_map(nullptr)
   {
     m_canvas = caca_create_canvas(width, height);
     if (!m_canvas)
@@ -167,7 +166,6 @@ namespace arcade
 	size_t            width = comp.getWidth() * m_width;
 	size_t            height = comp.getHeight() * m_height;
 	Color             color = comp.getBackgroundColor();
-	double            a(color.a / 255.0);
 
 	if (color.a != 0)
 	  {

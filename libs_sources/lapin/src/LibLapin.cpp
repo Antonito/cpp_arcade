@@ -218,7 +218,7 @@ namespace arcade
   void LibLapin::updateGUI(IGUI &gui)
   {
     Color *pixels = reinterpret_cast<Color *>(m_gui->pixels);
-    memset(pixels, 0, m_width * m_height * sizeof(Color));
+    std::memset(pixels, 0, m_width * m_height * sizeof(Color));
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);

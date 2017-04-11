@@ -57,9 +57,6 @@ namespace arcade
     caca_display_t *        m_win;
     caca_canvas_t *         m_canvas;
     caca_canvas_t *         m_map;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 
