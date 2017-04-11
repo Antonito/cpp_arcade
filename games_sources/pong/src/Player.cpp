@@ -7,7 +7,7 @@ namespace arcade
   {
     namespace pong
     {
-      Player::Player()
+      Player::Player() : m_mult(0)
       {
       }
 
@@ -17,31 +17,38 @@ namespace arcade
 
       void Player::display(Map &map, double ratio) const
       {
+        ratio -= 1.0;
+        
+        if (ratio >= 0.0)
+        {
+          m_mult = 0;
+        }
+
         for (size_t i = 0; i < m_pos.size(); ++i)
         {
           Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
 
           tile.setColor(Color::White);
-	  tile.setShiftY((m_pos[0].y - (m_pos[0] - m_dir).y) * ratio);
+	  tile.setShiftY(ratio * m_mult);
         }
       }
 
       void Player::move()
       {
-        int modif = 0;
+        m_mult = 0;
 
         if (m_dir == Direction::UP)
         {
-          modif = -1;
+          m_mult = -1;
         }
         else if (m_dir == Direction::DOWN)
         {
-          modif = 1;
+          m_mult = 1;
         }
 
         for (Position &p : m_pos)
         {
-          p.y += modif;
+          p.y += m_mult;
         }
       }
     }
