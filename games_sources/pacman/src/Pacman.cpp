@@ -165,6 +165,10 @@ void Pacman::notifyEvent(std::vector<Event> &&events)
         break;
       case KB_ESCAPE:
         m_state = MENU;
+      case KB_ENTER:
+        if (m_finished)
+          m_state = MENU;
+        break;
       default:
         break;
       }
@@ -195,10 +199,14 @@ void Pacman::checkEnemy()
       if (e.getEatable())
       {
         e.setDead(true);
+        m_score += 100;
         e.setDeathTime(this->getCurrentTick());
       }
       else
-        m_state = MENU;
+      {
+        m_finished = true;
+        return;
+      }
     }
   }
 }
@@ -206,10 +214,13 @@ void Pacman::checkEnemy()
 void Pacman::checkPowerUps()
 {
   if (m_powerups.size() == 0)
-    m_state = MENU;
+  {
+    m_finished = true;
+    return;
+  }
   if (m_powerups.isTouch(m_player[0]))
   {
-    // up score
+    m_score += 5;
     m_powerups.erase(m_player[0]);
   }
 }
@@ -239,7 +250,6 @@ void Pacman::unsetSuperPowers()
     e.setEatable(false);
   }
   m_hasEat = false;
-  std::cout << "RESET POWERS" << std::endl;
 }
 
 void Pacman::process()
