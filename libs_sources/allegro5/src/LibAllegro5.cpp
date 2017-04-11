@@ -217,7 +217,7 @@ namespace arcade
 				    size_t X = posX + _x;
 				    size_t Y = posY + _y;
 				    size_t pix = Y * (m_width) + X;
-				    Color cur(_pixels[_y * tileSize + _x]);
+				    Color cur(_pixels[_y * width + _x]);
 				    Color old(pixels[pix]);
 				    Color merged(cur.r * a + old.r * (1 - a),
 						 cur.g * a + old.g * (1 - a),
