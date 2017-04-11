@@ -85,9 +85,12 @@ namespace arcade
     void AGame::getMap(std::ostream &os) const
     {
       // Allocate the struct
-      GetMap header = {CommandType::GET_MAP,
-                       static_cast<uint16_t>(m_map->getWidth()),
-                       static_cast<uint16_t>(m_map->getHeight())};
+      GetMap header = {};
+
+      header.type = CommandType::GET_MAP;
+      header.width = static_cast<uint16_t>(m_map->getWidth());
+      header.height =  static_cast<uint16_t>(m_map->getHeight());
+
       std::unique_ptr<TileType[]> map(
           new TileType[header.width * header.height]);
 
