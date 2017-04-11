@@ -222,10 +222,7 @@ namespace arcade
 
   void LibSDL::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
-    std::cout << "Sprites.size == " << sprites.size() << std::endl;
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
-    std::cout << "Sprites.size == " << sprites.size() << std::endl;
-    std::cout << "s.size == " << s.size() << std::endl;
 
     for (std::vector<SDL_Surface *> &s : m_sprites)
     {
@@ -243,17 +240,23 @@ namespace arcade
     {
       std::vector<SDL_Surface *> images;
 
+#if defined(DEBUG)
       std::cout << "Loading sprite " << m_sprites.size() << ", " << sprite->spritesCount() << std::endl;
+#endif
       for (size_t i = 0; i < sprite->spritesCount(); ++i)
       {
+#if defined(DEBUG)
         std::cout << "File: '" << sprite->getGraphicPath(i) << "'" << std::endl;
+#endif
         SDL_Surface *surface = IMG_Load(sprite->getGraphicPath(i).c_str());
 
         if (!surface)
         {
 	  throw RessourceError("File not found: " + sprite->getGraphicPath(i));
         }
+#if defined(DEBUG)
         std::cout << "Loaded " << surface->w << "x" << surface->h << std::endl;
+#endif
         //SDL_FillRect(surface, NULL, Color::Black.full);
         images.push_back(surface);
       }
