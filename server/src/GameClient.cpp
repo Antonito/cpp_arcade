@@ -1,4 +1,6 @@
+#if defined(__linux__) || (__APPLE__)
 #include <sys/socket.h>
+#endif
 #include <cstring>
 #include "GameClient.hpp"
 #include "Packet.hpp"
@@ -35,7 +37,7 @@ namespace arcade
     std::pair<uint32_t, std::shared_ptr<uint8_t>> pair = m_sendQueue.back();
 
     // Send buffer
-    ret = send(m_sock, pair.second.get(), pair.first, 0);
+    ret = send(m_sock, reinterpret_cast<char *>(pair.second.get()), pair.first, 0);
     m_lastActionDate = std::chrono::system_clock::now();
     if (ret == -1)
       {
@@ -50,7 +52,7 @@ namespace arcade
   {
     ssize_t ret;
 
-    ret = recv(m_sock, m_buff.get(), GameClient::buffSize, 0);
+    ret = recv(m_sock, reinterpret_cast<char *>(m_buff.get()), GameClient::buffSize, 0);
     m_lastActionDate = std::chrono::system_clock::now();
     if (ret == -1)
       {

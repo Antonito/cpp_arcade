@@ -1,7 +1,13 @@
 #ifndef _PACKET_HPP_
 #define _PACKET_HPP_
 
+#include <functional>
 #include "NetworkPacket.hpp"
+
+#if defined(_WIN32)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
 
 namespace arcade
 {

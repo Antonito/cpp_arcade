@@ -2,7 +2,9 @@
 #define PACKET_FACTORY_HPP_
 
 #include <iostream>
+#if defined(__linux__) || (__APPLE__)
 #include <arpa/inet.h>
+#endif
 #include <functional>
 #include <memory>
 #include <cstring>

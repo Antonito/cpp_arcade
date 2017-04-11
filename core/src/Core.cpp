@@ -47,6 +47,7 @@ namespace arcade
 
     m_firstLibIndex = m_gui->size();
 
+#if defined(__linux__) || (__APPLE__)
     try
     {
       m_soundLib.load("sound/lib_arcade_sfml_sound.so");
@@ -56,6 +57,7 @@ namespace arcade
     {
       Nope::Log::Warning<< "Backup sound lib not found";
     }
+#endif
 
 #ifdef DEBUG
     Nope::Log::Debug << "Core constructed";
@@ -243,6 +245,7 @@ Nope::Log::Info << "Exiting the core";
     DIR *dir;
     struct dirent *ent;
     bool found = false;
+#if defined(__linux__) || (__APPLE__)
     struct stat search;
     struct stat file;
 
@@ -250,7 +253,7 @@ Nope::Log::Info << "Exiting the core";
     {
       throw RessourceError("Library " + lib + " not found");
     }
-
+#endif
     // Open "dir/" directory
     if ((dir = opendir("lib")) != NULL)
     {
@@ -272,16 +275,23 @@ Nope::Log::Info << "Exiting the core";
 
           std::string libPath = std::string("lib/") + ent->d_name;
           m_libList.emplace_back(libPath);
+
+#if defined(__linux__) || (__APPLE__)
           if (stat(libPath.c_str(), &file) < 0)
           {
             throw RessourceError("Error while accessing " + libPath);
           }
+#endif
 
           m_gui->push(game::Component(0.12, 0.35 + 0.07 * (m_libList.size() - 1),
             0.3, 0.05, Color::Transparent, std::string(ent->d_name)));
 
+#if defined(__linux__) || (__APPLE__)
           // If same file inode
           if (search.st_ino == file.st_ino)
+#elif defined(_WIN32)
+          if (lib == libPath)
+#endif
           {
             found = true;
             m_currentLibId = m_libList.size() - 1;

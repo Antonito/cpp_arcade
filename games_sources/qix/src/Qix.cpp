@@ -1,46 +1,45 @@
 #include <iostream>
 #include <sstream>
-#include "Centipede.hpp"
+#include "Qix.hpp"
 #include "Sprite.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace centipede
+namespace qix
 {
-Centipede::Centipede()
+Qix::Qix()
 {
   Enemy new_enemy;
   Position tmp;
 
   std::vector<std::string> m =
-      {
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "1111111111111111111111111",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000",
-          "0000000000000000000000000"};
+      {"0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000",
+       "0000000000000000000000000"};
 
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
@@ -88,7 +87,7 @@ Centipede::Centipede()
   m_hasShot = false;
 }
 
-Centipede::Centipede(Centipede const &other) : AGame()
+Qix::Qix(Qix const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -100,11 +99,11 @@ Centipede::Centipede(Centipede const &other) : AGame()
   m_hasShot = other.m_hasShot;
 }
 
-Centipede::~Centipede()
+Qix::~Qix()
 {
 }
 
-Centipede &Centipede::operator=(Centipede const &other)
+Qix &Qix::operator=(Qix const &other)
 {
   if (this != &other)
   {
@@ -112,7 +111,7 @@ Centipede &Centipede::operator=(Centipede const &other)
   return (*this);
 }
 
-void Centipede::notifyEvent(std::vector<Event> &&events)
+void Qix::notifyEvent(std::vector<Event> &&events)
 {
   std::vector<Event> ev = events;
 
@@ -156,28 +155,28 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
   }
 }
 
-std::vector<std::pair<std::string, SoundType>> Centipede::getSoundsToLoad() const
+std::vector<std::pair<std::string, SoundType>> Qix::getSoundsToLoad() const
 {
   std::vector<std::pair<std::string, SoundType>> s;
   // TODO: implement
   return (s);
 }
 
-std::vector<std::unique_ptr<ISprite>> Centipede::getSpritesToLoad() const
+std::vector<std::unique_ptr<ISprite>> Qix::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
 
   return (s);
 }
 
-void Centipede::checkShoot()
+void Qix::checkShoot()
 {
   m_shoot.move(*m_map);
   for (Enemy &e : m_enemy)
   {
     if (e.isTouch(m_shoot[0]))
     {
-      // split centipede
+      // split Qix
       m_hasShot = false;
     }
   }
@@ -204,7 +203,7 @@ void Centipede::checkShoot()
     m_hasShot = false;
 }
 
-void Centipede::process()
+void Qix::process()
 {
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
@@ -243,7 +242,7 @@ void Centipede::process()
   }
 }
 
-Position Centipede::placeObstacle(Map const &map) const
+Position Qix::placeObstacle(Map const &map) const
 {
   size_t width = map.getWidth();
   size_t height = map.getHeight();
@@ -268,7 +267,7 @@ Position Centipede::placeObstacle(Map const &map) const
 }
 
 #if defined(__linux__)
-void Centipede::WhereAmI(std::ostream &os) const
+void Qix::WhereAmI(std::ostream &os) const
 {
   uint16_t size = static_cast<uint16_t>(m_player.size());
   arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
@@ -292,7 +291,7 @@ void Centipede::WhereAmI(std::ostream &os) const
 #if defined(__linux__)
 extern "C" void Play(void)
 {
-  arcade::game::centipede::Centipede game;
+  arcade::game::Qix::Qix game;
 
   game.Play();
 }

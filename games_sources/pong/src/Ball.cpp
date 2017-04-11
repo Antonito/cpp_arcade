@@ -90,8 +90,9 @@ void Ball::setBallPos(Position const & p)
 }
 void Ball::reset(Position const &p)
 {
-  m_dirX = (1 % 2 ? 1.0 : -1.0);
-  m_dirY = static_cast<double>(1 % 600 + 400) / 1000.0 * (1 % 2 ? 1 : -1);
+  static int c = 40;
+  m_dirX = (c % 2 ? 1.0 : -1.0);
+  m_dirY = static_cast<double>((3 * c) % 600 + 400) / 1000.0 * (c % 2 ? 1 : -1);
 
   double norm = std::sqrt(1.0 + m_dirY * m_dirY);
 
@@ -101,6 +102,7 @@ void Ball::reset(Position const &p)
   m_pos[0] = p;
   m_x = p.x;
   m_y = p.y;
+  c += 13;
 }
   double Ball::getX() const
   {

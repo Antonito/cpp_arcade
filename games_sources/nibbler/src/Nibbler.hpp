@@ -1,27 +1,28 @@
-#ifndef SNAKE_HPP_
-#define SNAKE_HPP_
+#ifndef NIBBLER_HPP_
+#define NIBBLER_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
 #include "Player.hpp"
 #include "Fruit.hpp"
+#include "Obstacle.hpp"
 #include "AEntity.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace snake
+namespace nibbler
 {
-class Snake : public AGame
+class Nibbler : public AGame
 {
 
 public:
-  Snake();
-  Snake(Snake const &other);
-  ~Snake();
+  Nibbler();
+  Nibbler(Nibbler const &other);
+  ~Nibbler();
 
-  Snake &operator=(Snake const &other);
+  Nibbler &operator=(Nibbler const &other);
 
   virtual void notifyEvent(std::vector<Event> &&events);
 
@@ -40,6 +41,8 @@ private:
   Player m_player;
   Fruit m_fruit;
   Direction m_tmpDir;
+  Obstacle m_obstacles;
+
   size_t m_lastTick;
   size_t m_curTick;
 };
@@ -51,4 +54,4 @@ private:
 extern "C" void Play(void);
 #endif
 
-#endif // !SNAKE_HPP_
+#endif // !NIBBLER_HPP_

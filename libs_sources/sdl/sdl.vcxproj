@@ -73,32 +73,32 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src</IncludePath>
-    <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src;C:\vs_dev_libs\SDL2_ttf-2.0.14\include;C:\vs_dev_libs\SDL2_image-2.0.1\include</IncludePath>
+    <LibraryPath>C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64;C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src</IncludePath>
-    <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src;C:\vs_dev_libs\SDL2_ttf-2.0.14\include;C:\vs_dev_libs\SDL2_image-2.0.1\include</IncludePath>
+    <LibraryPath>C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64;C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src</IncludePath>
-    <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src;C:\vs_dev_libs\SDL2_ttf-2.0.14\include;C:\vs_dev_libs\SDL2_image-2.0.1\include</IncludePath>
+    <LibraryPath>C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64;C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
     <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src</IncludePath>
-    <LibraryPath>C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\vs_dev_libs\SDL2-2.0.5\include;$(SolutionDir)common\src;$(SolutionDir)exceptions\src;C:\vs_dev_libs\SDL2_ttf-2.0.14\include;C:\vs_dev_libs\SDL2_image-2.0.1\include</IncludePath>
+    <LibraryPath>C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64;C:\vs_dev_libs\SDL2-2.0.5\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <TargetName>lib_arcade_$(ProjectName)</TargetName>
     <ReferencePath>$(ReferencePath)</ReferencePath>
@@ -118,7 +118,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64\SDL2_image.lib;C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\vs_dev_libs\SDL2-2.0.5\lib\x64</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
@@ -135,7 +135,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64\SDL2_image.lib;C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\vs_dev_libs\SDL2-2.0.5\lib\x64</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
@@ -152,7 +152,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64\SDL2_image.lib;C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\vs_dev_libs\SDL2-2.0.5\lib\x64</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
@@ -173,7 +173,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2.lib;C:\vs_dev_libs\SDL2-2.0.5\lib\x64\SDL2main.lib;C:\vs_dev_libs\SDL2_image-2.0.1\lib\x64\SDL2_image.lib;C:\vs_dev_libs\SDL2_ttf-2.0.14\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\vs_dev_libs\SDL2-2.0.5\lib\x64</AdditionalLibraryDirectories>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
@@ -186,6 +186,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LibSDL.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\exceptions\exceptions.vcxproj">
+      <Project>{4a8e1e14-2875-4b87-90ed-414ebd5e6bfe}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

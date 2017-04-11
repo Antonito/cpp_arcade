@@ -20,15 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\src\Core.cpp" />
-    <ClCompile Include="core\src\exceptions\AException.cpp" />
-    <ClCompile Include="core\src\exceptions\SockError.cpp" />
     <ClCompile Include="core\src\GenLibrary.cpp" />
     <ClCompile Include="core\src\logger\Logger.cpp" />
     <ClCompile Include="core\src\logger\LogMessage.cpp" />
     <ClCompile Include="core\src\logger\LogSink.cpp" />
     <ClCompile Include="core\src\main.cpp" />
-    <ClCompile Include="core\src\network\ASocket.cpp" />
-    <ClCompile Include="core\src\network\TCPSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\src\Core.hpp" />
@@ -42,6 +38,14 @@
     <ClInclude Include="core\src\network\GenNetwork.hpp" />
     <ClInclude Include="core\src\network\ISocket.hpp" />
     <ClInclude Include="core\src\network\TCPSocket.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="exceptions\exceptions.vcxproj">
+      <Project>{4a8e1e14-2875-4b87-90ed-414ebd5e6bfe}</Project>
+    </ProjectReference>
+    <ProjectReference Include="network\network.vcxproj">
+      <Project>{79e9b945-7549-41fb-92d7-291ee994b02f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{214C9846-080F-4916-9A28-8FB713400826}</ProjectGuid>
@@ -98,26 +102,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)core\src\exceptions\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)network\src;$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)exceptions\src\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
     <TargetName>arcade</TargetName>
     <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)core\src\exceptions\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)network\src;$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)exceptions\src\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
     <TargetName>arcade</TargetName>
     <OutDir>$(SolutionDir)</OutDir>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)core\src\exceptions\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)network\src;$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)exceptions\src\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
     <TargetName>arcade</TargetName>
     <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)core\src\exceptions\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)network\src;$(SolutionDir)games_sources/games_common/src/;$(SolutionDir)core\src\logger\;$(SolutionDir)exceptions\src\;$(SolutionDir)core\src\network\;$(SolutionDir)\common\src\;$(SolutionDir)\core\src;$(IncludePath)</IncludePath>
     <TargetName>arcade</TargetName>
     <OutDir>$(SolutionDir)</OutDir>
     <IntDir>$(Configuration)\</IntDir>

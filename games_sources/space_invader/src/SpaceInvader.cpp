@@ -92,7 +92,7 @@ SpaceInvader::SpaceInvader()
   m_hasShot = false;
 }
 
-  SpaceInvader::SpaceInvader(SpaceInvader const &other) : AGame()
+SpaceInvader::SpaceInvader(SpaceInvader const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -182,7 +182,7 @@ void SpaceInvader::checkShoot()
       it->hit();
       if (it->getPv() == 0 || m_enemy.isTouch((*it)[0]))
       {
-        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::EMPTY);
+        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::BLOCK);
         it = m_obstacles.erase(it);
       }
       else
@@ -223,6 +223,16 @@ void SpaceInvader::process()
   if (m_curTick - m_lastTick > 300 + (100 * (m_enemy.size() / 5)))
   {
     m_enemy.move(*m_map);
+    for (std::vector<Obstacle>::iterator it = m_obstacles.begin(); it != m_obstacles.end();)
+    {
+      if (m_enemy.isTouch((*it)[0]))
+      {
+        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::BLOCK);
+        it = m_obstacles.erase(it);
+      }
+      else
+        it++;
+    }
     for (size_t i = 0; i < m_enemy.size(); i++)
     {
       if (!m_enemy[i].inMap(*m_map))

@@ -3,7 +3,7 @@
 #include <cstdbool>
 #endif
 #include "IGame.hpp"
-#include "Blockade.hpp"
+#include "Qix.hpp"
 
 #if defined(__linux__) || (__APPLE__)
 #define GAME_API
@@ -15,7 +15,7 @@
 extern "C" {
 GAME_API arcade::IGame *getGame()
 {
-	return (new arcade::game::blockade::Blockade());
+	return (new arcade::game::qix::Qix());
 }
 
 #if defined(_WIN32)
