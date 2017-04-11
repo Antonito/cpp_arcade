@@ -2,10 +2,11 @@
 
 namespace arcade
 {
-	namespace Network
-	{
-		SockError::SockError(std::string const &msg) : AException("SocketError: ", msg)
-		{
-		}
-	}
+  namespace Network
+  {
+    SockError::SockError(std::string const &msg)
+        : AException("SocketError: ", msg)
+    {
+    }
+  }
 }

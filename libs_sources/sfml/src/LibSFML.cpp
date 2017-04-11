@@ -8,38 +8,39 @@ namespace arcade
 {
   LibSFML::LibSFML(size_t width, size_t height)
   {
-      m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "Arcade sfml");
-      m_mousePos = sf::Mouse::getPosition(*m_win);
-      if (!m_font.loadFromFile("assets/fonts/arial.ttf"))
+    m_win = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height),
+                                               "Arcade sfml");
+    m_mousePos = sf::Mouse::getPosition(*m_win);
+    if (!m_font.loadFromFile("assets/fonts/arial.ttf"))
       {
-        throw RessourceError("Cannot load assets/fonts/arial.ttf");
+	throw RessourceError("Cannot load assets/fonts/arial.ttf");
       }
   }
 
   LibSFML::~LibSFML()
   {
     for (std::unique_ptr<sf::Sound> &s : m_sound)
-    {
-      if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
       {
-        s->stop();
+	if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
+	  {
+	    s->stop();
+	  }
       }
-    }
 
     for (std::unique_ptr<sf::Music> &m : m_music)
-    {
-      if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
       {
-        m->stop();
+	if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
+	  {
+	    m->stop();
+	  }
       }
-    }
 
     m_win->close();
   }
 
-  bool LibSFML::pollEvent(Event & e)
+  bool LibSFML::pollEvent(Event &e)
   {
-    sf::Event	event;
+    sf::Event event;
 
     if (m_win->pollEvent(event))
       {
@@ -96,9 +97,8 @@ namespace arcade
 	    // A mouse wheel was scrolled
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_NONE;
-	    //e.m_key = ;
+	    // e.m_key = ;
 	    e.pos_abs = LibSFML::getMousePos();
-	    // TODO: Get mousekey
 	    break;
 	  default:
 	    e.type = EventType::ET_NONE;
@@ -116,136 +116,137 @@ namespace arcade
     return (true);
   }
 
-  void LibSFML::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
+  void LibSFML::loadSounds(
+      std::vector<std::pair<std::string, SoundType>> const &sounds)
   {
     size_t index;
 
     for (std::unique_ptr<sf::Sound> &s : m_sound)
-    {
-      if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
       {
-        s->stop();
+	if (s.get() && s->getStatus() != sf::Sound::Status::Stopped)
+	  {
+	    s->stop();
+	  }
       }
-    }
 
     for (std::unique_ptr<sf::Music> &m : m_music)
-    {
-      if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
       {
-        m->stop();
+	if (m.get() && m->getStatus() != sf::Music::Status::Stopped)
+	  {
+	    m->stop();
+	  }
       }
-    }
 
     m_sound.clear();
     m_soundBuffer.clear();
     m_music.clear();
     for (std::pair<std::string, SoundType> const &p : sounds)
-    {
-      if (p.second == SoundType::MUSIC)
       {
-        m_music.push_back(std::make_unique<sf::Music>());
-        sf::Music &cur = *m_music.back();
-        if (!cur.openFromFile(p.first))
-        {
-          std::cerr << "Cannot open music: " << p.first << std::endl;
-          m_music.back().reset();
-        }
-        index = m_music.size() - 1;
+	if (p.second == SoundType::MUSIC)
+	  {
+	    m_music.push_back(std::make_unique<sf::Music>());
+	    sf::Music &cur = *m_music.back();
+	    if (!cur.openFromFile(p.first))
+	      {
+		std::cerr << "Cannot open music: " << p.first << std::endl;
+		m_music.back().reset();
+	      }
+	    index = m_music.size() - 1;
+	  }
+	else
+	  {
+	    m_soundBuffer.emplace_back();
+	    sf::SoundBuffer &buf = m_soundBuffer.back();
+	    if (!buf.loadFromFile(p.first))
+	      {
+		std::cerr << "Cannot open sound: " << p.first << std::endl;
+		m_sound.emplace_back(nullptr);
+	      }
+	    else
+	      {
+		m_sound.push_back(std::make_unique<sf::Sound>());
+		sf::Sound &sound = *m_sound.back();
+		sound.setBuffer(buf);
+	      }
+	    index = m_sound.size() - 1;
+	  }
+	m_soundIndex.emplace_back(p.second, index);
       }
-      else
-      {
-        m_soundBuffer.emplace_back();
-        sf::SoundBuffer &buf = m_soundBuffer.back();
-        if (!buf.loadFromFile(p.first))
-        {
-          std::cerr << "Cannot open sound: " << p.first << std::endl;
-          m_sound.emplace_back(nullptr);
-        }
-        else
-        {
-          m_sound.push_back(std::make_unique<sf::Sound>());
-          sf::Sound &sound = *m_sound.back();
-          sound.setBuffer(buf);
-        }
-        index = m_sound.size() - 1;
-      }
-      m_soundIndex.emplace_back(p.second, index);
-    }
   }
 
   void LibSFML::soundControl(Sound const &sound)
   {
     SoundType type = m_soundIndex[sound.id].first;
-    size_t index = m_soundIndex[sound.id].second;
+    size_t    index = m_soundIndex[sound.id].second;
 
     if (type == SoundType::MUSIC)
-    {
-      if (!m_music[index].get())
       {
-        return;
-      }
+	if (!m_music[index].get())
+	  {
+	    return;
+	  }
 
-      sf::Music &m = *m_music[index];
-      switch (sound.mode)
-      {
-      case UNIQUE:
-      case REPEAT:
-        m.setLoop(sound.mode == REPEAT);
-        break;
-      case VOLUME:
-        m.setVolume(static_cast<int>(sound.volume));
-        break;
-      case PLAY:
-        m.stop();
-        m.play();
-        break;
-      case PAUSE:
-        m.pause();
-        break;
-      case RESUME:
-        m.play();
-        break;
-      case STOP:
-        m.stop();
-        break;
+	sf::Music &m = *m_music[index];
+	switch (sound.mode)
+	  {
+	  case UNIQUE:
+	  case REPEAT:
+	    m.setLoop(sound.mode == REPEAT);
+	    break;
+	  case VOLUME:
+	    m.setVolume(static_cast<int>(sound.volume));
+	    break;
+	  case PLAY:
+	    m.stop();
+	    m.play();
+	    break;
+	  case PAUSE:
+	    m.pause();
+	    break;
+	  case RESUME:
+	    m.play();
+	    break;
+	  case STOP:
+	    m.stop();
+	    break;
+	  }
       }
-    }
     else
-    {
-      if (!m_sound[index].get())
       {
-        return;
-      }
+	if (!m_sound[index].get())
+	  {
+	    return;
+	  }
 
-      sf::Sound &s = *m_sound[index];
+	sf::Sound &s = *m_sound[index];
 
-      switch (sound.mode)
-      {
-      case UNIQUE:
-      case REPEAT:
-        s.setLoop(sound.mode == REPEAT);
-        break;
-      case VOLUME:
-        s.setVolume(static_cast<int>(sound.volume));
-        break;
-      case PLAY:
-        s.stop();
-        s.play();
-        break;
-      case PAUSE:
-        s.pause();
-        break;
-      case RESUME:
-        s.play();
-        break;
-      case STOP:
-        s.stop();
-        break;
+	switch (sound.mode)
+	  {
+	  case UNIQUE:
+	  case REPEAT:
+	    s.setLoop(sound.mode == REPEAT);
+	    break;
+	  case VOLUME:
+	    s.setVolume(static_cast<int>(sound.volume));
+	    break;
+	  case PLAY:
+	    s.stop();
+	    s.play();
+	    break;
+	  case PAUSE:
+	    s.pause();
+	    break;
+	  case RESUME:
+	    s.play();
+	    break;
+	  case STOP:
+	    s.stop();
+	    break;
+	  }
       }
-    }
   }
 
-  void LibSFML::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  void LibSFML::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
   {
     // Move the given vector
     std::vector<std::unique_ptr<ISprite>> sp(std::move(sprites));
@@ -255,29 +256,29 @@ namespace arcade
 
     // Loop on every sprites
     for (std::unique_ptr<ISprite> const &s : sp)
-    {
-      // Current sprite (with multiple slot for animation)
-      m_sprites.emplace_back();
-      std::vector<sf::Texture> &sprite = m_sprites.back();
-
-      // Loop on every frame
-      for (size_t i = 0; i < s->spritesCount(); ++i)
       {
-        sprite.emplace_back();
-        sf::Texture &tex = sprite.back();
+	// Current sprite (with multiple slot for animation)
+	m_sprites.emplace_back();
+	std::vector<sf::Texture> &sprite = m_sprites.back();
 
-        // Load the current image
-        if (!tex.loadFromFile(s->getGraphicPath(i)))
-        {
-          throw RessourceError("Error loading image");
-        }
+	// Loop on every frame
+	for (size_t i = 0; i < s->spritesCount(); ++i)
+	  {
+	    sprite.emplace_back();
+	    sf::Texture &tex = sprite.back();
+
+	    // Load the current image
+	    if (!tex.loadFromFile(s->getGraphicPath(i)))
+	      {
+		throw RessourceError("Error loading image");
+	      }
+	  }
       }
-    }
   }
 
-  void LibSFML::updateMap(IMap const & map)
+  void LibSFML::updateMap(IMap const &map)
   {
-    size_t tileSize;
+    size_t       tileSize;
     sf::Vector2u winSize = m_win->getSize();
     sf::Vector2u mapSize(map.getWidth(), map.getHeight());
 
@@ -291,44 +292,46 @@ namespace arcade
 
     // Loop on each layer
     for (size_t layer = 0; layer < map.getLayerNb(); ++layer)
-    {
-      // Loop on each line
-      for (size_t y = 0; y < mapSize.y; ++y)
       {
-        // Loop on each tile
-        for (size_t x = 0; x < mapSize.x; ++x)
-        {
-          // Get the current tile
-          ITile const &tile = map.at(layer, x, y);
-          Color color = tile.getColor();
+	// Loop on each line
+	for (size_t y = 0; y < mapSize.y; ++y)
+	  {
+	    // Loop on each tile
+	    for (size_t x = 0; x < mapSize.x; ++x)
+	      {
+		// Get the current tile
+		ITile const &tile = map.at(layer, x, y);
+		Color        color = tile.getColor();
 
-          sf::RectangleShape rectangle;
+		sf::RectangleShape rectangle;
 
-          // Set the sprite or the color
-          if (tile.hasSprite())
-          {
-            rectangle.setTexture(&m_sprites[tile.getSpriteId()][tile.getSpritePos()]);
-          }
-          else
-          {
-            rectangle.setFillColor(sf::Color(color.r, color.g, color.b, color.a));
-          }
+		// Set the sprite or the color
+		if (tile.hasSprite())
+		  {
+		    rectangle.setTexture(
+		        &m_sprites[tile.getSpriteId()][tile.getSpritePos()]);
+		  }
+		else
+		  {
+		    rectangle.setFillColor(
+		        sf::Color(color.r, color.g, color.b, color.a));
+		  }
 
-          // Calculate and set the position and size
-          size_t posX = winSize.x / 2 - (mapSize.x / 2 - x) * tileSize;
-          size_t posY = winSize.y / 2 - (mapSize.y / 2 - y) * tileSize;
+		// Calculate and set the position and size
+		size_t posX = winSize.x / 2 - (mapSize.x / 2 - x) * tileSize;
+		size_t posY = winSize.y / 2 - (mapSize.y / 2 - y) * tileSize;
 
-          rectangle.setPosition(sf::Vector2f(posX, posY));
-          rectangle.setSize(sf::Vector2f(tileSize, tileSize));
+		rectangle.setPosition(sf::Vector2f(posX, posY));
+		rectangle.setSize(sf::Vector2f(tileSize, tileSize));
 
-          // Draw
-          m_win->draw(rectangle);
-        }
+		// Draw
+		m_win->draw(rectangle);
+	      }
+	  }
       }
-    }
   }
 
-  void LibSFML::updateGUI(IGUI & gui)
+  void LibSFML::updateGUI(IGUI &gui)
   {
     // Get the Window size
     sf::Vector2u const size = m_win->getSize();
@@ -336,48 +339,49 @@ namespace arcade
     // Loop on every components
     for (size_t i = 0; i < gui.size(); ++i)
       {
-        // Get the current component
+	// Get the current component
 	IComponent const &comp = gui.at(i);
 
-        // Calculate it's position and size
+	// Calculate it's position and size
 	size_t x = comp.getX() * size.x;
 	size_t y = comp.getY() * size.y;
 	size_t width = comp.getWidth() * size.x;
 	size_t height = comp.getHeight() * size.y;
 
-        // Get the component properties
-        size_t backgroundId = comp.getBackgroundId();
-        Color color = comp.getBackgroundColor();
-        std::string str = comp.getText();
+	// Get the component properties
+	size_t      backgroundId = comp.getBackgroundId();
+	Color       color = comp.getBackgroundColor();
+	std::string str = comp.getText();
 
-        // If there is a background (image or color), display it
-        if (comp.hasSprite() || color.a != 0)
-        {
-          sf::RectangleShape shape;
+	// If there is a background (image or color), display it
+	if (comp.hasSprite() || color.a != 0)
+	  {
+	    sf::RectangleShape shape;
 
-          // Set texture OR color
-          if (comp.hasSprite())
-            shape.setTexture(&m_sprites[backgroundId][0]);
-          else
-            shape.setFillColor(sf::Color(color.r, color.g, color.b, color.a));
+	    // Set texture OR color
+	    if (comp.hasSprite())
+	      shape.setTexture(&m_sprites[backgroundId][0]);
+	    else
+	      shape.setFillColor(
+	          sf::Color(color.r, color.g, color.b, color.a));
 
-          // Set position and size
-          shape.setPosition(x, y);
-          shape.setSize(sf::Vector2f(width, height));
+	    // Set position and size
+	    shape.setPosition(x, y);
+	    shape.setSize(sf::Vector2f(width, height));
 
-          // Draw
-          m_win->draw(shape);
-        }
+	    // Draw
+	    m_win->draw(shape);
+	  }
 
-        // Create and display text if there is one
-        /*if (str.length() > 0)
-        {
-          sf::Text text(str, m_font);
+	// Create and display text if there is one
+	/*if (str.length() > 0)
+	{
+	  sf::Text text(str, m_font);
 
-          text.setPosition(x, y);
+	  text.setPosition(x, y);
 
-          m_win->draw(text);
-        }*/
+	  m_win->draw(text);
+	}*/
       }
   }
 
@@ -404,16 +408,14 @@ namespace arcade
     return (MouseKey::M_NONE);
   }
 
-  MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel code)
+  MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel)
   {
-    // TODO : implement
-    (void)code;
     return (MouseKey::M_NONE);
   }
 
   MousePos LibSFML::getMousePos()
   {
-    MousePos	pos;
+    MousePos pos;
 
     m_mousePos = sf::Mouse::getPosition(*m_win.get());
     pos.x = static_cast<double>(m_mousePos.x);

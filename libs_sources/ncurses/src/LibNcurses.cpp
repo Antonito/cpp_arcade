@@ -7,8 +7,7 @@
 
 namespace arcade
 {
-  LibNcurses::LibNcurses(size_t width, size_t height) : m_win(nullptr), m_map(nullptr), m_gui(nullptr),
-							m_mapWidth(0), m_mapHeight(0)
+  LibNcurses::LibNcurses(size_t width, size_t height) : m_win(nullptr)
   {
     initscr();
     clear();
@@ -26,14 +25,14 @@ namespace arcade
       }
     if (has_colors())
       {
-        start_color();
-        init_pair(1, COLOR_BLACK, COLOR_RED);
-        init_pair(2, COLOR_BLACK, COLOR_GREEN);
-        init_pair(3, COLOR_BLACK, COLOR_YELLOW);
-        init_pair(4, COLOR_BLACK, COLOR_BLUE);
-        init_pair(5, COLOR_BLACK, COLOR_MAGENTA);
-        init_pair(6, COLOR_BLACK, COLOR_CYAN);
-        init_pair(7, COLOR_BLACK, COLOR_WHITE);
+	start_color();
+	init_pair(1, COLOR_BLACK, COLOR_RED);
+	init_pair(2, COLOR_BLACK, COLOR_GREEN);
+	init_pair(3, COLOR_BLACK, COLOR_YELLOW);
+	init_pair(4, COLOR_BLACK, COLOR_BLUE);
+	init_pair(5, COLOR_BLACK, COLOR_MAGENTA);
+	init_pair(6, COLOR_BLACK, COLOR_CYAN);
+	init_pair(7, COLOR_BLACK, COLOR_WHITE);
       }
   }
 
@@ -45,8 +44,8 @@ namespace arcade
 
   bool LibNcurses::pollEvent(Event &e)
   {
-    struct pollfd	fds;
-    int			fd = fileno(stdin);
+    struct pollfd fds;
+    int           fd = fileno(stdin);
 
     fds.fd = fd;
     fds.events = POLLIN;
@@ -86,31 +85,30 @@ namespace arcade
     return (false);
   }
 
-  void LibNcurses::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
+  void LibNcurses::loadSounds(
+      std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void LibNcurses::soundControl(Sound const &sound)
+  void LibNcurses::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
-  void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
 
     for (std::unique_ptr<ISprite> const &sp : s)
-    {
-      m_sprites.emplace_back();
-      for (size_t i = 0; i < sp->spritesCount(); ++i)
       {
-        m_sprites.back() += sp->getAscii(i);
+	m_sprites.emplace_back();
+	for (size_t i = 0; i < sp->spritesCount(); ++i)
+	  {
+	    m_sprites.back() += sp->getAscii(i);
+	  }
       }
-    }
   }
 
-  void LibNcurses::updateMap(IMap const & map)
+  void LibNcurses::updateMap(IMap const &map)
   {
     int w;
     int h;
@@ -124,46 +122,47 @@ namespace arcade
       {
 	for (size_t y = 0; y < map.getHeight(); ++y)
 	  {
-          for (size_t x = 0; x < map.getWidth(); ++x)
-          {
-            ITile const &tile = map.at(l, x, y);
-            size_t id = tile.getSpriteId();
-            size_t pos = tile.getSpritePos();
-            size_t color = getColor(tile.getColor());
+	    for (size_t x = 0; x < map.getWidth(); ++x)
+	      {
+		ITile const &tile = map.at(l, x, y);
+		size_t       id = tile.getSpriteId();
+		size_t       pos = tile.getSpritePos();
+		size_t       color = getColor(tile.getColor());
 
-            if (tile.hasSprite()) // TODO: Enable
-            {
-              if (color)
-                attron(COLOR_PAIR(color));
-              mvprintw(y + posY + 1, x + posX + 1, "%c", m_sprites[id][pos]);
-              if (color)
-                attroff(COLOR_PAIR(color));
-            }
-            else
-            {
-              if (color)
-                attron(COLOR_PAIR(color));
-              mvprintw(y + posY + 1, x + posX + 1, " ");
-              if (color)
-                attroff(COLOR_PAIR(color));
-            }
-          }
+		if (tile.hasSprite())
+		  {
+		    if (color)
+		      attron(COLOR_PAIR(color));
+		    mvprintw(y + posY + 1, x + posX + 1, "%c",
+		             m_sprites[id][pos]);
+		    if (color)
+		      attroff(COLOR_PAIR(color));
+		  }
+		else
+		  {
+		    if (color)
+		      attron(COLOR_PAIR(color));
+		    mvprintw(y + posY + 1, x + posX + 1, " ");
+		    if (color)
+		      attroff(COLOR_PAIR(color));
+		  }
+	      }
 	  }
       }
     char border = '*';
     for (size_t y = 0; y < map.getHeight() + 2; ++y)
-    {
-      mvprintw(y + posY, posX, "%c", border);
-      mvprintw(y + posY, posX + map.getWidth() + 2, "%c", border);
-    }
+      {
+	mvprintw(y + posY, posX, "%c", border);
+	mvprintw(y + posY, posX + map.getWidth() + 2, "%c", border);
+      }
     for (size_t x = 0; x < map.getWidth() + 2; ++x)
-    {
-      mvprintw(posY, x + posX, "%c", border);
-      mvprintw(posY + map.getHeight() + 2, x + posX, "%c", border);
-    }
+      {
+	mvprintw(posY, x + posX, "%c", border);
+	mvprintw(posY + map.getHeight() + 2, x + posX, "%c", border);
+      }
   }
 
-  void LibNcurses::updateGUI(IGUI & gui)
+  void LibNcurses::updateGUI(IGUI &gui)
   {
     int w;
     int h;
@@ -172,13 +171,13 @@ namespace arcade
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * w;
-	size_t y = comp.getY() * h;
-	size_t width = comp.getWidth() * w;
-	size_t height = comp.getWidth() * h;
-	size_t color = getColor(comp.getBackgroundColor());
+	size_t            x = comp.getX() * w;
+	size_t            y = comp.getY() * h;
+	size_t            width = comp.getWidth() * w;
+	size_t            height = comp.getWidth() * h;
+	size_t            color = getColor(comp.getBackgroundColor());
 
-        if (color)
+	if (color)
 	  {
 	    attron(COLOR_PAIR(color));
 	    for (size_t _y = 0; _y < height; ++_y)
@@ -190,7 +189,7 @@ namespace arcade
 	      }
 	    attroff(COLOR_PAIR(color));
 	  }
-        if (comp.getText().size())
+	if (comp.getText().size())
 	  {
 	    size_t c = getColor(comp.getTextColor());
 
@@ -230,7 +229,7 @@ namespace arcade
   MousePos LibNcurses::getMousePos()
   {
     MousePos pos;
-    // TODO
+
     pos.x = 0;
     pos.y = 0;
     return (pos);

@@ -2,7 +2,8 @@
 
 namespace arcade
 {
-  WindowError::WindowError(std::string const &msg) : AException("WindowError: ", msg)
+  WindowError::WindowError(std::string const &msg)
+      : AException("WindowError: ", msg)
   {
   }
 }

@@ -1,16 +1,6 @@
 #ifndef AGAME_HPP_
 #define AGAME_HPP_
 
-// TODO: REMOVE
-// TODO: REMOVE
-// TODO: REMOVE
-//#ifndef __linux__
-//# define __linux__
-//#endif
-// TODO: REMOVE
-// TODO: REMOVE
-// TODO: REMOVE
-
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -33,7 +23,7 @@ namespace arcade
     public:
       AGame();
       AGame(AGame const &other) = delete;
-      virtual ~AGame() {};
+      virtual ~AGame(){};
 
       AGame &operator=(AGame const &other) = delete;
 
@@ -46,10 +36,11 @@ namespace arcade
       // Network
       virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
       virtual std::vector<NetworkPacket> getNetworkToSend();
-      virtual bool hasNetwork() const;
+      virtual bool                       hasNetwork() const;
       // Sound
-      virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const = 0;
-      virtual std::vector<Sound>         getSoundsToPlay();
+      virtual std::vector<std::pair<std::string, SoundType>>
+                                 getSoundsToLoad() const = 0;
+      virtual std::vector<Sound> getSoundsToPlay();
 
       // Map
       virtual IMap const &getCurrentMap() const;
@@ -57,7 +48,7 @@ namespace arcade
       // GUI
       virtual IGUI &getGUI();
 
-      // Play
+// Play
 #if defined(__linux__)
       void Play();
 #endif
@@ -91,7 +82,7 @@ namespace arcade
 
       std::chrono::time_point<m_clock_t> m_startTick;
 
-      bool m_mouliMode;
+      bool           m_mouliMode;
       mutable size_t m_fakeTick;
     };
   }

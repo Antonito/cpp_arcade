@@ -9,17 +9,17 @@ namespace arcade
     {
     public:
       enum ClientAction
-	{
-	  SUCCESS,
-	  FAILURE,
-	  DISCONNECT
-	};
+      {
+	SUCCESS,
+	FAILURE,
+	DISCONNECT
+      };
 
       virtual ~IClient(){};
-      virtual bool	disconnect() = 0;
+      virtual bool                  disconnect() = 0;
       virtual IClient::ClientAction write() = 0;
       virtual IClient::ClientAction read() = 0;
-      virtual bool hasTimedOut() const = 0;
+      virtual bool                  hasTimedOut() const = 0;
     };
   }
 }

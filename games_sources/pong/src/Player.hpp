@@ -8,23 +8,24 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace pong
-{
-class Player : public AMovable
-{
+  namespace game
+  {
+    namespace pong
+    {
+      class Player : public AMovable
+      {
 
-public:
-  Player();
-  Player(Player const &other) = default;
-  virtual ~Player();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move();
-private:
-  mutable int m_mult;
-};
-}
-}
+      public:
+	Player();
+	Player(Player const &other) = default;
+	virtual ~Player();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	virtual void move(Map &);
+
+      private:
+	mutable int m_mult;
+      };
+    }
+  }
 }
 #endif // !PLAYER_HPP_

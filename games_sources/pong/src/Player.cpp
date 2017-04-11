@@ -17,39 +17,39 @@ namespace arcade
 
       void Player::display(Map &map, double ratio) const
       {
-        ratio -= 1.0;
-        
-        if (ratio >= 0.0)
-        {
-          m_mult = 0;
-        }
+	ratio -= 1.0;
 
-        for (size_t i = 0; i < m_pos.size(); ++i)
-        {
-          Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
+	if (ratio >= 0.0)
+	  {
+	    m_mult = 0;
+	  }
 
-          tile.setColor(Color::White);
-	  tile.setShiftY(ratio * m_mult);
-        }
+	for (size_t i = 0; i < m_pos.size(); ++i)
+	  {
+	    Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
+
+	    tile.setColor(Color::White);
+	    tile.setShiftY(ratio * m_mult);
+	  }
       }
 
-      void Player::move()
+      void Player::move(Map &)
       {
-        m_mult = 0;
+	m_mult = 0;
 
-        if (m_dir == Direction::UP)
-        {
-          m_mult = -1;
-        }
-        else if (m_dir == Direction::DOWN)
-        {
-          m_mult = 1;
-        }
+	if (m_dir == Direction::UP)
+	  {
+	    m_mult = -1;
+	  }
+	else if (m_dir == Direction::DOWN)
+	  {
+	    m_mult = 1;
+	  }
 
-        for (Position &p : m_pos)
-        {
-          p.y += m_mult;
-        }
+	for (Position &p : m_pos)
+	  {
+	    p.y += m_mult;
+	  }
       }
     }
   }

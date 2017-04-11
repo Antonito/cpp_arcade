@@ -10,22 +10,22 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace spaceinvader
-{
-class Player : public AMovable, public IShooter
-{
+  namespace game
+  {
+    namespace spaceinvader
+    {
+      class Player : public AMovable, public IShooter
+      {
 
-public:
-  Player();
-  Player(Player const &other) = default;
-  virtual ~Player();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move(Map &map);
-  virtual std::unique_ptr<AEntity> shoot() const;
-};
-}
-}
+      public:
+	Player();
+	Player(Player const &other) = default;
+	virtual ~Player();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	virtual void move(Map &map);
+	virtual std::unique_ptr<AEntity> shoot() const;
+      };
+    }
+  }
 }
 #endif // !PLAYER_HPP_

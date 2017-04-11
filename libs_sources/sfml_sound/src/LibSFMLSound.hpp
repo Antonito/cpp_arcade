@@ -22,7 +22,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Sprites
@@ -42,7 +43,7 @@ namespace arcade
 
   private:
     std::vector<std::unique_ptr<sf::Music>> m_music;
-    std::vector<sf::SoundBuffer> m_soundBuffer;
+    std::vector<sf::SoundBuffer>            m_soundBuffer;
     std::vector<std::unique_ptr<sf::Sound>> m_sound;
     std::vector<std::pair<SoundType, size_t>> m_soundIndex;
   };

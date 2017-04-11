@@ -14,17 +14,17 @@ namespace arcade
       {
 	struct
 	{
-	  int32_t	x;
-	  int32_t	y;
-	}		pos;
+	  int32_t x;
+	  int32_t y;
+	} pos;
 	struct
 	{
-	  float		x;
-	  float		y;
-	}		ball;
-	uint8_t	id;
+	  float x;
+	  float y;
+	} ball;
+	uint8_t  id;
 	uint32_t update;
-	uint8_t updateBall;
+	uint8_t  updateBall;
       };
     }
   }

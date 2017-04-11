@@ -5,7 +5,8 @@ namespace arcade
 {
   void LibX::setKeyMapping() const
   {
-    std::function<void(int, KeyboardKey)> set = [this](int keysym, KeyboardKey key) {
+    std::function<void(int, KeyboardKey)> set = [this](int keysym,
+                                                       KeyboardKey key) {
       m_kb_keys[XKeysymToKeycode(m_disp, keysym)] = key;
     };
 
@@ -144,16 +145,10 @@ namespace arcade
     set(XK_at, KB_ATSYMBOL);
   }
   // Mapping caca Mouse Button with MouseKey enum
-  std::map<int, MouseKey> LibX::m_mouse_keys =
-    {
-      { -1, M_LEFT_CLICK },
-      { -1, M_MIDDLE_CLICK },
-      { -1, M_RIGHT_CLICK },
-      { -1, M_SCROLL_UP },
-      { -1, M_SCROLL_DOWN },
-      { -1, M_BT0 },
-      { -1, M_BT1 }
-    };
+  std::map<int, MouseKey> LibX::m_mouse_keys = {
+      {-1, M_LEFT_CLICK}, {-1, M_MIDDLE_CLICK}, {-1, M_RIGHT_CLICK},
+      {-1, M_SCROLL_UP},  {-1, M_SCROLL_DOWN},  {-1, M_BT0},
+      {-1, M_BT1}};
 
   // Mapping caca keyboard map
   std::map<int, KeyboardKey> LibX::m_kb_keys = {};

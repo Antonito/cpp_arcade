@@ -19,7 +19,7 @@ namespace arcade
     /// \fn virtual ~IGUI()
     /// \brief Virtual destructor of the interface
     ///
-    virtual ~IGUI() {};
+    virtual ~IGUI(){};
 
     // Number of IComponent
     ///

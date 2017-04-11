@@ -8,35 +8,35 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace pong
-{
-class Ball : public AEntity
-{
-public:
-  Ball();
-  Ball(Ball const &other) = default;
-  virtual ~Ball();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  void updatePosition(Player const &p, size_t mapHeight, double time);
-  int getBallDir() const;
-  void setBallPos(Position const &p);
-  void reset(Position const &p);
+  namespace game
+  {
+    namespace pong
+    {
+      class Ball : public AEntity
+      {
+      public:
+	Ball();
+	Ball(Ball const &other) = default;
+	virtual ~Ball();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	void updatePosition(Player const &p, size_t mapHeight, double time);
+	int  getBallDir() const;
+	void setBallPos(Position const &p);
+	void reset(Position const &p);
 
-  double getX() const;
-  void setX(double x);
-  double getY() const;
-  void setY(double y);
+	double getX() const;
+	void setX(double x);
+	double getY() const;
+	void setY(double y);
 
-private:
-  double m_x;
-  double m_y;
-  double m_speed;
-  double m_dirX;
-  double m_dirY;
-};
-}
-}
+      private:
+	double m_x;
+	double m_y;
+	double m_speed;
+	double m_dirX;
+	double m_dirY;
+      };
+    }
+  }
 }
 #endif // !BALL_HPP_

@@ -32,8 +32,8 @@ namespace arcade
 
     private:
       std::vector<Tile> m_tiles;
-      size_t                                           m_width;
-      size_t                                           m_height;
+      size_t            m_width;
+      size_t            m_height;
     };
   }
 }

@@ -27,7 +27,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Map
@@ -44,19 +45,20 @@ namespace arcade
 
     // Clear
     virtual void clear();
+
   private:
     static KeyboardKey getKeyboardKey(SDL_Keycode code);
     static MouseKey getMouseKey(Uint8 code);
     static MouseKey getMouseWheel(SDL_MouseWheelEvent const &code);
 
     static std::map<SDL_Keycode, KeyboardKey> m_kb_keys;
-    static std::map<Uint8, MouseKey> m_mouse_keys;
+    static std::map<Uint8, MouseKey>          m_mouse_keys;
 
     static void fillRect(SDL_Surface *surface, SDL_Rect *rect, Color color);
 
     static constexpr size_t m_maxTileSize = 30;
 
-    SDL_Window *m_win;
+    SDL_Window * m_win;
     SDL_Surface *m_winSurface;
 
     std::vector<std::vector<SDL_Surface *>> m_sprites;

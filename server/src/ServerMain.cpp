@@ -2,20 +2,18 @@
 #include <iostream>
 #include "GameServer.hpp"
 
-int	main(int ac, char **av)
+int main(int, char **)
 {
-  arcade::GameServer	srv(0, 64);
-  bool			leave = false;
+  arcade::GameServer srv(0, 64);
+  bool               leave = false;
 
-  static_cast<void>(ac);
-  static_cast<void>(av);
   std::cout << "Arcade Game Server" << std::endl;
   srv.run();
 
   // Server's shell
   do
     {
-      std::string	input;
+      std::string input;
 
       std::cout << "> ";
       std::getline(std::cin, input);
@@ -27,7 +25,8 @@ int	main(int ac, char **av)
 	}
       else if (input == "list clients")
 	{
-	  std::vector<std::unique_ptr<arcade::GameClient>> const &clients = srv.getClients();
+	  std::vector<std::unique_ptr<arcade::GameClient>> const &clients =
+	      srv.getClients();
 	  std::cout << clients.size() << " clients" << std::endl;
 	  for (std::unique_ptr<arcade::GameClient> const &client : clients)
 	    {
@@ -39,7 +38,8 @@ int	main(int ac, char **av)
 	{
 	  std::cout << "Available commands: stop | list clients" << std::endl;
 	}
-    } while (leave != true);
+    }
+  while (leave != true);
 
   srv.wait();
   return (EXIT_SUCCESS);

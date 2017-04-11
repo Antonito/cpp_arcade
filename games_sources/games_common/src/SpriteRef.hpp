@@ -17,7 +17,7 @@ namespace arcade
 
       SpriteRef &operator=(SpriteRef const &other);
 
-      int getId() const;
+      int    getId() const;
       size_t getPos() const;
 
       void next();

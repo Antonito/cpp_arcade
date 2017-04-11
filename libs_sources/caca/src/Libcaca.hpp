@@ -22,7 +22,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Sprite
@@ -39,8 +40,8 @@ namespace arcade
 
     // Clear
     virtual void clear();
-  private:
 
+  private:
     uint16_t convert32bitsColorTo16Bits(Color color) const;
 
     static KeyboardKey getKeyboardKey(int code);
@@ -48,17 +49,14 @@ namespace arcade
     MousePos getMousePos();
 
     static std::map<int, KeyboardKey> m_kb_keys;
-    static std::map<int, MouseKey> m_mouse_keys;
+    static std::map<int, MouseKey>    m_mouse_keys;
 
     static constexpr size_t m_tileSize = 1;
-    size_t m_width;
-    size_t m_height;
-    caca_display_t *m_win;
-    caca_canvas_t *m_canvas;
-    caca_canvas_t *m_map;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
+    size_t                  m_width;
+    size_t                  m_height;
+    caca_display_t *        m_win;
+    caca_canvas_t *         m_canvas;
+    caca_canvas_t *         m_map;
   };
 }
 

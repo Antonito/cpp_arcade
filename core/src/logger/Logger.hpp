@@ -10,62 +10,64 @@
 
 namespace Nope
 {
-	namespace Log
-	{
-		enum class LogLevel : int
-		{
-			LOG_TRACE,
+  namespace Log
+  {
+    enum class LogLevel : int
+    {
+      LOG_TRACE,
 #ifdef DEBUG
-			LOG_DEBUG,
+      LOG_DEBUG,
 #endif
-			LOG_INFO,
-			LOG_WARNING,
-			LOG_ERROR
-		};
+      LOG_INFO,
+      LOG_WARNING,
+      LOG_ERROR
+    };
 
-		class Logger
-		{
-		public:
-			Logger(LogLevel level = LogLevel::LOG_INFO);
-			~Logger() = default;
+    class Logger
+    {
+    public:
+      Logger(LogLevel level = LogLevel::LOG_INFO);
+      ~Logger() = default;
 
-			void addSink(LogSink const &s);
+      void addSink(LogSink const &s);
 
 #ifdef DEBUG
-			LogMessage operator()(std::string &&file, size_t line);
+      LogMessage operator()(std::string &&file, size_t line);
 #endif
 
-			template <typename T>
-			LogMessage operator<<(T const &e)
-			{
-				LogMessage msg(this);
+      template <typename T>
+      LogMessage operator<<(T const &e)
+      {
+	LogMessage msg(this);
 
-				msg << e;
-				return msg;
-			}
+	msg << e;
+	return msg;
+      }
 
-			void flush(LogMessage const &) const;
+      void flush(LogMessage const &) const;
 
-			static void start();
+      static void start();
 
-			static LogLevel logLevel;
-			static const std::chrono::time_point<std::chrono::high_resolution_clock, std::chrono::milliseconds> startTime;
+      static LogLevel logLevel;
+      static const std::chrono::time_point<std::chrono::high_resolution_clock,
+                                           std::chrono::milliseconds>
+          startTime;
 
-		private:
-			std::vector<LogSink> m_sinks;
-			LogLevel             m_level;
-		};
+    private:
+      std::vector<LogSink> m_sinks;
+      LogLevel             m_level;
+    };
 
-		std::ostream &operator<<(std::ostream &os, LogLevel level);
+    std::ostream &operator<<(std::ostream &os, LogLevel level);
 
-		extern Logger Trace;
+    extern Logger Trace;
 #ifdef DEBUG
-		extern Logger Debug;
+    extern Logger Debug;
 #endif
-		extern Logger Info;
-		extern Logger Warning;
-		extern Logger Error;
-	}
+    extern Logger Info;
+    extern Logger Warning;
+    extern Logger Error;
+  }
 }
 
 #ifdef DEBUG

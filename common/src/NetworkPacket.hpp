@@ -7,22 +7,22 @@
 namespace arcade
 {
   enum NetworkGames
-    {
-      NO_GAME		= 0x0,
-      SNAKE,
-      CENTIPEDE,
-      SOLAR_FOX,
-      PACMAN,
-      PONG
-    };
+  {
+    NO_GAME = 0x0,
+    SNAKE,
+    CENTIPEDE,
+    SOLAR_FOX,
+    PACMAN,
+    PONG
+  };
 
   enum NetworkAction
-    {
-      HELLO_EVENT	= 0x0,
-      PLAYER_EVENT,
-      GAME_EVENT,
-      ENTITY_EVENT
-    };
+  {
+    HELLO_EVENT = 0x0,
+    PLAYER_EVENT,
+    GAME_EVENT,
+    ENTITY_EVENT
+  };
 
   ///
   /// \struct NetworkPacketHeader
@@ -31,9 +31,9 @@ namespace arcade
   struct NetworkPacketHeader
   {
     static constexpr uint32_t packetMagicNumber = 0x41C4D3;
-    uint32_t		magicNumber;
-    uint32_t		checksum;
-    NetworkGames	game;
+    uint32_t                  magicNumber;
+    uint32_t                  checksum;
+    NetworkGames              game;
   };
 
   ///
@@ -42,9 +42,9 @@ namespace arcade
   ///
   struct NetworkPacket
   {
-    NetworkPacketHeader	header;
-    uint32_t		len;
-    uint8_t		*data;
+    NetworkPacketHeader header;
+    uint32_t            len;
+    uint8_t *           data;
   };
 }
 

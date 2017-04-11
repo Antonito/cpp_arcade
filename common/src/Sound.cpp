@@ -5,5 +5,6 @@
 #include "Sound.hpp"
 
 arcade::Sound::Sound(unsigned int id, SoundAction mode, float volume)
-        : id(id), mode(mode), volume(volume)
-{}
+    : id(id), mode(mode), volume(volume)
+{
+}

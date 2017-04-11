@@ -22,7 +22,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Sprites
@@ -47,13 +48,13 @@ namespace arcade
     MousePos getMousePos();
 
     static std::map<sf::Keyboard::Key, KeyboardKey> m_kb_keys;
-    static std::map<sf::Mouse::Button, MouseKey> m_mouse_keys;
+    static std::map<sf::Mouse::Button, MouseKey>    m_mouse_keys;
 
     static constexpr size_t m_maxTileSize = 24;
 
-    std::unique_ptr<sf::RenderWindow> m_win;
+    std::unique_ptr<sf::RenderWindow>       m_win;
     std::vector<std::unique_ptr<sf::Music>> m_music;
-    std::vector<sf::SoundBuffer> m_soundBuffer;
+    std::vector<sf::SoundBuffer>            m_soundBuffer;
     std::vector<std::unique_ptr<sf::Sound>> m_sound;
     std::vector<std::pair<SoundType, size_t>> m_soundIndex;
     sf::Vector2i m_mousePos;
@@ -61,9 +62,6 @@ namespace arcade
     std::vector<std::vector<sf::Texture>> m_sprites;
 
     sf::Font m_font;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 

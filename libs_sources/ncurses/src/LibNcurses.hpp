@@ -54,11 +54,6 @@ namespace arcade
     size_t m_height;
 
     WINDOW	*m_win;
-    WINDOW	*m_map;
-    WINDOW	*m_gui;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 

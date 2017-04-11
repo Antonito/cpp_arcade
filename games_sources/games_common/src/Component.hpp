@@ -14,7 +14,8 @@ namespace arcade
     public:
       Component();
       Component(double x, double y, double width, double height,
-        Color color = Color::Transparent, std::string const &text = "");
+                Color              color = Color::Transparent,
+                std::string const &text = "");
       Component(Component const &other) = default;
       Component(Component &&other) = default;
       virtual ~Component();
@@ -34,11 +35,11 @@ namespace arcade
       void setWidth(double width);
       void setHeight(double height);
 
-      virtual std::size_t getBackgroundId() const;
-      virtual Color getBackgroundColor() const;
+      virtual std::size_t        getBackgroundId() const;
+      virtual Color              getBackgroundColor() const;
       virtual std::string const &getText() const;
-      virtual bool hasSprite() const;
-      virtual Color getTextColor() const;
+      virtual bool               hasSprite() const;
+      virtual Color              getTextColor() const;
 
       void setBackgroundId(std::size_t id);
       void setBackgroundColor(Color color);
@@ -51,17 +52,17 @@ namespace arcade
     private:
       typedef struct
       {
-        double x;
-        double y;
-      }          m_vec;
+	double x;
+	double y;
+      } m_vec;
 
       m_vec m_pos;
       m_vec m_size;
 
       std::size_t m_sprite;
-      Color m_color;
+      Color       m_color;
       std::string m_text;
-      bool m_clicked;
+      bool        m_clicked;
     };
   }
 }

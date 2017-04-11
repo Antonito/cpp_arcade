@@ -8,22 +8,23 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace snake
-{
-class Player : public AMovable
-{
+  namespace game
+  {
+    namespace snake
+    {
+      class Player : public AMovable
+      {
 
-public:
-  Player();
-  Player(Player const &other) = default;
-  virtual ~Player();
-  virtual void display(Map &map, double ratio = 0.0) const;
-private:
-  Position m_endPos;
-};
-}
-}
+      public:
+	Player();
+	Player(Player const &other) = default;
+	virtual ~Player();
+	virtual void display(Map &map, double ratio = 0.0) const;
+
+      private:
+	Position m_endPos;
+      };
+    }
+  }
 }
 #endif // !PLAYER_HPP_

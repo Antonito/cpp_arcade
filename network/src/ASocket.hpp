@@ -4,7 +4,7 @@
 #include <string>
 #include "ISocket.hpp"
 
-// TODO: Add IPv4 / IPV6 selection, SSL / TLS, catch exceptions
+// TODO: Add IPv4 / IPV6 selection, SSL / TLS
 namespace arcade
 {
   namespace Network
@@ -57,6 +57,7 @@ namespace arcade
     private:
       ASocket(SocketType type);
 
+// Init network DLL
 #if defined(_WIN32)
       static uint32_t m_nbSockets;
       static bool     m_WSAInited;

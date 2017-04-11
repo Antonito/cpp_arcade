@@ -5,14 +5,14 @@
 
 namespace arcade
 {
-	namespace Network
-	{
-		class SockError : public AException
-		{
-		public:
-			SockError(std::string const &msg = "");
-		};
-	}
+  namespace Network
+  {
+    class SockError : public AException
+    {
+    public:
+      SockError(std::string const &msg = "");
+    };
+  }
 }
 
 #endif // !SOCKERROR_HPP_

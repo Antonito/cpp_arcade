@@ -7,13 +7,13 @@
 
 namespace arcade
 {
-  GameServer::GameServer(int16_t port, uint32_t maxClients) :
-    m_fact(),
-    m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
-    m_running(false), m_mutex()
+  GameServer::GameServer(int16_t port, uint32_t maxClients)
+      : m_fact(),
+        m_sock(port, maxClients, Network::ASocket::SocketType::BLOCKING),
+        m_running(false), m_mutex()
   {
     m_sock.openConnection();
-    std::cout << "Running server on port " <<  m_sock.getPort() << std::endl;
+    std::cout << "Running server on port " << m_sock.getPort() << std::endl;
 
     // Check the max number of file descriptors that select() can handle
     if (maxClients > FD_SETSIZE)
@@ -28,13 +28,82 @@ namespace arcade
     std::cout << "Stopping server..." << std::endl;
   }
 
-  void	GameServer::handleIO(int max, fd_set const &readfds, fd_set const &writefds,
-			     fd_set const &exceptfds)
+  void GameServer::handleGames(std::unique_ptr<GameClient> const &client) const
   {
-    int	i = 0;
+    // Send data to every players
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue =
+        client->getRecQueue();
+
+    // Handle games here
+    switch (client->getGame())
+      {
+      case arcade::NetworkGames::PONG:
+	// Pong game
+	if (client->getState() == GameClient::State::AUTHENTICATING)
+	  {
+	    static uint32_t id = 0;
+
+	    // Send player ID
+	    std::unique_ptr<arcade::NetworkPacket> pck =
+	        m_fact.create<0, arcade::game::pong::PongPacket>(
+	            client->getGame(),
+	            [&](Network::NetworkPacketData<
+	                0, arcade::game::pong::PongPacket> &packet) {
+	              packet.action = static_cast<NetworkAction>(htonl(
+	                  static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
+	              std::memset(&packet.entity.data, 0,
+	                          sizeof(arcade::game::pong::PongPacket));
+	              packet.entity.data.id = id;
+	            });
+
+	    // Convert packet to uint8_t *
+	    uint32_t pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) +
+	                      sizeof(uint32_t);
+	    uint8_t *tmp = reinterpret_cast<uint8_t *>(pck.get());
+	    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen],
+	                                   std::default_delete<uint8_t[]>());
+
+	    std::memset(shPck.get(), 0, pckLen);
+	    std::memcpy(shPck.get(), tmp,
+	                sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) +
+	                    sizeof(uint32_t),
+	                pck->data, ntohl(pck->len));
+
+	    // Send data
+	    client->sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(
+	        sizeof(NetworkPacketHeader) + sizeof(uint32_t) +
+	            ntohl(pck->len),
+	        shPck));
+	    pck.release();
+
+	    // Update ID
+	    ++id;
+	    if (id > 1)
+	      id = 0;
+	    client->setState(GameClient::State::WAITING);
+	    break;
+	  }
+
+      default:
+	for (std::unique_ptr<GameClient> const &_client : m_clients)
+	  {
+	    // Send packets to players on the same game
+	    if (client != _client && _client->getGame() == client->getGame())
+	      _client->sendData(queue.back());
+	  }
+	break;
+      }
+    queue.pop();
+  }
+
+  void GameServer::handleIO(int max, fd_set const &readfds,
+                            fd_set const &writefds, fd_set const &exceptfds)
+  {
+    int i = 0;
     if (FD_ISSET(m_sock.getSocket(), &readfds))
       {
-	// New Connection
+// New Connection
 #if defined(DEBUG)
 	std::cout << "New connection" << std::endl;
 #endif
@@ -43,7 +112,7 @@ namespace arcade
       }
     for (std::unique_ptr<GameClient> const &client : m_clients)
       {
-	sock_t	cur;
+	sock_t cur;
 
 	if (i >= max)
 	  break;
@@ -68,54 +137,7 @@ namespace arcade
 		  }
 		else
 		  {
-		    // Send data to every players
-		    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &queue = client->getRecQueue();
-		    switch (client->getGame())
-		      {
-		      case arcade::NetworkGames::PONG:
-			// Pong game
-			if (client->getState() == GameClient::State::AUTHENTICATING)
-			  {
-			    static uint32_t	id = 0;
-
-			    // Send player ID
-			    std::unique_ptr<arcade::NetworkPacket> pck =
-			      m_fact.create<0, arcade::game::pong::PongPacket>(client->getGame(),
-									       [&](Network::NetworkPacketData<0, arcade::game::pong::PongPacket> &packet)
-									       {
-										 packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::ENTITY_EVENT)));
-										 std::memset(&packet.entity.data, 0, sizeof(arcade::game::pong::PongPacket));
-										 packet.entity.data.id = id;
-									       });
-
-			    uint32_t pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
-			    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.get());
-			    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
-
-			    std::memset(shPck.get(), 0, pckLen);
-			    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-			    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
-					pck->data, ntohl(pck->len));
-			    client->sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(sizeof(NetworkPacketHeader) + sizeof(uint32_t) + ntohl(pck->len), shPck));
-			    pck.release();
-			    // Update ID
-			    ++id;
-			    if (id > 1)
-			      id = 0;
-			    client->setState(GameClient::State::WAITING);
-			    break;
-			  }
-
-		      default:
-			for (std::unique_ptr<GameClient> const &_client : m_clients)
-			  {
-			    // Send packets to players on the same game
-			    if (client != _client && _client->getGame() == client->getGame())
-			      _client->sendData(queue.back());
-			  }
-			break;
-		      }
-		    queue.pop();
+		    handleGames(client);
 		  }
 	      }
 	    ++i;
@@ -151,20 +173,21 @@ namespace arcade
     m_thread.join();
   }
 
-  void	GameServer::_server()
+  void GameServer::_server()
   {
 #if defined(DEBUG)
     std::cout << "Started server loop" << std::endl;
 #endif
     while (m_running)
       {
-	fd_set		readfds, writefds, exceptfds;
-	sock_t		maxSock;
-	int	        ret;
-	struct timeval	tv;
+	fd_set         readfds, writefds, exceptfds;
+	sock_t         maxSock;
+	int            ret;
+	struct timeval tv;
 
 	do
 	  {
+	    // Clean file descriptors set
 	    FD_ZERO(&readfds);
 	    FD_ZERO(&writefds);
 
@@ -188,6 +211,8 @@ namespace arcade
 		FD_SET(cur, &exceptfds);
 		if (client->canWrite() && client->hasDataToSend())
 		  FD_SET(cur, &writefds);
+
+		// Get max socket
 		if (cur > maxSock)
 		  maxSock = cur;
 	      }
@@ -197,7 +222,8 @@ namespace arcade
 	    tv.tv_sec = 15;
 
 	    ret = select(maxSock + 1, &readfds, &writefds, &exceptfds, &tv);
-	  } while (ret == -1 && errno == EINTR);
+	  }
+	while (ret == -1 && errno == EINTR);
 	if (ret == -1)
 	  {
 	    // Error
@@ -205,17 +231,18 @@ namespace arcade
 	  }
 	else if (ret > 0)
 	  {
-	    // Handle I/O
 #if defined(DEBUG)
 	    std::cout << "Handling I/O operation" << std::endl;
 #endif
+	    // Handle I/O
 	    handleIO(ret, readfds, writefds, exceptfds);
 	  }
 	else
 	  {
-	    // Timeout
 #if defined(DEBUG)
-	    std::cout << "Timed out [Connected: " << m_clients.size()<< "]" << std::endl;
+	    // Timeout
+	    std::cout << "Timed out [Connected: " << m_clients.size() << "]"
+	              << std::endl;
 #endif
 	  }
       }
@@ -227,11 +254,12 @@ namespace arcade
 
   bool GameServer::addClient()
   {
-    sockaddr_in_t	in = {};
-    socklen_t		len = sizeof(in);
-    int			sock;
+    sockaddr_in_t in = {};
+    socklen_t     len = sizeof(in);
+    int           sock;
 
-    sock = accept(m_sock.getSocket(), reinterpret_cast<sockaddr_t *>(&in), &len);
+    sock =
+        accept(m_sock.getSocket(), reinterpret_cast<sockaddr_t *>(&in), &len);
     if (sock != -1)
       {
 	m_clients.push_back(std::make_unique<GameClient>(sock, in));
@@ -240,42 +268,64 @@ namespace arcade
     return (false);
   }
 
-  void		GameServer::authenticateClient(GameClient &client)
+  void GameServer::authenticateClient(GameClient &client)
   {
-    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	queue = client.getRecQueue();
-    NetworkPacket *pck = reinterpret_cast<NetworkPacket *>(queue.back().second.get());
-    Network::NetworkPacketData<0, bool> *data = reinterpret_cast<Network::NetworkPacketData<0, bool> *>(&pck->data);
+    std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> queue =
+        client.getRecQueue();
+    NetworkPacket *pck =
+        reinterpret_cast<NetworkPacket *>(queue.back().second.get());
+    Network::NetworkPacketData<0, bool> *data =
+        reinterpret_cast<Network::NetworkPacketData<0, bool> *>(&pck->data);
 
+    // Do we have data ?
     if (data)
       {
 #if defined(DEBUG)
 	std::cout << "Authenticating client" << std::endl;
 #endif
-	if (ntohl(pck->header.magicNumber) == NetworkPacketHeader::packetMagicNumber &&
-	    static_cast<arcade::NetworkAction>(ntohl(static_cast<uint32_t>(data->action))) == arcade::NetworkAction::HELLO_EVENT)
+	// Check packet validity
+	if (ntohl(pck->header.magicNumber) ==
+	        NetworkPacketHeader::packetMagicNumber &&
+	    static_cast<arcade::NetworkAction>(ntohl(static_cast<uint32_t>(
+	        data->action))) == arcade::NetworkAction::HELLO_EVENT)
 	  {
-	    uint32_t	pckLen = 0;
-	    client.setGame(static_cast<NetworkGames>(ntohs(static_cast<uint16_t>(pck->header.game))));
+	    uint32_t pckLen = 0;
+	    // We now know the client's game
+	    client.setGame(static_cast<NetworkGames>(
+	        ntohs(static_cast<uint16_t>(pck->header.game))));
+
+	    // Craft a response packet
 	    std::unique_ptr<arcade::NetworkPacket> pck =
-	      m_fact.create<0, uint8_t>(client.getGame(), [&](Network::NetworkPacketData<0, uint8_t> &packet){
-		  packet.action = static_cast<NetworkAction>(htonl(static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
-		  packet.auth = true;
-		});
+	        m_fact.create<0, uint8_t>(
+	            client.getGame(),
+	            [&](Network::NetworkPacketData<0, uint8_t> &packet) {
+	              packet.action = static_cast<NetworkAction>(htonl(
+	                  static_cast<uint32_t>(NetworkAction::HELLO_EVENT)));
+	              packet.auth = true;
+	            });
 
-	    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) + sizeof(uint32_t);
-	    uint8_t	*tmp = reinterpret_cast<uint8_t *>(pck.get());
-	    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen], std::default_delete<uint8_t[]>());
-
+	    // Transform the packet to uint8_t *
+	    pckLen = ntohl(pck->len) + sizeof(NetworkPacketHeader) +
+	             sizeof(uint32_t);
+	    uint8_t *tmp = reinterpret_cast<uint8_t *>(pck.get());
+	    std::shared_ptr<uint8_t> shPck(new uint8_t[pckLen],
+	                                   std::default_delete<uint8_t[]>());
 	    std::memset(shPck.get(), 0, pckLen);
-	    std::memcpy(shPck.get(), tmp, sizeof(NetworkPacketHeader) + sizeof(uint32_t));
-	    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) + sizeof(uint32_t),
-			pck->data, ntohl(pck->len));
+	    std::memcpy(shPck.get(), tmp,
+	                sizeof(NetworkPacketHeader) + sizeof(uint32_t));
+	    std::memcpy(shPck.get() + sizeof(NetworkPacketHeader) +
+	                    sizeof(uint32_t),
+	                pck->data, ntohl(pck->len));
 	    pck.release();
-	    client.sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>>(pckLen, shPck));
+
+	    // Send data to the client
+	    client.sendData(
+	        std::pair<uint32_t, std::shared_ptr<uint8_t>>(pckLen, shPck));
 	    queue.pop();
 #if defined(DEBUG)
 	    std::cout << "Authentication successful" << std::endl;
 #endif
+	    // Now the client is authenticated
 	    client.authenticate();
 	  }
       }
@@ -285,21 +335,22 @@ namespace arcade
   {
     GameClient &gclient = static_cast<GameClient &>(client);
 
+    // Disconnect a client, then remove it from the server
     gclient.disconnect();
     m_clients.erase(std::remove_if(m_clients.begin(), m_clients.end(),
-				   [&](std::unique_ptr<GameClient> const &e)
-				   {
-				     return (*e == gclient);
-				   }));
+                                   [&](std::unique_ptr<GameClient> const &e) {
+                                     return (*e == gclient);
+                                   }));
     return (true);
   }
 
-  std::vector<std::unique_ptr<GameClient>> const &GameServer::getClients() const
+  std::vector<std::unique_ptr<GameClient>> const &
+      GameServer::getClients() const
   {
     return (m_clients);
   }
 
-  bool  GameServer::isRunning() const
+  bool GameServer::isRunning() const
   {
     return (m_running);
   }

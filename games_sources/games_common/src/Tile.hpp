@@ -14,7 +14,7 @@ namespace arcade
     class Tile : public ITile
     {
     public:
-      Tile(TileType type = TileType::EMPTY, Color color = { 0xFFFFFFFF });
+      Tile(TileType type = TileType::EMPTY, Color color = {0xFFFFFFFF});
       Tile(Tile const &other);
       ~Tile();
 
@@ -31,28 +31,28 @@ namespace arcade
 
       virtual size_t getSpriteId() const;
       virtual size_t getSpritePos() const;
-      virtual void nextSprite();
-      virtual void prevSprite();
+      virtual void   nextSprite();
+      virtual void   prevSprite();
       virtual void setSpritePos(size_t pos);
       virtual void setSprite(size_t id);
       void removeSprite();
 
       virtual double getShiftX() const;
       virtual double getShiftY() const;
-      virtual bool hasSprite() const;
+      virtual bool   hasSprite() const;
 
       void setShiftX(double shift);
       void setShiftY(double shift);
       void setShift(double x, double y);
 
     private:
-      TileType m_type;
+      TileType          m_type;
       TileTypeEvolution m_typeEv;
-      Color m_color;
-      SpriteRef m_sprite;
-      double m_shiftX;
-      double m_shiftY;
-      bool m_hasSprite;
+      Color             m_color;
+      SpriteRef         m_sprite;
+      double            m_shiftX;
+      double            m_shiftY;
+      bool              m_hasSprite;
     };
   }
 }

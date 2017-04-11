@@ -22,7 +22,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Sprite
@@ -39,12 +40,13 @@ namespace arcade
 
     // Clear
     virtual void clear();
+
   private:
     void drawPixel(size_t x, size_t y, Color color);
     void putPixel(size_t x, size_t y, Color color, XImage *img);
     static constexpr long eventMask =
-      KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-      PointerMotionMask | ResizeRedirectMask | ExposureMask;
+        KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
+        PointerMotionMask | ResizeRedirectMask | ExposureMask;
 
     static KeyboardKey getKeyboardKey(int code);
     static MouseKey getMouseKey(int code);
@@ -55,28 +57,28 @@ namespace arcade
     static std::map<int, MouseKey> m_mouse_keys;
 
     static constexpr size_t m_tileSize = 24;
-    size_t m_width;
-    size_t m_height;
+    size_t                  m_width;
+    size_t                  m_height;
 
-    Display	*m_disp;
-    Window	m_win;
-    Window	m_root;
-    GC		m_gc;
-    int		m_screen;
-    uint64_t	m_whitePixel;
-    uint64_t	m_blackPixel;
-    Atom	m_del;
-    int		m_fd;
-    Visual	*m_vis;
+    Display *m_disp;
+    Window   m_win;
+    Window   m_root;
+    GC       m_gc;
+    int      m_screen;
+    uint64_t m_whitePixel;
+    uint64_t m_blackPixel;
+    Atom     m_del;
+    int      m_fd;
+    Visual * m_vis;
 
-    uint32_t	*m_mapData;
-    XImage	*m_map;
-    uint32_t	*m_guiData;
-    XImage	*m_gui;
+    uint32_t *m_mapData;
+    XImage *  m_map;
+    uint32_t *m_guiData;
+    XImage *  m_gui;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
-    bool m_canDraw;
+    bool   m_canDraw;
   };
 }
 

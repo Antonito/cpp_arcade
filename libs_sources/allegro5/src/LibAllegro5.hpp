@@ -25,7 +25,8 @@ namespace arcade
 
     // Sound
     virtual bool doesSupportSound() const;
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds);
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds);
     virtual void soundControl(Sound const &sound);
 
     // Sprites
@@ -50,23 +51,19 @@ namespace arcade
     MousePos getMousePos();
 
     static std::map<int, KeyboardKey> m_kb_keys;
-    static std::map<int, MouseKey> m_mouse_keys;
+    static std::map<int, MouseKey>    m_mouse_keys;
 
     static constexpr size_t m_maxTileSize = 24;
-    size_t m_width;
-    size_t m_height;
+    size_t                  m_width;
+    size_t                  m_height;
 
-    ALLEGRO_DISPLAY	*m_win;
-    ALLEGRO_EVENT_QUEUE	*m_event;
-    ALLEGRO_TIMER	*m_timer;
-    ALLEGRO_BITMAP	*m_gui;
-    ALLEGRO_BITMAP	*m_map;
-    ALLEGRO_FONT	*m_font;
+    ALLEGRO_DISPLAY *    m_win;
+    ALLEGRO_EVENT_QUEUE *m_event;
+    ALLEGRO_TIMER *      m_timer;
+    ALLEGRO_BITMAP *     m_gui;
+    ALLEGRO_FONT *       m_font;
 
     std::vector<std::vector<ALLEGRO_BITMAP *>> m_sprites;
-
-    size_t m_mapWidth;
-    size_t m_mapHeight;
   };
 }
 

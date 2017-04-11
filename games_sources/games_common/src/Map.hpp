@@ -8,10 +8,10 @@
 
 namespace arcade
 {
-namespace game
-{
-class Map : public IMap
-{
+  namespace game
+  {
+    class Map : public IMap
+    {
     public:
       Map(size_t width, size_t height);
 
@@ -27,19 +27,20 @@ class Map : public IMap
       virtual size_t getLayerNb() const;
       virtual size_t getWidth() const;
       virtual size_t getHeight() const;
-      void addLayer();
+      void           addLayer();
       void loadMap(std::string const &path);
 
       void clear(Color color = Color::Transparent);
       void clear(Color color, size_t sprite);
       void clearLayer(size_t layer, Color color = Color::Transparent);
       void clearLayer(size_t layer, Color color, size_t sprite);
+
     private:
       std::vector<Layer> m_layers;
-      size_t m_width;
-      size_t m_height;
-};
-}
+      size_t             m_width;
+      size_t             m_height;
+    };
+  }
 }
 
 #endif // !MAP_HPP_
