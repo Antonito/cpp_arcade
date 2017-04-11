@@ -48,7 +48,6 @@ private:
   bool m_hasShot;
   size_t m_lastTick;
   size_t m_lastShootTick;
-  size_t m_lastEnemyTick;
   size_t m_curTick;
 };
 }

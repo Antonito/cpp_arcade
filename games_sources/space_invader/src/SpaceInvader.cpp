@@ -71,9 +71,11 @@ SpaceInvader::SpaceInvader()
         break;
       }
       case 'E':
+        type = TileType::BLOCK;
         m_enemy.push(Position(x, y));
         break;
       case 'S':
+        type = TileType::EMPTY;
         m_player.push(Position(x, y));
         m_player.setDir(Direction::LEFT);
         break;
