@@ -8,8 +8,7 @@ include $(MK_COMMON_DIR)colors.mk $(MK_COMMON_DIR)defs.mk $(MK_DIR)local_defs.mk
 
 SRC_DIR=		./src/
 
-DIR_LIST=	$(SRC_DIR)	\
-		$(shell pkg-config --cflags-only-I caca | cut -c 3-)
+DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 

@@ -3,6 +3,9 @@
 
 #define ALLEGRO_STATICLINK
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <map>
 #include "IGfxLib.hpp"
 
@@ -58,6 +61,9 @@ namespace arcade
     ALLEGRO_TIMER	*m_timer;
     ALLEGRO_BITMAP	*m_gui;
     ALLEGRO_BITMAP	*m_map;
+    ALLEGRO_FONT	*m_font;
+
+    std::vector<std::vector<ALLEGRO_BITMAP *>> m_sprites;
 
     size_t m_mapWidth;
     size_t m_mapHeight;
