@@ -56,30 +56,30 @@ SpaceInvader::SpaceInvader() : AGame("space_invader")
       switch (m[y][x])
       {
       case '0':
-	type = TileType::EMPTY;
-	break;
+        type = TileType::EMPTY;
+        break;
       case '1':
-	type = TileType::BLOCK;
-	break;
+        type = TileType::BLOCK;
+        break;
       case 'x':
       {
-	Obstacle new_obstacle;
+        Obstacle new_obstacle;
 
-	type = TileType::BLOCK;
-	new_obstacle.push(Position(x, y));
-	new_obstacle.setPv(3);
-	m_obstacles.push_back(new_obstacle);
-	break;
+        type = TileType::BLOCK;
+        new_obstacle.push(Position(x, y));
+        new_obstacle.setPv(3);
+        m_obstacles.push_back(new_obstacle);
+        break;
       }
       case 'E':
-	type = TileType::BLOCK;
-	m_enemy.push(Position(x, y));
-	break;
+        type = TileType::BLOCK;
+        m_enemy.push(Position(x, y));
+        break;
       case 'S':
-	type = TileType::EMPTY;
-	m_player.push(Position(x, y));
-	m_player.setDir(Direction::LEFT);
-	break;
+        type = TileType::EMPTY;
+        m_player.push(Position(x, y));
+        m_player.setDir(Direction::LEFT);
+        break;
       }
       m_map->at(0, x, y).setType(type);
     }
@@ -130,29 +130,29 @@ void SpaceInvader::notifyEvent(std::vector<Event> &&events)
       switch (e.kb_key)
       {
       case KB_ARROW_LEFT:
-	m_player.setDir(Direction::LEFT);
-	m_player.move(*m_map);
-	break;
+        m_player.setDir(Direction::LEFT);
+        m_player.move(*m_map);
+        break;
       case KB_ARROW_RIGHT:
-	m_player.setDir(Direction::RIGHT);
-	m_player.move(*m_map);
-	break;
+        m_player.setDir(Direction::RIGHT);
+        m_player.move(*m_map);
+        break;
       case KB_SPACE:
-	if (!m_hasShot)
-	{
-	  m_hasShot = true;
-	  m_shoot =
-	      *static_cast<Shoot *>(m_player.shoot().get());
-	  m_shoot.setDir(Direction::UP);
-	  m_shoot.setCurTile(
-	      m_map->at(0, m_shoot[0].x, m_shoot[0].y)
-		  .getType());
-	}
-	break;
+        if (!m_hasShot)
+        {
+          m_hasShot = true;
+          m_shoot =
+              *static_cast<Shoot *>(m_player.shoot().get());
+          m_shoot.setDir(Direction::UP);
+          m_shoot.setCurTile(
+              m_map->at(0, m_shoot[0].x, m_shoot[0].y)
+                  .getType());
+        }
+        break;
       case KB_ESCAPE:
-	m_state = MENU;
+        m_state = MENU;
       default:
-	break;
+        break;
       }
     }
   }
@@ -170,7 +170,14 @@ std::vector<std::unique_ptr<ISprite>>
 SpaceInvader::getSpritesToLoad() const
 {
   std::vector<std::unique_ptr<ISprite>> s;
-
+  s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "enemy", 1,
+                                       ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "player", 1,
+                                       ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "shoot", 1,
+                                       ".png", "$"));
+  s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "obstacle", 1,
+                                       ".png", "$"));
   return (s);
 }
 
@@ -191,12 +198,12 @@ void SpaceInvader::checkShoot()
       it->hit();
       if (it->getPv() == 0 || m_enemy.isTouch((*it)[0]))
       {
-	m_map->at(0, (*it)[0].x, (*it)[0].y)
-	    .setType(TileType::BLOCK);
-	it = m_obstacles.erase(it);
+        m_map->at(0, (*it)[0].x, (*it)[0].y)
+            .setType(TileType::BLOCK);
+        it = m_obstacles.erase(it);
       }
       else
-	it++;
+        it++;
       m_hasShot = false;
     }
     else
@@ -234,21 +241,21 @@ void SpaceInvader::process()
   {
     m_enemy.move(*m_map);
     for (std::vector<Obstacle>::iterator it = m_obstacles.begin();
-	 it != m_obstacles.end();)
+         it != m_obstacles.end();)
     {
       if (m_enemy.isTouch((*it)[0]))
       {
-	m_map->at(0, (*it)[0].x, (*it)[0].y)
-	    .setType(TileType::BLOCK);
-	it = m_obstacles.erase(it);
+        m_map->at(0, (*it)[0].x, (*it)[0].y)
+            .setType(TileType::BLOCK);
+        it = m_obstacles.erase(it);
       }
       else
-	it++;
+        it++;
     }
     for (size_t i = 0; i < m_enemy.size(); i++)
     {
       if (!m_enemy[i].inMap(*m_map))
-	m_state = MENU;
+        m_state = MENU;
     }
     if (m_enemy.isTouch(m_player[0]))
       m_state = MENU;

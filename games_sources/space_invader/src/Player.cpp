@@ -22,6 +22,7 @@ namespace arcade
 	    Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
 
 	    tile.setColor(Color::Red);
+	    tile.setSprite(1);
 	  }
       }
 
@@ -39,7 +40,7 @@ namespace arcade
 
       std::unique_ptr<AEntity> Player::shoot() const
       {
-	std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
+	std::unique_ptr<AEntity> shoot = std::make_unique<Shoot>();
 
 	shoot->push(m_pos[0] + Direction::UP);
 	return (shoot);
