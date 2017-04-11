@@ -8,6 +8,7 @@
 #include "AllocationError.hpp"
 #include "CapabilityError.hpp"
 #include "InitializationError.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -17,6 +18,10 @@ namespace arcade
     {
       throw InitializationError("Cannot initialize Lib Allegro5");
     }
+    if (!al_init_image_addon())
+      {
+	throw InitializationError("Cannot initialize Lib Allegro5 image");
+      }
     if (!al_init_font_addon() || ! al_init_ttf_addon())
       {
 	throw InitializationError("Cannot initialize Lib Allegro5 fonts / ttf");
@@ -131,8 +136,42 @@ namespace arcade
 
   void LibAllegro5::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
   {
-    std::vector<std::unique_ptr<ISprite>> sp(std::move(sprites));
-    (void)sp;
+    std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+
+    for (std::vector<ALLEGRO_BITMAP *> &s : m_sprites)
+      {
+	for (ALLEGRO_BITMAP *_s : s)
+	  {
+	    if (_s)
+	      {
+		al_destroy_bitmap(_s);
+	      }
+	  }
+      }
+    m_sprites.clear();
+
+    for (std::unique_ptr<ISprite> const &sprite : s)
+      {
+	std::vector<ALLEGRO_BITMAP *> images;
+
+#if defined(DEBUG)
+	std::cout << "Loading sprite " << m_sprites.size() << ", " << sprite->spritesCount() << std::endl;
+#endif
+	for (size_t i = 0; i < sprite->spritesCount(); ++i)
+	  {
+#if defined(DEBUG)
+	    std::cout << "File: '" << sprite->getGraphicPath(i) << "'" << std::endl;
+#endif
+	    ALLEGRO_BITMAP *surface = al_load_bitmap(sprite->getGraphicPath(i).c_str());
+
+	    if (!surface)
+	      {
+		throw RessourceError("File not found: " + sprite->getGraphicPath(i));
+	      }
+	    images.push_back(surface);
+	  }
+	m_sprites.push_back(images);
+      }
   }
 
   void LibAllegro5::updateMap(IMap const & map)
@@ -162,7 +201,16 @@ namespace arcade
 		    size_t posX = m_width / 2 - (map.getWidth() * tileSize / 2) + (x + tile.getShiftX()) * tileSize;
 		    size_t posY = m_height / 2 - (map.getHeight() * tileSize / 2) + (y + tile.getShiftY()) * tileSize;
 
-		    if (color.a != 0)
+		    if (tile.hasSprite() && m_sprites[tile.getSpriteId()][tile.getSpritePos()])
+		      {
+			ALLEGRO_BITMAP *bm = m_sprites[tile.getSpriteId()][tile.getSpritePos()];
+			int width = al_get_bitmap_width(bm);
+			int height = al_get_bitmap_height(bm);
+			int g_width = al_get_bitmap_width(m_gui);
+			int g_height = al_get_bitmap_height(m_gui);
+			al_draw_scaled_bitmap(bm, 0, 0, width, height, 0, 0, g_width, g_height, 0);
+		      }
+		    else if (color.a != 0)
 		      {
 			for (size_t _y = 0; _y < static_cast<unsigned>(tileSize); ++_y)
 			  {
@@ -245,8 +293,8 @@ namespace arcade
 void LibAllegro5::clear()
   {
     ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
-    std::memset(lr->data, 0, m_width * m_height * sizeof(Color));
-    al_set_blender(ALLEGRO_ADD , ALLEGRO_ALPHA , ALLEGRO_INVERSE_ALPHA);
+    if (lr)
+      std::memset(lr->data, 0, m_width * m_height * sizeof(Color));
     al_unlock_bitmap(m_gui);
   }
 
