@@ -203,34 +203,14 @@ namespace arcade
 
 		    if (tile.hasSprite() && m_sprites[tile.getSpriteId()][tile.getSpritePos()])
 		      {
-			ALLEGRO_BITMAP *bm = m_sprites[tile.getSpriteId()][tile.getSpritePos()];
-			ALLEGRO_LOCKED_REGION *_lr = al_lock_bitmap(bm, al_get_bitmap_format(bm), ALLEGRO_LOCK_READWRITE);
-			if (lr)
-			  {
-			    // TODO: Fix
-			    int width = al_get_bitmap_width(bm);
+                      al_set_target_bitmap(m_gui);
+                      ALLEGRO_BITMAP *bm = m_sprites[tile.getSpriteId()][tile.getSpritePos()];
+		  int width = al_get_bitmap_width(bm);
 			    int height = al_get_bitmap_height(bm);
-			    Color *_pixels = reinterpret_cast<Color *>(_lr->data);
-			    for (size_t _y = 0; _y < static_cast<unsigned>(height); ++_y)
-			      {
-				for (size_t _x = 0; _x < static_cast<unsigned>(width); ++_x)
-				  {
-				    size_t X = posX + _x;
-				    size_t Y = posY + _y;
-				    size_t pix = Y * (m_width) + X;
-				    Color cur(_pixels[_y * width + _x]);
-				    Color old(pixels[pix]);
-				    Color merged(cur.r * a + old.r * (1 - a),
-						 cur.g * a + old.g * (1 - a),
-						 cur.b * a + old.b * (1 - a),
-						 cur.a + old.a * (1 - a));
-				    pixels[pix] = merged.full;
-				  }
-			      }
-			    al_unlock_bitmap(bm);
-			  }
-			//al_draw_scaled_bitmap(bm, 0, 0, width, height, posX, posY, tileSize, tileSize, 0);
-		      }
+
+		        al_draw_scaled_bitmap(bm, 0, 0, width, height, posX, posY, tileSize, tileSize, 0);
+                        al_set_target_bitmap(al_get_backbuffer(m_win));
+                }
 		    else if (color.a != 0)
 		      {
 			for (size_t _y = 0; _y < static_cast<unsigned>(tileSize); ++_y)
