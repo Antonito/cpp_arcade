@@ -172,14 +172,12 @@ namespace arcade
 	std::vector<std::unique_ptr<ISprite>> s;
 	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "enemy", 1,
 	                                     ".png", "$"));
-#if 0
 	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "player", 1,
 	                                     ".png", "$"));
 	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "shoot", 1,
 	                                     ".png", "$"));
 	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "obstacle", 1,
 	                                     ".png", "$"));
-#endif
 	return (s);
       }
 

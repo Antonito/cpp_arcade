@@ -17,7 +17,7 @@ namespace arcade
 	    Tile &tile = map.at(1, p.x, p.y);
 
 	    tile.setColor(Color::Green);
-	    //	    tile.setSprite(3);
+	    tile.setSprite(3);
 	  }
       }
 
