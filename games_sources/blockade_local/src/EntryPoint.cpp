@@ -3,7 +3,7 @@
 #include <cstdbool>
 #endif
 #include "IGame.hpp"
-#include "Blockade.hpp"
+#include "BlockadeLocal.hpp"
 
 #if defined(__linux__) || (__APPLE__)
 #define GAME_API
@@ -15,13 +15,13 @@
 extern "C" {
 GAME_API arcade::IGame *getGame()
 {
-  return (new arcade::game::blockade::Blockade());
+	return (new arcade::game::blockade_local::BlockadeLocal());
 }
 
 #if defined(_WIN32)
 BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 {
-  return (true);
+	return (true);
 }
 #endif
 }

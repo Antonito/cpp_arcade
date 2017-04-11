@@ -1,6 +1,25 @@
 # cpp_arcade
 ## An arcade game simulator
 
+### Installation
+
+```bash
+make init    # Init the dependencies
+make update  # Update all the dependencies
+make link    # Install the dependencies
+make         # Install the game
+```
+
+You can compile the full project in debug mode with
+``` bash
+make re DEBUG=yes
+```
+
+You can start a multiplayer game (when supported) with this command:
+```bash
+echo -ne "serverAddress\nserverPort\n" | ./arcade pathToTheGFXLibrary
+```
+
 ### Games
 We currently support a few games.
 - Snake
@@ -24,6 +43,3 @@ We currently support those libraries
 
 You can switch to another library at any moment.
 
-# IMPORTANT
-Diagramme de classe (/2)
-Manuel descriptif du programme (/2)

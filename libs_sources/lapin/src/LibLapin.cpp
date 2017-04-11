@@ -6,6 +6,7 @@
 #include "LibLapin.hpp"
 #include "WindowError.hpp"
 #include "AllocationError.hpp"
+#include "RessourceError.hpp"
 
 namespace arcade
 {
@@ -147,6 +148,45 @@ namespace arcade
   void LibLapin::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
+
+    for (std::vector<t_bunny_picture *> &s : m_sprites)
+      {
+	for (t_bunny_picture *_s : s)
+	  {
+	    if (_s)
+	      {
+		bunny_delete_clipable(_s);
+	      }
+	  }
+      }
+    m_sprites.clear();
+
+    for (std::unique_ptr<ISprite> const &sprite : s)
+      {
+	std::vector<t_bunny_picture *> images;
+
+#if defined(DEBUG)
+	std::cout << "Loading sprite " << m_sprites.size() << ", "
+	          << sprite->spritesCount() << std::endl;
+#endif
+	for (size_t i = 0; i < sprite->spritesCount(); ++i)
+	  {
+#if defined(DEBUG)
+	    std::cout << "File: '" << sprite->getGraphicPath(i) << "'"
+	              << std::endl;
+#endif
+	    t_bunny_picture *surface =
+	        bunny_load_picture(sprite->getGraphicPath(i).c_str());
+
+	    if (!surface)
+	      {
+		throw RessourceError("File not found: " +
+		                     sprite->getGraphicPath(i));
+	      }
+	    images.push_back(surface);
+	  }
+	m_sprites.push_back(images);
+      }
   }
 
   void LibLapin::updateMap(IMap const &map)
@@ -184,8 +224,16 @@ namespace arcade
 	    for (size_t x = 0; x < m_mapWidth; ++x)
 	      {
 		ITile const &tile = map.at(l, x, y);
-		if (tile.getSpriteId() != 0 && false)
+		if (tile.hasSprite() &&
+		    m_sprites[tile.getSpriteId()][tile.getSpritePos()])
 		  {
+		    t_bunny_picture *bm =
+		        m_sprites[tile.getSpriteId()][tile.getSpritePos()];
+		    size_t width = bm->clip_width;
+		    size_t height = bm->clip_height;
+		    static_cast<void>(width);
+		    static_cast<void>(height);
+		    // TODO: Blit
 		  }
 		else
 		  {
@@ -227,6 +275,7 @@ namespace arcade
 	size_t            width = comp.getWidth() * m_width;
 	size_t            height = comp.getHeight() * m_height;
 	Color             color = comp.getBackgroundColor();
+	std::string       str = comp.getText();
 	double            a(color.a / 255.0);
 	if (color.a != 0)
 	  {

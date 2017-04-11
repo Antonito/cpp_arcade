@@ -88,8 +88,9 @@ namespace arcade
     std::vector<t_bunny_effect *> m_effect;
     std::vector<t_bunny_sound *>  m_sound;
 
-    size_t m_mapWidth;
-    size_t m_mapHeight;
+    size_t                                      m_mapWidth;
+    size_t                                      m_mapHeight;
+    std::vector<std::vector<t_bunny_picture *>> m_sprites;
   };
 }
 

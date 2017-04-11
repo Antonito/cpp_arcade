@@ -38,7 +38,8 @@ void Shoot::move(Map &map)
   m_pos.insert(m_pos.begin(), m_pos[0] + m_dir);
   m_pos.erase(m_pos.end() - 1);
   m_curTile = map.at(0, m_pos[0].x, m_pos[0].y).getType();
-  map.at(0, m_pos[0].x, m_pos[0].y).setType(TileType::MY_SHOOT);
+  if (map.at(0, m_pos[0].x, m_pos[0].y).getType() != TileType::OBSTACLE)
+    map.at(0, m_pos[0].x, m_pos[0].y).setType(TileType::MY_SHOOT);
 }
 
 void Shoot::setCurTile(TileType tile)

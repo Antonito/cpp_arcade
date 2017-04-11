@@ -12,9 +12,10 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Qix.cpp		\
-		Player.cpp 	\
-		EntryPoint.cpp
+SRC_FILES=	BlockadeLocal.cpp	\
+		EntryPoint.cpp		\
+		Player.cpp		\
+		Fruit.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
