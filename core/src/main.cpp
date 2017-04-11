@@ -45,6 +45,9 @@ int main(int ac, char **av)
         if (ac != 2)
         {
           std::cout << "Usage: " << av[0] << " path_to_graphic_lib.so" << std::endl;
+#if defined(_WIN32)
+          system("pause");
+#endif
           return (0);
         }
 
@@ -65,11 +68,10 @@ int main(int ac, char **av)
 #endif
           core.launch(lib);
         }
-        //catch (std::exception const &e)
-        //{
-        //  std::cerr << "Fatal error : " << e.what() << std::endl;
-        //  return (1);
-        //}
-        catch (int n) {}
+        catch (std::exception const &e)
+        {
+          std::cerr << "Fatal error : " << e.what() << std::endl;
+          return (1);
+        }
 	return (0);
 }

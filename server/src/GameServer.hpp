@@ -5,7 +5,9 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
+#if defined(__linux__) || (__APPLE__)
 #include <sys/select.h>
+#endif
 #include "IServer.hpp"
 #include "TCPSocket.hpp"
 #include "GameClient.hpp"
