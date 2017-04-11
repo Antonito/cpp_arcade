@@ -32,6 +32,7 @@ namespace arcade
       : AGame("Core"), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
         m_selectedGameId(0), m_menuLib(false)
   {
+    static_cast<void>(m_inMenu);
     m_state = INGAME;
 
     m_map = std::make_unique<game::Map>(0, 0);
@@ -102,7 +103,11 @@ namespace arcade
 	    m_gameState = LOADING;
 	    m_gameState = this->gameLoop();
 	    if (m_gameState == QUIT)
-	      std::cout << "QUIT #3" << std::endl;
+	      {
+#if defined(DEBUG)
+		std::cout << "QUIT #3" << std::endl;
+#endif
+	      }
 	    break;
 	  default:
 	    m_gameState = QUIT;
@@ -134,7 +139,9 @@ namespace arcade
 	m_lib->clear();
 	if (m_gameState != INGAME)
 	  {
+#if defined(DEBUG)
 	    std::cout << "Quit 1" << std::endl;
+#endif
 	    break;
 	  }
 	// Events
@@ -146,13 +153,23 @@ namespace arcade
 	  }
 	// m_eventBuffer.push_back(ev);
 	if (m_gameState == QUIT)
-	  std::cout << "QUIT #1" << std::endl;
+	  {
+#if defined(DEBUG)
+	    std::cout << "QUIT #1" << std::endl;
+#endif
+	  }
 	if (m_gameState != INGAME && m_gameState != LOADING)
 	  {
 	    if (m_gameState == QUIT)
-	      std::cout << "QUIT #2" << std::endl;
+	      {
+#if defined(DEBUG)
+		std::cout << "QUIT #2" << std::endl;
+#endif
+	      }
 	    m_sock = nullptr;
+#if defined(DEBUG)
 	    std::cout << "Quit 2" << std::endl;
+#endif
 	    break;
 	  }
 #ifdef DEBUG
@@ -165,7 +182,9 @@ namespace arcade
 
 	if (m_game.get() == nullptr)
 	  {
+#if defined(DEBUG)
 	    std::cout << "Quit 3" << std::endl;
+#endif
 	    return (QUIT);
 	  }
 // Network
@@ -287,12 +306,12 @@ namespace arcade
 		    throw RessourceError("Error while accessing " + libPath);
 		  }
 #endif
-                std::string name(ent->d_name);
-                name = name.substr(11);
-                name = name.substr(0, name.size() - 3);
-		m_gui->push(game::Component(
-		    0.12, 0.35 + 0.04 * (m_libList.size() - 1), 0.25, 0.05,
-		    Color::Transparent, name));
+		std::string name(ent->d_name);
+		name = name.substr(11);
+		name = name.substr(0, name.size() - 3);
+		m_gui->push(
+		    game::Component(0.12, 0.35 + 0.04 * (m_libList.size() - 1),
+		                    0.25, 0.05, Color::Transparent, name));
 
 #if defined(__linux__) || (__APPLE__)
 		// If same file inode
@@ -355,13 +374,13 @@ namespace arcade
 		m_gui->push(game::Component(
 		    0.52, 0.35 + 0.05 * (m_gameList.size() - 1), 0.25, 0.05,
 		    Color::Transparent, name));
-                std::stringstream ss;
+		std::stringstream ss;
 
-                ss << getScore(name);
+		ss << getScore(name);
 
-                m_gui->push(game::Component(
-                  0.82, 0.35 + 0.05 * (m_gameList.size() - 1), 0.1, 0.05,
-                  Color::Transparent, ss.str()));
+		m_gui->push(game::Component(
+		    0.82, 0.35 + 0.05 * (m_gameList.size() - 1), 0.1, 0.05,
+		    Color::Transparent, ss.str()));
 	      }
 	  }
 	// Close the dir after using it because we are well educated people
@@ -403,12 +422,12 @@ namespace arcade
         m_game->getSoundsToLoad();
 
     for (size_t i = 0; i < m_gameList.size(); ++i)
-    {
-      std::stringstream ss;
+      {
+	std::stringstream ss;
 
-      ss << getScore(m_gameList[i].getName());
-      m_gui->at(m_firstGameIndex + 2 * i + 1).setText(ss.str());
-    }
+	ss << getScore(m_gameList[i].getName());
+	m_gui->at(m_firstGameIndex + 2 * i + 1).setText(ss.str());
+      }
 
     if (m_lib->doesSupportSound())
       {
@@ -497,23 +516,23 @@ namespace arcade
 	        m_gameList[m_currentGameId].getFunction<IGame *()>(
 	            "getGame")());
 #ifdef DEBUG
-            std::cout << "Done." << std::endl;
+	    std::cout << "Done." << std::endl;
 #endif
-            m_gameState = LOADING;
+	    m_gameState = LOADING;
 	    this->loadGame();
 	  }
 	if (m_currentLibId != static_cast<unsigned>(lib))
 	  {
 #ifdef DEBUG
-          std::cout << "Using lib " << m_currentLibId << std::endl;
+	    std::cout << "Using lib " << m_currentLibId << std::endl;
 #endif
-          m_lib = std::unique_ptr<IGfxLib>(
+	    m_lib = std::unique_ptr<IGfxLib>(
 	        m_libList[m_currentLibId].getFunction<IGfxLib *()>(
 	            "getLib")());
 #ifdef DEBUG
-            std::cout << "Done." << std::endl;
+	    std::cout << "Done." << std::endl;
 #endif
-            this->loadGame();
+	    this->loadGame();
 	  }
 
 	return;
@@ -693,20 +712,20 @@ namespace arcade
 
     for (size_t i = 0; i < m_gameList.size(); ++i)
       {
-      if (i == m_selectedGameId)
-      {
-        m_gui->at(m_firstGameIndex + 2 * i)
-          .setBackgroundColor(Color(150, 150, 150, 80));
-        m_gui->at(m_firstGameIndex + 2 * i + 1)
-          .setBackgroundColor(Color(150, 150, 150, 80));
-      }
-      else
-      {
-        m_gui->at(m_firstGameIndex + 2 * i)
-          .setBackgroundColor(Color::Transparent);
-        m_gui->at(m_firstGameIndex + 2 * i + 1)
-          .setBackgroundColor(Color::Transparent);
-      }
+	if (i == m_selectedGameId)
+	  {
+	    m_gui->at(m_firstGameIndex + 2 * i)
+	      .setBackgroundColor(Color(150, 150, 150, 80));
+	    m_gui->at(m_firstGameIndex + 2 * i + 1)
+	      .setBackgroundColor(Color(150, 150, 150, 80));
+	  }
+	else
+	  {
+	    m_gui->at(m_firstGameIndex + 2 * i)
+	      .setBackgroundColor(Color::Transparent);
+	    m_gui->at(m_firstGameIndex + 2 * i + 1)
+	      .setBackgroundColor(Color::Transparent);
+	  }
       }
 
     Color light(10, 10, 10, 150);
@@ -804,7 +823,7 @@ namespace arcade
 	    pcks.push_back(pck);
 	  }
       }
-    return (std::move(pcks));
+    return (pcks);
   }
 
   std::vector<std::unique_ptr<ISprite>> Core::getSpritesToLoad() const
@@ -820,16 +839,20 @@ namespace arcade
     size_t score = 0;
     std::cout << "Reading from scores/" << game << ".txt" << std::endl;
     if (game != "")
-    {
-      std::fstream fs("scores/" + game + ".txt");
-
-      std::cout << "Reading from scores/" << game << ".txt" << std::endl;
-      if (fs.is_open())
       {
-        std::cout << "Opened!" << std::endl;
-        fs >> score;
+	std::fstream fs("scores/" + game + ".txt", std::ios::in);
+
+#if defined(DEBUG)
+	std::cout << "Reading from scores/" << game << ".txt" << std::endl;
+#endif
+	if (fs.is_open())
+	  {
+#if defined(DEBUG)
+	    std::cout << "Opened!" << std::endl;
+#endif
+	    fs >> score;
+	  }
       }
-    }
     return (score);
   }
 

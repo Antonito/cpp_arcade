@@ -9,7 +9,7 @@ namespace arcade
   {
     namespace nibbler
     {
-      Nibbler::Nibbler()
+      Nibbler::Nibbler() : AGame("nibbler")
       {
 	// clang-format off
   std::vector<std::string> m =
@@ -77,7 +77,7 @@ namespace arcade
 	m_tmpDir = Direction::UP;
       }
 
-      Nibbler::Nibbler(Nibbler const &other) : AGame()
+      Nibbler::Nibbler(Nibbler const &other) : AGame("nibbler")
       {
 	*m_map = *other.m_map;
 	m_player = other.m_player;
@@ -131,6 +131,10 @@ namespace arcade
 		    if (m_player.getDir() != Direction::LEFT)
 		      m_tmpDir = Direction::RIGHT;
 		    break;
+		  case KB_ENTER:
+		    if (m_finished)
+		      m_state = MENU;
+		    break;
 		  case KB_ESCAPE:
 		    m_state = MENU;
 		  default:
@@ -174,6 +178,8 @@ namespace arcade
 
       void Nibbler::process()
       {
+	if (m_finished)
+	  return;
 	m_curTick = this->getCurrentTick();
 	m_map->clearLayer(1);
 	m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
@@ -185,6 +191,7 @@ namespace arcade
 	    m_player.setDir(m_tmpDir);
 	    if (m_fruit[0] == m_player.next())
 	      {
+		m_score += 1;
 		m_soundsToPlay.emplace_back(0, PLAY);
 		m_fruit[0] = placeFood(*m_map);
 		m_fruit.updateSprite();
@@ -199,7 +206,7 @@ namespace arcade
 		m_player.move(*m_map);
 	      }
 	    else
-	      m_state = MENU;
+	      m_finished = true;
 	    m_lastTick = m_curTick;
 	  }
       }
@@ -208,9 +215,11 @@ namespace arcade
       void Nibbler::WhereAmI(std::ostream &os) const
       {
 	uint16_t         size = static_cast<uint16_t>(m_player.size() - 1);
-	arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
+	arcade::WhereAmI header = {};
 	std::unique_ptr<::arcade::Position[]> pos(
 	    new ::arcade::Position[size]);
+	header.type = CommandType::WHERE_AM_I;
+	header.lenght = size;
 
 	for (size_t i = 0; i < size; ++i)
 	  {

@@ -7,20 +7,15 @@ namespace arcade
 {
   namespace game
   {
-    AGame::AGame(std::string const &name) :
-      m_state(INGAME),
-      m_gui(std::make_unique<GUI>()),
-      m_score(0),
-      m_finished(false),
-      m_startTick(m_clock_t::now()),
-      m_mouliMode(false),
-      m_fakeTick(0),
-      m_overUpdated(false),
-      m_name(name)
+    AGame::AGame(std::string const &name)
+        : m_state(INGAME), m_gui(std::make_unique<GUI>()), m_score(0),
+          m_finished(false), m_startTick(m_clock_t::now()), m_mouliMode(false),
+          m_fakeTick(0), m_overUpdated(false), m_name(name)
     {
       m_over = std::make_unique<GUI>();
       m_over->push(Component(0, 0, 1, 1, Color(0, 0, 0, 150)));
-      m_over->push(Component(0.45, 0.2, 0.4, 0.2, Color::Transparent, "Game Over !"));
+      m_over->push(
+          Component(0.45, 0.2, 0.4, 0.2, Color::Transparent, "Game Over !"));
       m_over->push(Component(0.45, 0.5, 0.4, 0.2));
     }
 
@@ -90,9 +85,9 @@ namespace arcade
     void AGame::getMap(std::ostream &os) const
     {
       // Allocate the struct
-      GetMap header = {
-          CommandType::GET_MAP, static_cast<uint16_t>(m_map->getWidth()),
-          static_cast<uint16_t>(m_map->getHeight())};
+      GetMap header = {CommandType::GET_MAP,
+                       static_cast<uint16_t>(m_map->getWidth()),
+                       static_cast<uint16_t>(m_map->getHeight())};
       std::unique_ptr<TileType[]> map(
           new TileType[header.width * header.height]);
 

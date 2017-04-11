@@ -39,7 +39,7 @@ namespace arcade
 
       std::unique_ptr<AEntity> Enemy::shoot() const
       {
-	std::unique_ptr<EvilShoot> shoot = std::make_unique<EvilShoot>();
+	std::unique_ptr<AEntity> shoot = std::make_unique<EvilShoot>();
 
 	shoot->push(m_pos[0] + m_shootDir);
 	shoot->setDir(m_shootDir);

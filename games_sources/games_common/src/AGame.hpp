@@ -74,7 +74,7 @@ namespace arcade
       size_t getCurrentTick() const;
 
       size_t m_score;
-      bool m_finished;
+      bool   m_finished;
 
     private:
 #if defined(__linux__)
@@ -89,7 +89,7 @@ namespace arcade
       mutable size_t m_fakeTick;
 
       std::unique_ptr<GUI> m_over;
-      bool m_overUpdated;
+      bool                 m_overUpdated;
 
       std::string m_name;
     };

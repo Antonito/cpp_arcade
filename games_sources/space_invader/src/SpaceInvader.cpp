@@ -9,7 +9,7 @@ namespace arcade
   {
     namespace spaceinvader
     {
-      SpaceInvader::SpaceInvader()
+      SpaceInvader::SpaceInvader() : AGame("space_invader")
       {
 	Enemy    new_enemy;
 	Position tmp;
@@ -95,7 +95,8 @@ namespace arcade
 	m_hasShot = false;
       }
 
-      SpaceInvader::SpaceInvader(SpaceInvader const &other) : AGame()
+      SpaceInvader::SpaceInvader(SpaceInvader const &other)
+          : AGame("space_invader")
       {
 	*m_map = *other.m_map;
 	m_player = other.m_player;
@@ -170,7 +171,14 @@ namespace arcade
           SpaceInvader::getSpritesToLoad() const
       {
 	std::vector<std::unique_ptr<ISprite>> s;
-
+	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "enemy",
+	                                     1, ".png", "$"));
+	s.push_back(std::make_unique<Sprite>("assets/space_invaders/",
+	                                     "player", 1, ".png", "$"));
+	s.push_back(std::make_unique<Sprite>("assets/space_invaders/", "shoot",
+	                                     1, ".png", "$"));
+	s.push_back(std::make_unique<Sprite>("assets/space_invaders/",
+	                                     "obstacle", 1, ".png", "$"));
 	return (s);
       }
 

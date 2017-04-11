@@ -9,7 +9,7 @@ namespace arcade
   {
     namespace solarfox
     {
-      SolarFox::SolarFox()
+      SolarFox::SolarFox() : AGame("solarfox")
       {
 	Position tmp;
 
@@ -137,7 +137,7 @@ namespace arcade
 	m_curTick = 0;
       }
 
-      SolarFox::SolarFox(SolarFox const &other) : AGame()
+      SolarFox::SolarFox(SolarFox const &other) : AGame("solarfox")
       {
 	*m_map = *other.m_map;
 	m_player = other.m_player;
@@ -206,6 +206,11 @@ namespace arcade
 		    break;
 		  case KB_ESCAPE:
 		    m_state = MENU;
+		    break;
+		  case KB_ENTER:
+		    if (m_finished)
+		      m_state = MENU;
+		    break;
 		  default:
 		    break;
 		  }
@@ -231,7 +236,7 @@ namespace arcade
       void SolarFox::checkPowerUps()
       {
 	if (m_powerups.size() == 0)
-	  m_state = MENU;
+	  m_finished = true;
 	if (m_hasShot && m_powerups.isTouch(m_shoot[0]))
 	  {
 	    // up score
@@ -246,7 +251,7 @@ namespace arcade
       {
 	if (pos == m_player[0])
 	  {
-	    m_state = MENU;
+	    m_finished = true;
 	    return true;
 	  }
 	if (m_hasShot && pos == m_shoot[0])
@@ -338,6 +343,8 @@ namespace arcade
 
       void SolarFox::process()
       {
+	if (m_finished)
+	  return;
 	m_curTick = this->getCurrentTick();
 
 	// Clear the map
@@ -383,9 +390,11 @@ namespace arcade
       void SolarFox::WhereAmI(std::ostream &os) const
       {
 	uint16_t         size = static_cast<uint16_t>(m_player.size());
-	arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
+	arcade::WhereAmI header = {};
 	std::unique_ptr<::arcade::Position[]> pos(
 	    new ::arcade::Position[size]);
+	header.type = CommandType::WHERE_AM_I;
+	header.lenght = size;
 
 	for (size_t i = 0; i < size; ++i)
 	  {
@@ -403,9 +412,11 @@ namespace arcade
   }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void)
 {
   arcade::game::solarfox::SolarFox game;
 
   game.Play();
 }
+#endif

@@ -15,13 +15,13 @@
 extern "C" {
 GAME_API arcade::IGame *getGame()
 {
-	return (new arcade::game::blockade_local::BlockadeLocal());
+  return (new arcade::game::blockade_local::BlockadeLocal());
 }
 
 #if defined(_WIN32)
 BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
 {
-	return (true);
+  return (true);
 }
 #endif
 }

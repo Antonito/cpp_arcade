@@ -5,15 +5,16 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace centipede
-{
-Centipede::Centipede()
-{
-  Enemy new_enemy;
-  Position tmp;
+  namespace game
+  {
+    namespace centipede
+    {
+      Centipede::Centipede() : AGame("centipede")
+      {
+	Enemy    new_enemy;
+	Position tmp;
 
+	// clang-format off
   std::vector<std::string> m =
       {
           "1111111111111111111111111",
@@ -41,6 +42,7 @@ Centipede::Centipede()
           "0000000000000000000000000",
           "0000000000000000000000000",
           "0000000000000000000000000"};
+// clang-format off
 
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();
@@ -88,7 +90,7 @@ Centipede::Centipede()
   m_hasShot = false;
 }
 
-Centipede::Centipede(Centipede const &other) : AGame()
+Centipede::Centipede(Centipede const &other) : AGame("centipede")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -147,6 +149,10 @@ void Centipede::notifyEvent(std::vector<Event> &&events)
           m_shoot.setCurTile(m_map->at(0, m_shoot[0].x, m_shoot[0].y).getType());
         }
         break;
+      case KB_ENTER:
+        if (m_finished)
+          m_state = MENU;
+        break;
       case KB_ESCAPE:
         m_state = MENU;
       default:
@@ -178,6 +184,7 @@ void Centipede::checkShoot()
   {
     if (e.isTouch(m_shoot[0]))
     {
+      m_score += 1;
       added.push_back(e.split(m_shoot[0]));
       m_obstacles.emplace_back();
       m_obstacles.back().push(m_shoot[0]);
@@ -224,6 +231,8 @@ void Centipede::checkShoot()
 
 void Centipede::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
 
@@ -278,7 +287,7 @@ void Centipede::process()
     {
       e.move(*m_map);
       if (e.isTouch(m_player[0]))
-        m_state = MENU;
+        m_finished = true;
     }
     m_lastTick = m_curTick;
   }
@@ -312,8 +321,10 @@ Position Centipede::placeObstacle(Map const &map) const
 void Centipede::WhereAmI(std::ostream &os) const
 {
   uint16_t size = static_cast<uint16_t>(m_player.size());
-  arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
+  arcade::WhereAmI header = {};;
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
+  header.type = CommandType::WHERE_AM_I;
+  header.lenght = size;
 
   for (size_t i = 0; i < size; ++i)
   {

@@ -1,5 +1,5 @@
 # Definitions for Makefile
-NAME=			$(ROOT_DIR)/games/lib_arcade_blockade.so
+NAME=			$(ROOT_DIR)/games/lib_arcade_blockade_local.so
 
 LOCAL_COMP_FLAGS=	-fPIC
 
