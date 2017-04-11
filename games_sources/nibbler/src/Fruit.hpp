@@ -9,7 +9,7 @@ namespace arcade
 {
 namespace game
 {
-namespace snake
+namespace nibbler
 {
 class Fruit : public AEntity
 {
