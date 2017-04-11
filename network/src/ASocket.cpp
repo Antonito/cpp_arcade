@@ -22,7 +22,9 @@ namespace arcade
         : m_socket(-1), m_port(0), m_host(""), m_ip(false), m_maxClients(0),
           m_curClients(0), m_addr{}, m_type(type)
     {
+#if defined(__linux__) || (__APPLE__)
       std::signal(SIGPIPE, SIG_IGN);
+#endif
 #if defined(_WIN32)
       // Do we need to load the network DLL ?
       if (!m_nbSockets && !initWSA())

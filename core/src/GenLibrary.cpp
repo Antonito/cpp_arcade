@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "GenLibrary.hpp"
 #include "RessourceError.hpp"
 
@@ -55,7 +56,10 @@ namespace arcade
           m_libPtr = LoadLibraryA(m_filename.c_str());
           if (!m_libPtr)
           {
-            throw RessourceError("Cannot load '" + m_filename + "' ! Error : " + GetLastError());
+            std::stringstream ss;
+            
+            ss << "Cannot load '" << m_filename << "' ! Error : " << GetLastError();
+            throw RessourceError(ss.str());
           }
 #endif
         }

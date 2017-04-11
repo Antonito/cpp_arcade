@@ -207,6 +207,7 @@ namespace arcade
 			ALLEGRO_LOCKED_REGION *_lr = al_lock_bitmap(bm, al_get_bitmap_format(bm), ALLEGRO_LOCK_READWRITE);
 			if (lr)
 			  {
+			    // TODO: Fix
 			    int width = al_get_bitmap_width(bm);
 			    int height = al_get_bitmap_height(bm);
 			    Color *_pixels = reinterpret_cast<Color *>(_lr->data);
@@ -223,7 +224,7 @@ namespace arcade
 						 cur.g * a + old.g * (1 - a),
 						 cur.b * a + old.b * (1 - a),
 						 cur.a + old.a * (1 - a));
-				    pixels[pix] = cur.full;
+				    pixels[pix] = merged.full;
 				  }
 			      }
 			    al_unlock_bitmap(bm);

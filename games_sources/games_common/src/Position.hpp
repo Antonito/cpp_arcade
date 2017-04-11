@@ -1,7 +1,12 @@
 #ifndef POS_HPP_
 #define POS_HPP_
 
-#include <stdint.h>
+#if defined(_WIN32)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
+#include <cstdint>
 #include "Map.hpp"
 
 namespace arcade

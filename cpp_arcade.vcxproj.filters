@@ -19,12 +19,6 @@
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{dd241250-55af-43fa-8531-f3bca1876441}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Exception">
-      <UniqueIdentifier>{2c9dc7d8-0c24-4dcf-9d3b-f4965ec7b69b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Network">
-      <UniqueIdentifier>{e82cc0d4-159e-48c0-b4c5-dc571591f914}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Logger">
       <UniqueIdentifier>{8ff34786-f30f-4ac0-a639-d160c3685c37}</UniqueIdentifier>
     </Filter>
@@ -33,18 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core\src\exceptions\AException.cpp">
-      <Filter>Source Files\Exception</Filter>
-    </ClCompile>
-    <ClCompile Include="core\src\exceptions\SockError.cpp">
-      <Filter>Source Files\Exception</Filter>
-    </ClCompile>
-    <ClCompile Include="core\src\network\ASocket.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="core\src\network\TCPSocket.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
     <ClCompile Include="core\src\GenLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
