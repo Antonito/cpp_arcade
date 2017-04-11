@@ -20,8 +20,8 @@ namespace arcade
     template <size_t len>
     struct NetworkGameEvent
     {
-      uint32_t		buffLen = len;
-      uint8_t		data[len];
+      uint32_t buffLen = len;
+      uint8_t  data[len];
     };
 
     ///
@@ -31,7 +31,7 @@ namespace arcade
     template <typename T>
     struct NetworkEntityEvent
     {
-      T		data;
+      T data;
     };
 
     ///
@@ -42,11 +42,11 @@ namespace arcade
     {
       struct
       {
-	ssize_t	x;
-	ssize_t	y;
-      }		pos;
-      uint8_t	dir;
-      size_t	life;
+	ssize_t x;
+	ssize_t y;
+      } pos;
+      uint8_t dir;
+      size_t  life;
     };
 
     ///
@@ -56,13 +56,13 @@ namespace arcade
     template <size_t gameEventLen, typename EntityDataType>
     struct NetworkPacketData
     {
-      NetworkPacketData() : action{}, game{}
-      {
-      };
+      NetworkPacketData() : action{}, game{} {};
 
-      void	handleAction(std::function <void (NetworkPlayerEvent const &)> _play,
-			     std::function <void (NetworkGameEvent<gameEventLen> const &)> _game,
-			     std::function <void (NetworkEntityEvent<EntityDataType> const &)> _entity)
+      void handleAction(
+          std::function<void(NetworkPlayerEvent const &)>             _play,
+          std::function<void(NetworkGameEvent<gameEventLen> const &)> _game,
+          std::function<void(NetworkEntityEvent<EntityDataType> const &)>
+              _entity)
       {
 	switch (action)
 	  {
@@ -80,13 +80,13 @@ namespace arcade
 	  }
       }
 
-      arcade::NetworkAction			action;
+      arcade::NetworkAction action;
       union
       {
-	bool					auth;
-	NetworkPlayerEvent			player;
-	NetworkGameEvent<gameEventLen>		game;
-	NetworkEntityEvent<EntityDataType>	entity;
+	bool                               auth;
+	NetworkPlayerEvent                 player;
+	NetworkGameEvent<gameEventLen>     game;
+	NetworkEntityEvent<EntityDataType> entity;
       };
     };
   }

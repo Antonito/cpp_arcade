@@ -13,6 +13,7 @@ namespace arcade
 {
   namespace Network
   {
+// Make sure you have to init / deinit WSA
 #if defined(_WIN32)
     uint32_t Network::ASocket::m_nbSockets = 0;
     bool     Network::ASocket::m_WSAInited = false;
@@ -23,6 +24,7 @@ namespace arcade
           m_curClients(0), m_addr{}, m_type(type)
     {
 #if defined(__linux__) || (__APPLE__)
+      // If we can, ignore SIGPIPE
       std::signal(SIGPIPE, SIG_IGN);
 #endif
 #if defined(_WIN32)
@@ -74,6 +76,7 @@ namespace arcade
 #endif
     }
 
+    // Close the socket
     bool ASocket::closeConnection()
     {
       if (m_socket > 0 && !closesocket(m_socket))
@@ -155,6 +158,7 @@ namespace arcade
       if (getaddrinfo(m_host.c_str(), std::to_string(m_port).c_str(), &hints,
                       &res) == 0)
 	{
+	  // Loop over all the potential addresses
 	  for (addrinfo_t *ptr = res; ptr; ptr = ptr->ai_next)
 	    {
 	      int ret = 0;
@@ -179,7 +183,6 @@ namespace arcade
 #endif
 	      if (ret != -1)
 		{
-		  std::cout << "Connected to host !" << std::endl;
 		  if (typeBackup == ASocket::NONBLOCKING)
 		    {
 		      m_type = ASocket::NONBLOCKING;
@@ -213,8 +216,9 @@ namespace arcade
 	}
       if (m_port != 0)
 	{
+	  // Try to reuse the socket
 	  if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &enable,
-			 sizeof(enable)) < 0)
+	                 sizeof(enable)) < 0)
 	    {
 	      if (errno != EINVAL)
 		throw Network::SockError("Cannot set socket options");
@@ -222,6 +226,7 @@ namespace arcade
 	}
     }
 
+    // Set the socket to blocking or non-blocking state
     bool ASocket::setSocketType() const
     {
       bool ret;

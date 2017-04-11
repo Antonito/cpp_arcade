@@ -12,6 +12,7 @@
 #include <unistd.h>
 #define closesocket(s) close(s)
 
+// Uniform type declarations
 typedef int                sock_t;
 typedef struct sockaddr_in sockaddr_in_t;
 typedef struct sockaddr    sockaddr_t;
@@ -28,8 +29,9 @@ typedef struct addrinfo    addrinfo_t;
 #include <windows.h>
 #include <winsock2.h>
 #include <Ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "ws2_32.lib") // Link with ws2_32.lib
 
+// Uniform type declarations
 typedef SOCKET          sock_t;
 typedef SOCKADDR_IN     sockaddr_in_t;
 typedef SOCKADDR        sockaddr_t;

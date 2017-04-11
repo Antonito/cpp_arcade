@@ -40,7 +40,6 @@ namespace arcade
 	    }
 	  catch (std::exception &e)
 	    {
-	      // TODO: Logger ?
 	      ret = false;
 	    }
 	}
@@ -70,7 +69,6 @@ namespace arcade
 #endif
       if (ret < 0)
 	{
-	  // TODO: Handle errno
 	  return (false);
 	}
       return (true);
@@ -120,7 +118,7 @@ namespace arcade
                                 ssize_t *buffLen) const
     {
       assert(getType() == ASocket::BLOCKING);
-      *buffer = new uint8_t[rlen]; // TODO: Smart ptr ?
+      *buffer = new uint8_t[rlen];
 #if defined(__linux__) || defined(__APPLE__)
       *buffLen = ::recv(m_socket, static_cast<char *>(*buffer), rlen, 0);
 #elif defined(_WIN32)
@@ -129,7 +127,6 @@ namespace arcade
 #endif
       if (*buffLen < 0)
 	{
-	  // TODO: Handle errno
 	  *buffLen = 0;
 	  return (false);
 	}
@@ -201,12 +198,14 @@ namespace arcade
       if (m_port == 0)
 	{
 	  sockaddr_in_t newAddr = {};
-	  socklen_t len = sizeof(sockaddr_in_t);
+	  socklen_t     len = sizeof(sockaddr_in_t);
 
 	  // Get the port selected by the kernel
-	  if (getsockname(m_socket, reinterpret_cast<sockaddr_t *>(&newAddr), &len) == -1)
+	  if (getsockname(m_socket, reinterpret_cast<sockaddr_t *>(&newAddr),
+	                  &len) == -1)
 	    {
-	      throw Network::SockError("Cannot get port selected by the kernel");
+	      throw Network::SockError(
+	          "Cannot get port selected by the kernel");
 	    }
 	  m_port = ntohs(newAddr.sin_port);
 	}
