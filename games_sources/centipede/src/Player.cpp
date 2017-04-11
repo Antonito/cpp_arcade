@@ -41,7 +41,7 @@ namespace arcade
 
       std::unique_ptr<AEntity> Player::shoot() const
       {
-	std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
+	std::unique_ptr<AEntity> shoot = std::make_unique<Shoot>();
 
 	shoot->push(m_pos[0] + Direction::UP);
 	return (shoot);

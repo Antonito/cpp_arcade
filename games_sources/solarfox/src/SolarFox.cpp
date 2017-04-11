@@ -410,9 +410,11 @@ namespace arcade
   }
 }
 
+#if defined(__linux__)
 extern "C" void Play(void)
 {
   arcade::game::solarfox::SolarFox game;
 
   game.Play();
 }
+#endif
