@@ -63,11 +63,17 @@ namespace arcade
           std::stringstream ss;
           std::fstream os("scores/" + m_name + ".txt", std::ios::out | std::ios::trunc);
 
+          size_t last;
+
           ss << m_score;
           m_over->at(2).setText("Score : " + ss.str());
           if (os.is_open())
           {
-            os << m_score;
+            os >> last;
+            if (last < m_score)
+            {
+              os << m_score << std::endl;
+            }
           }
         }
         return (*m_over);

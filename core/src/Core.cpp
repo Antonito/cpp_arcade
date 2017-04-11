@@ -404,7 +404,7 @@ namespace arcade
       std::stringstream ss;
 
       ss << getScore(m_gameList[i].getName());
-      m_gui->at(m_firstGameIndex + 2 * m_selectedGameId + 1).setText(ss.str());
+      m_gui->at(m_firstGameIndex + 2 * i + 1).setText(ss.str());
     }
 
     if (m_lib->doesSupportSound())
@@ -811,7 +811,7 @@ namespace arcade
 
   size_t Core::getScore(std::string const &game)
   {
-    size_t score = 0;
+    size_t score = -1;
     if (game != "")
     {
       std::fstream fs("scores/" + game + ".txt", std::ios::in);
@@ -819,6 +819,7 @@ namespace arcade
       std::cout << "Reading from scores/" << game << ".txt" << std::endl;
       if (fs.is_open())
       {
+        std::cout << "Opened!" << std::endl;
         fs >> score;
       }
     }
