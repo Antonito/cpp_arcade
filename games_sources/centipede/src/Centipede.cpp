@@ -88,7 +88,7 @@ Centipede::Centipede()
   m_hasShot = false;
 }
 
-Centipede::Centipede(Centipede const &other)
+  Centipede::Centipede(Centipede const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
