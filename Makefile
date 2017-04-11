@@ -13,7 +13,6 @@ GFX_LIBS=		allegro5	\
 			sfml		\
 			caca		\
 			lapin		\
-			x		\
 			sfml_sound
 
 GFX_PROJECT=		$(addprefix $(GFX_LIBS_DIR), $(GFX_LIBS))
