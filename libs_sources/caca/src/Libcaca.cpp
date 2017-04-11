@@ -194,7 +194,7 @@ namespace arcade
 			     color.g * a + old.g * (1 - a),
 			     color.b * a + old.b * (1 - a),
 			     color.a + old.a * (1 - a));*/
-		    
+
 		    caca_put_char(m_canvas, x + _x, y + _y, ' ');
 		  }
 	      }
@@ -248,7 +248,7 @@ namespace arcade
     uint8_t g = color.g >> 4;
     uint8_t b = color.b >> 4;
 
-    
+
     return ((a << 12) | (r << 8) | (g << 4) | (b));
 	/*uint8_t a = color.a >> 3;
 	uint8_t r = color.r >> 3;
