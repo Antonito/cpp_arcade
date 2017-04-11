@@ -9,7 +9,7 @@ namespace game
 {
 namespace blockade_local
 {
-BlockadeLocal::BlockadeLocal()
+BlockadeLocal::BlockadeLocal() : AGame("blockade_local")
 {
   std::vector<std::string> m =
       {
@@ -77,7 +77,7 @@ BlockadeLocal::BlockadeLocal()
   m_tmpDir2 = Direction::DOWN;
 }
 
-BlockadeLocal::BlockadeLocal(BlockadeLocal const &other) : AGame()
+BlockadeLocal::BlockadeLocal(BlockadeLocal const &other) : AGame("blockade_local")
 {
   *m_map = *other.m_map;
   m_player1 = other.m_player1;
@@ -149,9 +149,13 @@ void BlockadeLocal::notifyEvent(std::vector<Event> &&events)
         if (m_player2.getDir() != Direction::LEFT)
           m_tmpDir2 = Direction::RIGHT;
         break;
-
+      case KB_ENTER:
+        if (m_finished)
+          m_state = MENU;
+        break;
       case KB_ESCAPE:
         m_state = MENU;
+        break;
       default:
         break;
       }
@@ -186,6 +190,8 @@ std::vector<std::unique_ptr<ISprite>> BlockadeLocal::getSpritesToLoad() const
 
 void BlockadeLocal::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_player1.display(*m_map, (m_curTick - m_lastTick) / 100.0);
@@ -208,7 +214,7 @@ void BlockadeLocal::process()
       m_player2.move(*m_map);
     }
     else
-      m_state = MENU;
+      m_finished = true;
     m_lastTick = m_curTick;
   }
 }

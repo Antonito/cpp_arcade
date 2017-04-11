@@ -9,7 +9,7 @@ namespace game
 {
 namespace blockade
 {
-Blockade::Blockade()
+Blockade::Blockade() : AGame("blockade")
 {
   // clang-format off
   std::vector<std::string> m =
@@ -71,7 +71,7 @@ Blockade::Blockade()
   m_tmpDir = Direction::LEFT;
 }
 
-Blockade::Blockade(Blockade const &other) : AGame()
+Blockade::Blockade(Blockade const &other) : AGame("blockade")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -127,6 +127,11 @@ void Blockade::notifyEvent(std::vector<Event> &&events)
 	break;
       case KB_ESCAPE:
 	m_state = MENU;
+	break;
+      case KB_ENTER:
+	if (m_finished)
+	  m_state = MENU;
+	break;
       default:
 	break;
       }
@@ -168,6 +173,8 @@ std::vector<std::unique_ptr<ISprite>> Blockade::getSpritesToLoad() const
 
 void Blockade::process()
 {
+  if (m_finished)
+    return;
   m_curTick = this->getCurrentTick();
   m_map->clearLayer(1);
   m_player.display(*m_map, (m_curTick - m_lastTick) / 100.0);
@@ -181,6 +188,7 @@ void Blockade::process()
       m_soundsToPlay.emplace_back(0, PLAY);
       m_fruit[0] = placeFood(*m_map);
       m_fruit.updateSprite();
+      m_score += 1;
       m_player.push(m_player.last());
       m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
     }
@@ -191,7 +199,7 @@ void Blockade::process()
       m_player.move(*m_map);
     }
     else
-      m_state = MENU;
+      m_finished = true;
     m_lastTick = m_curTick;
   }
 }
