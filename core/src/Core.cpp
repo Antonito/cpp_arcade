@@ -616,7 +616,7 @@ Nope::Log::Info << "Exiting the core";
 
     if (musicCount)
     {
-     // m_soundsToPlay.emplace_back(musicIndex + rand() % musicCount, PLAY);
+      m_soundsToPlay.emplace_back(musicIndex + rand() % musicCount, PLAY);
     }
     return (s);
   }
