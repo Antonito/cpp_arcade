@@ -9,7 +9,7 @@ namespace game
 {
 namespace centipede
 {
-Centipede::Centipede()
+Centipede::Centipede() : AGame("centipede")
 {
   Enemy new_enemy;
   Position tmp;
@@ -88,7 +88,7 @@ Centipede::Centipede()
   m_hasShot = false;
 }
 
-Centipede::Centipede(Centipede const &other) : AGame()
+Centipede::Centipede(Centipede const &other) : AGame("centipede")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

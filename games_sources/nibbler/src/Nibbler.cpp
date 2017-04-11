@@ -9,7 +9,7 @@ namespace game
 {
 namespace nibbler
 {
-Nibbler::Nibbler()
+Nibbler::Nibbler() : AGame("nibbler")
 {
   // clang-format off
   std::vector<std::string> m =
@@ -77,7 +77,7 @@ Nibbler::Nibbler()
   m_tmpDir = Direction::UP;
 }
 
-Nibbler::Nibbler(Nibbler const &other) : AGame()
+Nibbler::Nibbler(Nibbler const &other) : AGame("nibbler")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

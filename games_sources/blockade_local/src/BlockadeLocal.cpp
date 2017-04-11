@@ -9,7 +9,7 @@ namespace game
 {
 namespace blockade_local
 {
-BlockadeLocal::BlockadeLocal()
+BlockadeLocal::BlockadeLocal() : AGame("blockade_local")
 {
   std::vector<std::string> m =
       {
@@ -77,7 +77,7 @@ BlockadeLocal::BlockadeLocal()
   m_tmpDir2 = Direction::DOWN;
 }
 
-BlockadeLocal::BlockadeLocal(BlockadeLocal const &other) : AGame()
+BlockadeLocal::BlockadeLocal(BlockadeLocal const &other) : AGame("blockade_local")
 {
   *m_map = *other.m_map;
   m_player1 = other.m_player1;

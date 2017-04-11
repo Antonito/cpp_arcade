@@ -9,7 +9,7 @@ namespace game
 {
 namespace qix
 {
-Qix::Qix()
+Qix::Qix() : AGame("qix")
 {
 
   std::vector<std::string> m =
@@ -75,7 +75,7 @@ Qix::Qix()
   m_dir = Direction::UP;
 }
 
-Qix::Qix(Qix const &other) : AGame()
+Qix::Qix(Qix const &other) : AGame("qix")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

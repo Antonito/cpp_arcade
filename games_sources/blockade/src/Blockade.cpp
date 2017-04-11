@@ -9,7 +9,7 @@ namespace game
 {
 namespace blockade
 {
-Blockade::Blockade()
+Blockade::Blockade() : AGame("blockade")
 {
   // clang-format off
   std::vector<std::string> m =
@@ -71,7 +71,7 @@ Blockade::Blockade()
   m_tmpDir = Direction::LEFT;
 }
 
-Blockade::Blockade(Blockade const &other) : AGame()
+Blockade::Blockade(Blockade const &other) : AGame("blockade")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

@@ -67,6 +67,8 @@ namespace arcade
     virtual void notifyNetwork(std::vector<NetworkPacket> &&events);
     virtual std::vector<NetworkPacket> getNetworkToSend();
 
+    static size_t getScore(std::string const &);
+
     // Main menu
     size_t m_firstLibIndex;
     size_t m_firstGameIndex;

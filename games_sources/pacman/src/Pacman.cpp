@@ -9,7 +9,7 @@ namespace game
 {
 namespace pacman
 {
-Pacman::Pacman()
+Pacman::Pacman() : AGame("pacman")
 {
   Enemy new_enemy;
   std::vector<std::string> m =
@@ -100,7 +100,7 @@ Pacman::Pacman()
   m_hasEat = false;
 }
 
-Pacman::Pacman(Pacman const &other) : AGame()
+Pacman::Pacman(Pacman const &other) : AGame("pacman")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;

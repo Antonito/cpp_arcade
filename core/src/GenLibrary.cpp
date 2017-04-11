@@ -9,7 +9,9 @@ namespace arcade
   {
   }
 
-  GenLibrary::GenLibrary(std::string const &filename) : m_filename(filename)
+  GenLibrary::GenLibrary(std::string const &filename, std::string const &name) :
+    m_filename(filename),
+    m_name(name)
   {
     this->load(filename);
   }
@@ -63,5 +65,12 @@ namespace arcade
 	throw RessourceError(ss.str());
       }
 #endif
+  }
+
+  std::string GenLibrary::getName() const
+  {
+    if (m_name.size() < 14)
+      return ("");
+    return (m_name.substr(11).substr(0, m_name.size() - 14));
   }
 }

@@ -9,7 +9,7 @@ namespace game
 {
 namespace solarfox
 {
-SolarFox::SolarFox()
+SolarFox::SolarFox() : AGame("solarfox")
 {
   Position tmp;
 
@@ -137,7 +137,7 @@ SolarFox::SolarFox()
   m_curTick = 0;
 }
 
-SolarFox::SolarFox(SolarFox const &other) : AGame()
+SolarFox::SolarFox(SolarFox const &other) : AGame("solarfox")
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -343,7 +343,7 @@ void SolarFox::enemyShoot(size_t speed)
 
 void SolarFox::process()
 {
-  if (m_finsihed)
+  if (m_finished)
     return;
   m_curTick = this->getCurrentTick();
 

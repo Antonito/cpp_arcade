@@ -12,7 +12,7 @@ namespace game
 namespace pong
 {
 Pong::Pong()
-    : m_lastTick(0), m_curTick(0), m_lastUpTick(0), m_lastDownTick(0),
+    : AGame("pong"), m_lastTick(0), m_curTick(0), m_lastUpTick(0), m_lastDownTick(0),
       m_lastSendTick(0), m_state(PongState::AUTHENTICATING), m_fact(),
       m_updatePos(0)
 {
@@ -43,7 +43,7 @@ Pong::Pong()
 }
 
 Pong::Pong(Pong const &other)
-    : AGame(), m_lastTick(other.m_lastTick), m_curTick(other.m_curTick),
+    : AGame("pong"), m_lastTick(other.m_lastTick), m_curTick(other.m_curTick),
       m_id(other.m_id)
 {
   m_player[0] = other.m_player[0];
