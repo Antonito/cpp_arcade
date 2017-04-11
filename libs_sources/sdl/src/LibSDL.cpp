@@ -52,6 +52,7 @@ namespace arcade
 
   LibSDL::~LibSDL()
   {
+    m_sprites.clear();
     SDL_DestroyWindow(m_win);
     SDL_Quit();
     TTF_CloseFont(m_font);
@@ -233,18 +234,7 @@ namespace arcade
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
 
-    for (std::vector<SDL_Surface *> &s : m_sprites)
-      {
-	for (SDL_Surface *_s : s)
-	  {
-	    if (_s)
-	      {
-		SDL_FreeSurface(_s);
-	      }
-	  }
-      }
     m_sprites.clear();
-
     for (std::unique_ptr<ISprite> const &sprite : s)
       {
 	std::vector<SDL_Surface *> images;
