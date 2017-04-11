@@ -90,9 +90,11 @@ namespace arcade
 	    XEvent ev;
 
 	    XNextEvent(m_disp, &ev);
+	    m_canDraw = false;
 	    switch (ev.type)
 	      {
 	      case Expose:
+		std::cout << "Expose" << std::endl;
 		m_canDraw = true;
 		return (false);
 		break;
@@ -107,16 +109,19 @@ namespace arcade
 
 		// Mouse
 	      case ButtonPress:
+		m_canDraw = false;
 		e.type = EventType::ET_MOUSE;
 		e.action = ActionType::AT_PRESSED;
 		// TODO
 		break;
 	      case ButtonRelease:
+		m_canDraw = false;
 		e.type = EventType::ET_MOUSE;
 		e.action = ActionType::AT_RELEASED;
 		// TODO
 		break;
 	      case MotionNotify:
+		m_canDraw = false;
 		e.type = EventType::ET_MOUSE;
 		e.action = ActionType::AT_MOVED;
 		// TODO
@@ -130,14 +135,13 @@ namespace arcade
 		break;
 	      case KeyRelease:
 		e.type = EventType::ET_KEYBOARD;
-		e.action = ActionType::AT_PRESSED;
+		e.action = ActionType::AT_RELEASED;
 		e.kb_key = LibX::getKeyboardKey(ev.xkey.keycode);
 		break;
 	      default:
 		break;
 	      }
 	  }
-	m_canDraw = true;
 	return (true);
       }
     return (false);
@@ -262,16 +266,17 @@ namespace arcade
     if (m_canDraw)
       {
 	if (m_map)
-	  XPutImage(m_disp, m_win, m_gc, m_map, 0, 0, 0, 0, m_width, m_height); // TODO : Check positiiiioooonn
+	  XPutImage(m_disp, m_win, m_gc, m_map, 0, 0, 0, 0, m_width, m_height);
 	XPutImage(m_disp, m_win, m_gc, m_gui, 0, 0, 0, 0, m_width, m_height);
 	XFlush(m_disp);
-	m_canDraw = false;
+	m_canDraw = true;
       }
   }
 
   void LibX::clear()
   {
-    XClearWindow(m_disp, m_win);
+    if (m_canDraw)
+      XClearWindow(m_disp, m_win);
   }
 
   void LibX::drawPixel(size_t x, size_t y, Color color)
