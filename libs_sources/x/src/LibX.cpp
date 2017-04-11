@@ -153,15 +153,12 @@ namespace arcade
     return (false);
   }
 
-  void LibX::loadSounds(
-      std::vector<std::pair<std::string, SoundType>> const &sounds)
+  void LibX::loadSounds(std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void LibX::soundControl(Sound const &sound)
+  void LibX::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
   void LibX::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)

@@ -116,14 +116,12 @@ namespace arcade
   }
 
   void LibSDL::loadSounds(
-      std::vector<std::pair<std::string, SoundType>> const &sounds)
+      std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void LibSDL::soundControl(Sound const &sound)
+  void LibSDL::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
   void LibSDL::updateMap(IMap const &map)

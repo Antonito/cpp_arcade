@@ -5,19 +5,18 @@ namespace arcade
   namespace game
   {
     Component::Component()
-    {}
+    {
+    }
 
     Component::Component(double x, double y, double width, double height,
-      Color color, std::string const & text) :
-      m_pos({ x, y }),
-      m_size({ width, height }),
-      m_color(color),
-      m_text(text)
+                         Color color, std::string const &text)
+        : m_pos({x, y}), m_size({width, height}), m_color(color), m_text(text)
     {
     }
 
     Component::~Component()
-    {}
+    {
+    }
 
     double Component::getX() const
     {
@@ -69,7 +68,7 @@ namespace arcade
       return (m_color);
     }
 
-    std::string const & Component::getText() const
+    std::string const &Component::getText() const
     {
       return (m_text);
     }
@@ -84,7 +83,7 @@ namespace arcade
       m_color = color;
     }
 
-    void Component::setText(std::string const & text)
+    void Component::setText(std::string const &text)
     {
       m_text = text;
     }

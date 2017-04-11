@@ -101,14 +101,12 @@ namespace arcade
   }
 
   void Libcaca::loadSounds(
-      std::vector<std::pair<std::string, SoundType>> const &sounds)
+      std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void Libcaca::soundControl(Sound const &sound)
+  void Libcaca::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
   void Libcaca::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)

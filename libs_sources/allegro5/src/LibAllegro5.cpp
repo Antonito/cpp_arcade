@@ -13,8 +13,7 @@
 namespace arcade
 {
   LibAllegro5::LibAllegro5(size_t width, size_t height)
-      : m_width(width), m_height(height), m_gui(nullptr),
-        m_font(nullptr)
+      : m_width(width), m_height(height), m_gui(nullptr), m_font(nullptr)
   {
     if (!al_init())
       {
@@ -128,14 +127,12 @@ namespace arcade
   }
 
   void LibAllegro5::loadSounds(
-      std::vector<std::pair<std::string, SoundType>> const &sounds)
+      std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void LibAllegro5::soundControl(Sound const &sound)
+  void LibAllegro5::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
   void
@@ -336,9 +333,8 @@ namespace arcade
     return (MouseKey::M_NONE);
   }
 
-  MouseKey LibAllegro5::getMouseWheel(int code)
+  MouseKey LibAllegro5::getMouseWheel(int)
   {
-    static_cast<void>(code);
     return (MouseKey::M_NONE);
   }
 

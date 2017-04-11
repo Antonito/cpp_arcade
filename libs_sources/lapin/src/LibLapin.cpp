@@ -317,9 +317,8 @@ namespace arcade
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_eventLoop(void *data)
+  t_bunny_response LibLapin::_eventLoop(void *)
   {
-    static_cast<void>(data);
     return (EXIT_ON_ERROR);
   }
 
@@ -349,70 +348,60 @@ namespace arcade
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_moveHandler(t_bunny_position const *relative,
-                                          void *                  dat)
+  t_bunny_response LibLapin::_moveHandler(t_bunny_position const *, void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(relative);
     static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_wheelHandler(int wheelId, int delta, void *dat)
+  t_bunny_response LibLapin::_wheelHandler(int, int, void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(wheelId);
-    static_cast<void>(delta);
     static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_lostFocusHandler(t_bunny_window const *win,
-                                               void *                dat)
+  t_bunny_response LibLapin::_lostFocusHandler(t_bunny_window const *,
+                                               void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(win);
     static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_gotFocusHandler(t_bunny_window const *win,
-                                              void *                dat)
+  t_bunny_response LibLapin::_gotFocusHandler(t_bunny_window const *,
+                                              void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(win);
     static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_resizeHandler(t_bunny_window const *  win,
-                                            t_bunny_position const *size,
-                                            void *                  dat)
+  t_bunny_response LibLapin::_resizeHandler(t_bunny_window const *,
+                                            t_bunny_position const *,
+                                            void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(win);
-    static_cast<void>(size);
     static_cast<void>(e);
     return (EXIT_ON_SUCCESS);
   }
 
-  t_bunny_response LibLapin::_closeHandler(t_bunny_window const *win,
-                                           void *                dat)
+  t_bunny_response LibLapin::_closeHandler(t_bunny_window const *, void *dat)
   {
     Event *e = static_cast<Event *>(dat);
 
     assert(e);
-    static_cast<void>(win);
     e->type = EventType::ET_QUIT;
     return (EXIT_ON_SUCCESS);
   }

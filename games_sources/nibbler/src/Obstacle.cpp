@@ -2,29 +2,29 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace nibbler
-{
-Obstacle::Obstacle()
-{
-}
-
-void Obstacle::display(Map &map, double ratio) const
-{
-  static_cast<void>(ratio);
-  for (Position const &p : m_pos)
+  namespace game
   {
-    Tile &tile = map.at(1, p.x, p.y);
+    namespace nibbler
+    {
+      Obstacle::Obstacle()
+      {
+      }
 
-    tile.setColor(Color::Red);
-    // tile.setSprite(m_sprite);
+      void Obstacle::display(Map &map, double ratio) const
+      {
+	static_cast<void>(ratio);
+	for (Position const &p : m_pos)
+	  {
+	    Tile &tile = map.at(1, p.x, p.y);
+
+	    tile.setColor(Color::Red);
+	    // tile.setSprite(m_sprite);
+	  }
+      }
+
+      Obstacle::~Obstacle()
+      {
+      }
+    }
   }
-}
-
-Obstacle::~Obstacle()
-{
-}
-}
-}
 }

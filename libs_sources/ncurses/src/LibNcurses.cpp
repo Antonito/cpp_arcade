@@ -7,8 +7,7 @@
 
 namespace arcade
 {
-  LibNcurses::LibNcurses(size_t width, size_t height)
-      : m_win(nullptr)
+  LibNcurses::LibNcurses(size_t width, size_t height) : m_win(nullptr)
   {
     initscr();
     clear();
@@ -87,14 +86,12 @@ namespace arcade
   }
 
   void LibNcurses::loadSounds(
-      std::vector<std::pair<std::string, SoundType>> const &sounds)
+      std::vector<std::pair<std::string, SoundType>> const &)
   {
-    static_cast<void>(sounds);
   }
 
-  void LibNcurses::soundControl(Sound const &sound)
+  void LibNcurses::soundControl(Sound const &)
   {
-    static_cast<void>(sound);
   }
 
   void LibNcurses::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)

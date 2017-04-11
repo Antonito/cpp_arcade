@@ -8,21 +8,21 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace spaceinvader
-{
-class Enemy : public AMovable
-{
+  namespace game
+  {
+    namespace spaceinvader
+    {
+      class Enemy : public AMovable
+      {
 
-public:
-  Enemy();
-  Enemy(Enemy const &other) = default;
-  virtual ~Enemy();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move(Map &map);
-};
-}
-}
+      public:
+	Enemy();
+	Enemy(Enemy const &other) = default;
+	virtual ~Enemy();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	virtual void move(Map &map);
+      };
+    }
+  }
 }
 #endif // !ENEMY_HPP_

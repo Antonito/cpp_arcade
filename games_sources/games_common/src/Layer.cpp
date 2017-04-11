@@ -5,7 +5,8 @@ namespace arcade
 {
   namespace game
   {
-    Layer::Layer(size_t width, size_t height) : m_width(width), m_height(height)
+    Layer::Layer(size_t width, size_t height)
+        : m_width(width), m_height(height)
     {
       Tile tile;
 
@@ -15,17 +16,15 @@ namespace arcade
       m_tiles.insert(m_tiles.begin(), width * height, tile);
     }
 
-    Layer::Layer(Layer const & other) :
-      m_tiles(other.m_tiles),
-      m_width(other.m_width),
-      m_height(other.m_height)
+    Layer::Layer(Layer const &other)
+        : m_tiles(other.m_tiles), m_width(other.m_width),
+          m_height(other.m_height)
     {
     }
 
-    Layer::Layer(Layer && other) :
-      m_tiles(std::move(other.m_tiles)),
-      m_width(other.m_width),
-      m_height(other.m_height)
+    Layer::Layer(Layer &&other)
+        : m_tiles(std::move(other.m_tiles)), m_width(other.m_width),
+          m_height(other.m_height)
     {
       other.m_width = 0;
       other.m_height = 0;
@@ -35,27 +34,27 @@ namespace arcade
     {
     }
 
-    Layer & Layer::operator=(Layer const & other)
+    Layer &Layer::operator=(Layer const &other)
     {
       if (this != &other)
-      {
-        m_tiles = other.m_tiles;
-        m_width = other.m_width;
-        m_height = other.m_height;
-      }
+	{
+	  m_tiles = other.m_tiles;
+	  m_width = other.m_width;
+	  m_height = other.m_height;
+	}
       return (*this);
     }
 
-    Layer & Layer::operator=(Layer && other)
+    Layer &Layer::operator=(Layer &&other)
     {
       if (this != &other)
-      {
-        m_tiles = std::move(other.m_tiles);
-        m_width = other.m_width;
-        m_height = other.m_height;
-        other.m_width = 0;
-        other.m_height = 0;
-      }
+	{
+	  m_tiles = std::move(other.m_tiles);
+	  m_width = other.m_width;
+	  m_height = other.m_height;
+	  other.m_width = 0;
+	  other.m_height = 0;
+	}
       return (*this);
     }
 
@@ -72,23 +71,23 @@ namespace arcade
     void Layer::clear(Color color)
     {
       for (Tile &tile : m_tiles)
-      {
-        tile.setColor(color);
-        tile.removeSprite();
-        tile.setShiftX(0);
-        tile.setShiftY(0);
-      }
+	{
+	  tile.setColor(color);
+	  tile.removeSprite();
+	  tile.setShiftX(0);
+	  tile.setShiftY(0);
+	}
     }
 
     void Layer::clear(Color color, size_t sprite)
     {
       for (Tile &tile : m_tiles)
-      {
-        tile.setColor(color);
-        tile.setSprite(sprite);
-        tile.setShiftX(0);
-        tile.setShiftY(0);
-      }
+	{
+	  tile.setColor(color);
+	  tile.setSprite(sprite);
+	  tile.setShiftX(0);
+	  tile.setShiftY(0);
+	}
     }
 
     size_t Layer::getWidth() const

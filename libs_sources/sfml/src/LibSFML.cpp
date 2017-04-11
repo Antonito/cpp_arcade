@@ -408,9 +408,8 @@ namespace arcade
     return (MouseKey::M_NONE);
   }
 
-  MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel code)
+  MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel)
   {
-    static_cast<void>(code);
     return (MouseKey::M_NONE);
   }
 

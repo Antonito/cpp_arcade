@@ -5,14 +5,11 @@ namespace arcade
 {
   namespace game
   {
-    Sprite::Sprite(std::string const & path, std::string const & name,
-      size_t count, std::string const & extension,
-      std::string const & ascii) :
-      m_path(path),
-      m_name(name),
-      m_extension(extension),
-      m_count(count),
-      m_ascii(ascii)
+    Sprite::Sprite(std::string const &path, std::string const &name,
+                   size_t count, std::string const &extension,
+                   std::string const &ascii)
+        : m_path(path), m_name(name), m_extension(extension), m_count(count),
+          m_ascii(ascii)
     {
     }
 

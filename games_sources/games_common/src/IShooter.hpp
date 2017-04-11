@@ -10,7 +10,7 @@ namespace arcade
     class IShooter
     {
     public:
-      virtual ~IShooter() {};
+      virtual ~IShooter(){};
 
       virtual std::unique_ptr<AEntity> shoot() const = 0;
     };

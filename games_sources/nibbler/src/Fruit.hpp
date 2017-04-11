@@ -7,24 +7,24 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace nibbler
-{
-class Fruit : public AEntity
-{
+  namespace game
+  {
+    namespace nibbler
+    {
+      class Fruit : public AEntity
+      {
 
-public:
-  Fruit();
-  Fruit(Fruit const &other) = default;
-  virtual ~Fruit();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  void updateSprite();
+      public:
+	Fruit();
+	Fruit(Fruit const &other) = default;
+	virtual ~Fruit();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	void updateSprite();
 
-private:
-  size_t m_sprite;
-};
-}
-}
+      private:
+	size_t m_sprite;
+      };
+    }
+  }
 }
 #endif // !FRUIT_HPP_

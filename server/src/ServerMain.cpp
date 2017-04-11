@@ -2,13 +2,11 @@
 #include <iostream>
 #include "GameServer.hpp"
 
-int main(int ac, char **av)
+int main(int, char **)
 {
   arcade::GameServer srv(0, 64);
   bool               leave = false;
 
-  static_cast<void>(ac);
-  static_cast<void>(av);
   std::cout << "Arcade Game Server" << std::endl;
   srv.run();
 
