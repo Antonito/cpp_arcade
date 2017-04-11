@@ -837,7 +837,7 @@ namespace arcade
   size_t Core::getScore(std::string const &game)
   {
     size_t score = 0;
-    std::cout << "Reading from scores/" << game << ".txt" << std::endl;
+
     if (game != "")
       {
 	std::fstream fs("scores/" + game + ".txt", std::ios::in);
