@@ -223,6 +223,11 @@ void SpaceInvader::process()
   if (m_curTick - m_lastTick > 300 + (100 * (m_enemy.size() / 5)))
   {
     m_enemy.move(*m_map);
+    for (size_t i = 0; i < m_enemy.size(); i++)
+    {
+      if (!m_enemy[i].inMap(*m_map))
+        m_state = MENU;
+    }
     if (m_enemy.isTouch(m_player[0]))
       m_state = MENU;
     m_lastTick = m_curTick;
