@@ -4,7 +4,13 @@
 ### Games
 We currently support a few games.
 - Snake
+- Nibbler
+- Blockade
 - Centipede
+- SolarFox
+- Pacman
+- Pong (multiplayer, network)
+- Space Invaders
 
 ### Libs
 We currently support those libraries
@@ -18,17 +24,6 @@ We currently support those libraries
 
 You can switch to another library at any moment.
 
-# Coming Soon
-
-- Savegames
-- Record and replay games
-- Multiplayer
-- OpenGL Library
-- NDK++ Library
-- More games
-
 # IMPORTANT
 Diagramme de classe (/2)
 Manuel descriptif du programme (/2)
-Réseau(/6)
-Jeux supplémentaires (/10)

@@ -92,7 +92,7 @@ SpaceInvader::SpaceInvader()
   m_hasShot = false;
 }
 
-SpaceInvader::SpaceInvader(SpaceInvader const &other)
+  SpaceInvader::SpaceInvader(SpaceInvader const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
