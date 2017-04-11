@@ -73,7 +73,7 @@ Centipede::Centipede()
   new_enemy.push(Position(m_map->getWidth() / 2, 0), 10);
   new_enemy.setDir(Direction::RIGHT);
   m_enemy.push_back(new_enemy);
-  for (size_t i = 0; i < 0; i++)
+  for (size_t i = 0; i < 15; i++)
   {
     tmp = placeObstacle(*m_map);
     m_obstacles.push_back(Obstacle());
@@ -179,7 +179,6 @@ void Centipede::checkShoot()
     if (e.isTouch(m_shoot[0]))
     {
       added.push_back(e.split(m_shoot[0]));
-      //e.erase(m_shoot[0]);
       m_obstacles.emplace_back();
       m_obstacles.back().push(m_shoot[0]);
       m_obstacles.back().setPv(5);
@@ -208,7 +207,7 @@ void Centipede::checkShoot()
       it->hit();
       if (it->getPv() == 0)
       {
-        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::EMPTY);
+        m_map->at(0, (*it)[0].x, (*it)[0].y).setType(TileType::BLOCK);
         it = m_obstacles.erase(it);
       }
       else
@@ -246,6 +245,14 @@ void Centipede::process()
     e.display(*m_map);
   }
 
+  if (m_enemy.size() == 0)
+  {
+    Enemy new_enemy;
+    new_enemy.push(Position(m_map->getWidth() / 2, 0), 10);
+    new_enemy.setDir(Direction::RIGHT);
+    m_enemy.push_back(new_enemy);
+  }
+
   for (std::vector<Enemy>::iterator it = m_enemy.begin(); it != m_enemy.end();)
   {
     if (it->size() == 0)
@@ -261,7 +268,7 @@ void Centipede::process()
   //Movement of the shoot ,enemy and check of collision
   if (m_hasShot && m_curTick - m_lastShootTick > 40)
   {
-  m_shoot.move(*m_map);
+    m_shoot.move(*m_map);
     m_lastShootTick = m_curTick;
   }
 

@@ -5,7 +5,6 @@
 #include <ostream>
 #include "AGame.hpp"
 #include "Player.hpp"
-#include "Enemy.hpp"
 #include "AEntity.hpp"
 
 namespace arcade
@@ -36,13 +35,9 @@ public:
   virtual void WhereAmI(std::ostream &) const;
 #endif
 private:
-  Position placeObstacle(Map const &map) const;
-  void checkShoot();
   Player m_player;
-  std::vector<Obstacle> m_obstacles;
-  std::vector<Enemy> m_enemy;
-  Shoot m_shoot;
-  bool m_hasShot;
+  Direction m_dir;
+
   size_t m_lastTick;
   size_t m_lastShootTick;
   size_t m_curTick;

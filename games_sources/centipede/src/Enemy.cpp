@@ -58,7 +58,7 @@ void Enemy::move(Map &map)
   }
 }
 
-Enemy Enemy::split(Position const & p)
+Enemy Enemy::split(Position const &p)
 {
   size_t block = 0;
   Enemy newEnemy;
@@ -74,7 +74,6 @@ Enemy Enemy::split(Position const & p)
   if (block != m_pos.size() - 1)
   {
     newEnemy.m_pos.insert(newEnemy.m_pos.begin(), m_pos.begin() + block + 1, m_pos.end());
-    
   }
   m_pos.resize(block);
   newEnemy.m_dir = m_dir;
