@@ -80,25 +80,21 @@ namespace arcade
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_MOVED;
 	    e.m_key = MouseKey::M_NONE;
-	    // TODO : add mouse position
 	    break;
 	  case SDL_MOUSEBUTTONDOWN:
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_PRESSED;
 	    e.m_key = LibSDL::getMouseKey(ev.button.button);
-	    // TODO : add mouse position
 	    break;
 	  case SDL_MOUSEBUTTONUP:
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_RELEASED;
 	    e.m_key = LibSDL::getMouseKey(ev.button.button);
-	    // TODO : add mouse position
 	    break;
 	  case SDL_MOUSEWHEEL:
 	    e.type = EventType::ET_MOUSE;
 	    e.action = ActionType::AT_NONE;
 	    e.m_key = LibSDL::getMouseWheel(ev.wheel);
-	    // TODO : add mouse position
 	    break;
 	  case SDL_QUIT:
 	    e.type = EventType::ET_QUIT;
@@ -122,14 +118,12 @@ namespace arcade
   void LibSDL::loadSounds(
       std::vector<std::pair<std::string, SoundType>> const &sounds)
   {
-    (void)sounds;
-    // TODO : implement
+    static_cast<void>(sounds);
   }
 
   void LibSDL::soundControl(Sound const &sound)
   {
-    (void)sound;
-    // TODO : implement
+    static_cast<void>(sound);
   }
 
   void LibSDL::updateMap(IMap const &map)

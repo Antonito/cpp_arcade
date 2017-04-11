@@ -28,7 +28,6 @@ namespace arcade
 
   Libcaca::~Libcaca()
   {
-    // TODO : implement
     if (m_map)
       caca_free_canvas(m_map);
     caca_free_canvas(m_canvas);
@@ -117,7 +116,7 @@ namespace arcade
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
 
-    (void)s;
+    static_cast<void>(s);
   }
 
   void Libcaca::updateMap(IMap const &map)
@@ -135,7 +134,7 @@ namespace arcade
 		ITile const &tile = map.at(l, x, y);
 
 		// In case of sprite
-		if (tile.getSpriteId() != 0 && false) // TODO: Enable
+		if (tile.getSpriteId() != 0 && false)
 		  {
 		  }
 		// Display color
@@ -218,7 +217,6 @@ namespace arcade
   {
     MousePos pos;
 
-    // TODO : Check correctness
     pos.x = caca_get_mouse_x(m_win);
     pos.y = caca_get_mouse_y(m_win);
     return (pos);

@@ -37,8 +37,7 @@ namespace arcade
     al_set_window_title(m_win, "Arcade allegro");
     if (!al_install_keyboard())
       {
-	throw CapabilityError(
-	    "Cannot install keyboard handler Allegro5"); // TODO
+	throw CapabilityError("Cannot install keyboard handler Allegro5");
       }
     if (!al_install_mouse())
       {

@@ -96,7 +96,6 @@ namespace arcade
 	    switch (ev.type)
 	      {
 	      case Expose:
-		std::cout << "Expose" << std::endl;
 		m_canDraw = true;
 		return (false);
 		break;

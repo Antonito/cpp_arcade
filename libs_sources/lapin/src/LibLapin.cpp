@@ -274,7 +274,6 @@ namespace arcade
   {
     MousePos pos;
 
-    // TODO
     pos.x = 0;
     pos.y = 0;
     return (pos);
@@ -355,7 +354,6 @@ namespace arcade
   {
     Event *e = static_cast<Event *>(dat);
 
-    // TODO
     assert(e);
     static_cast<void>(relative);
     static_cast<void>(e);
@@ -366,7 +364,6 @@ namespace arcade
   {
     Event *e = static_cast<Event *>(dat);
 
-    // TODO
     assert(e);
     static_cast<void>(wheelId);
     static_cast<void>(delta);
@@ -379,7 +376,6 @@ namespace arcade
   {
     Event *e = static_cast<Event *>(dat);
 
-    // TODO
     assert(e);
     static_cast<void>(win);
     static_cast<void>(e);
@@ -391,7 +387,6 @@ namespace arcade
   {
     Event *e = static_cast<Event *>(dat);
 
-    // TODO
     assert(e);
     static_cast<void>(win);
     static_cast<void>(e);
@@ -404,7 +399,6 @@ namespace arcade
   {
     Event *e = static_cast<Event *>(dat);
 
-    // TODO
     assert(e);
     static_cast<void>(win);
     static_cast<void>(size);

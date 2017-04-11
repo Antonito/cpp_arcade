@@ -5,6 +5,7 @@
 #include "GameState.hpp"
 #include "Logger.hpp"
 #include "RessourceError.hpp"
+#include "SockError.hpp"
 
 //
 // PLEASE READ CAREFULLY
@@ -404,7 +405,7 @@ namespace arcade
 	m_sock->openConnection();
 	if (!m_sock->isStarted())
 	  {
-	    throw std::exception(); // TODO: Change
+	    throw Network::SockError("Cannot initialize connection");
 	  }
       }
     m_gameState = INGAME;

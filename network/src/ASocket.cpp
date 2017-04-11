@@ -5,7 +5,7 @@
 
 #include <csignal>
 #include <cassert>
-#include <iostream> // TODO: RM
+#include <iostream>
 #include "ASocket.hpp"
 #include "SockError.hpp"
 

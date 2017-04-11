@@ -99,7 +99,6 @@ namespace arcade
 	    e.action = ActionType::AT_NONE;
 	    // e.m_key = ;
 	    e.pos_abs = LibSFML::getMousePos();
-	    // TODO: Get mousekey
 	    break;
 	  default:
 	    e.type = EventType::ET_NONE;
@@ -411,8 +410,7 @@ namespace arcade
 
   MouseKey LibSFML::getMouseWheel(sf::Mouse::Wheel code)
   {
-    // TODO : implement
-    (void)code;
+    static_cast<void>(code);
     return (MouseKey::M_NONE);
   }
 
