@@ -2,7 +2,8 @@
 
 namespace arcade
 {
-  CapabilityError::CapabilityError(std::string const &msg) : AException("CapabilityError: ", msg)
+  CapabilityError::CapabilityError(std::string const &msg)
+      : AException("CapabilityError: ", msg)
   {
   }
 }

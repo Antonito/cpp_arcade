@@ -2,7 +2,8 @@
 
 namespace arcade
 {
-  RessourceError::RessourceError(std::string const &msg) : AException("RessourceError: ", msg)
+  RessourceError::RessourceError(std::string const &msg)
+      : AException("RessourceError: ", msg)
   {
   }
 }

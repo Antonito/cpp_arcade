@@ -50,24 +50,28 @@ namespace arcade
     /// \brief Ask if the library support sound
     ///
     virtual bool doesSupportSound() const = 0;
-	  ///
-	  /// \fn virtual void loadSounds(std::vector<std::pair<std::string, SoundType > > const &sounds) = 0
-  	/// \brief Ask the lib to remove and load new sounds
-	  ///
-    virtual void loadSounds(std::vector<std::pair<std::string, SoundType > > const &sounds) = 0;
-	  ///
-	  /// \fn virtual void soundControl(const Sound &sound) = 0
-	  /// \brief Ask the lib to play a sound
-	  ///
+    ///
+    /// \fn virtual void loadSounds(std::vector<std::pair<std::string,
+    /// SoundType > > const &sounds) = 0
+    /// \brief Ask the lib to remove and load new sounds
+    ///
+    virtual void loadSounds(
+        std::vector<std::pair<std::string, SoundType>> const &sounds) = 0;
+    ///
+    /// \fn virtual void soundControl(const Sound &sound) = 0
+    /// \brief Ask the lib to play a sound
+    ///
     virtual void soundControl(const Sound &sound) = 0;
 
     // Sprites
     ///
-    /// \fn virtual std::vector<int> const &loadSprites(std::vector<std::string> const &sprites) = 0
+    /// \fn virtual std::vector<int> const
+    /// &loadSprites(std::vector<std::string> const &sprites) = 0
     /// \brief Load sprites in the lib from the paths given by the game
     /// \param sprites to pass the path of your sprites to give your lib
     ///        the way to search your assets
-    virtual void loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites) = 0;
+    virtual void
+        loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites) = 0;
 
     // Map
     ///
@@ -77,10 +81,10 @@ namespace arcade
     virtual void updateMap(IMap const &map) = 0;
 
     // GUI
-  	///
-	  /// \fn virtual void updateGUI(IGUI &gui) = 0
-  	/// \brief Update the GUI displayed
-	  ///
+    ///
+    /// \fn virtual void updateGUI(IGUI &gui) = 0
+    /// \brief Update the GUI displayed
+    ///
     virtual void updateGUI(IGUI &gui) = 0;
 
     // Display

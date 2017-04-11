@@ -5,14 +5,14 @@
 
 namespace arcade
 {
-	namespace Network
-	{
-		class PacketError : public AException
-		{
-		public:
-			PacketError(std::string const &msg = "");
-		};
-	}
+  namespace Network
+  {
+    class PacketError : public AException
+    {
+    public:
+      PacketError(std::string const &msg = "");
+    };
+  }
 }
 
 #endif // !PACKETERROR_HPP_
