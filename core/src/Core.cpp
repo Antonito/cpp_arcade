@@ -2,6 +2,8 @@
 #include <utility>
 #include <sys/stat.h>
 #include <fstream>
+#include <memory>
+#include "Sprite.hpp"
 #include "Core.hpp"
 #include "GameState.hpp"
 #include "Logger.hpp"
@@ -27,7 +29,7 @@
 namespace arcade
 {
   Core::Core()
-      : AGame(""), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
+      : AGame("Core"), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
         m_selectedGameId(0), m_menuLib(true)
   {
     m_state = INGAME;
@@ -276,7 +278,7 @@ namespace arcade
 		Nope::Log::Info << "Adding library '" << ent->d_name << "'";
 
 		std::string libPath = std::string("lib/") + ent->d_name;
-		m_libList.emplace_back(libPath);
+		m_libList.emplace_back(libPath, "");
 
 #if defined(__linux__) || (__APPLE__)
 		if (stat(libPath.c_str(), &file) < 0)
@@ -347,7 +349,7 @@ namespace arcade
                 std::string name = std::string(ent->d_name);
                 name = name.substr(11);
                 name = name.substr(0, name.size() - 3);
-		m_gameList.emplace_back(std::string("games/") + ent->d_name);
+		m_gameList.emplace_back(std::string("games/") + ent->d_name, ent->d_name);
 
 		m_gui->push(game::Component(
 		    0.52, 0.35 + 0.05 * (m_gameList.size() - 1), 0.25, 0.05,
@@ -806,15 +808,17 @@ namespace arcade
   {
     std::vector<std::unique_ptr<ISprite>> s;
 
+    s.push_back(std::make_unique<game::Sprite>("assets/", "background", 1, ".jpg", " "));
     return (s);
   }
 
   size_t Core::getScore(std::string const &game)
   {
-    size_t score = -1;
+    size_t score = 0;
+    std::cout << "Reading from scores/" << game << ".txt" << std::endl;
     if (game != "")
     {
-      std::fstream fs("scores/" + game + ".txt", std::ios::in);
+      std::fstream fs("scores/" + game + ".txt");
 
       std::cout << "Reading from scores/" << game << ".txt" << std::endl;
       if (fs.is_open())

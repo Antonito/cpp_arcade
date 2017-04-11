@@ -5,7 +5,7 @@
 
 namespace arcade
 {
-  GenLibrary::GenLibrary() : m_filename(""), m_libPtr(nullptr)
+  GenLibrary::GenLibrary() : m_filename(""), m_name(""), m_libPtr(nullptr)
   {
   }
 
@@ -17,7 +17,7 @@ namespace arcade
   }
 
   GenLibrary::GenLibrary(GenLibrary const &other)
-      : GenLibrary(other.m_filename)
+      : GenLibrary(other.m_filename, other.m_name)
   {
   }
 

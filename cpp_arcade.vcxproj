@@ -47,6 +47,10 @@
       <Project>{79e9b945-7549-41fb-92d7-291ee994b02f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{214C9846-080F-4916-9A28-8FB713400826}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

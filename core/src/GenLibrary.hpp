@@ -25,7 +25,7 @@ namespace arcade
   {
   public:
     GenLibrary();
-    GenLibrary(std::string const &filename, std::string const &name = "");
+    GenLibrary(std::string const &filename, std::string const &name);
     GenLibrary(GenLibrary const &);
     ~GenLibrary();
     GenLibrary &operator=(GenLibrary const &);

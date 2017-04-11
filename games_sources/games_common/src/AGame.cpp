@@ -61,18 +61,23 @@ namespace arcade
         if (!m_overUpdated)
         {
           std::stringstream ss;
-          std::fstream os("scores/" + m_name + ".txt", std::ios::out | std::ios::trunc);
+          std::fstream os("scores/" + m_name + ".txt", std::ios::in);
 
-          size_t last;
+          size_t last = 0;
 
           ss << m_score;
           m_over->at(2).setText("Score : " + ss.str());
           if (os.is_open())
           {
             os >> last;
+            os.close();
             if (last < m_score)
             {
-              os << m_score << std::endl;
+              os.open("scores/" + m_name + ".txt", std::ios::out | std::ios::trunc);
+              if (os.is_open())
+              {
+                os << m_score << std::endl;
+              }
             }
           }
         }
