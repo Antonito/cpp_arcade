@@ -7,12 +7,13 @@
 
 namespace arcade
 {
-  GameClient::GameClient(sock_t socket, sockaddr_in_t const &in) :
-    m_sock(socket), m_in(in), m_buffSize(0),
-    m_buff(std::make_unique<uint8_t[]>(GameClient::buffSize)),
-    m_write(false), m_lastActionDate(std::chrono::system_clock::from_time_t(0)),
-    m_recQueue(), m_sendQueue(), m_authenticated(false), m_game(NetworkGames::NO_GAME),
-    m_state(State::AUTHENTICATING)
+  GameClient::GameClient(sock_t socket, sockaddr_in_t const &in)
+      : m_sock(socket), m_in(in), m_buffSize(0),
+        m_buff(std::make_unique<uint8_t[]>(GameClient::buffSize)),
+        m_write(false),
+        m_lastActionDate(std::chrono::system_clock::from_time_t(0)),
+        m_recQueue(), m_sendQueue(), m_authenticated(false),
+        m_game(NetworkGames::NO_GAME), m_state(State::AUTHENTICATING)
   {
     static_cast<void>(m_in);
   }
@@ -37,7 +38,8 @@ namespace arcade
     std::pair<uint32_t, std::shared_ptr<uint8_t>> pair = m_sendQueue.back();
 
     // Send buffer
-    ret = send(m_sock, reinterpret_cast<char *>(pair.second.get()), pair.first, 0);
+    ret = send(m_sock, reinterpret_cast<char *>(pair.second.get()), pair.first,
+               0);
     m_lastActionDate = std::chrono::system_clock::now();
     if (ret == -1)
       {
@@ -52,7 +54,9 @@ namespace arcade
   {
     ssize_t ret;
 
-    ret = recv(m_sock, reinterpret_cast<char *>(m_buff.get()), GameClient::buffSize, 0);
+    // Fill buffer
+    ret = recv(m_sock, reinterpret_cast<char *>(m_buff.get()),
+               GameClient::buffSize, 0);
     m_lastActionDate = std::chrono::system_clock::now();
     if (ret == -1)
       {
@@ -69,9 +73,11 @@ namespace arcade
       }
 
     // Build packet
-    std::shared_ptr<uint8_t> pck(new uint8_t[m_buffSize], std::default_delete<uint8_t[]>());
+    std::shared_ptr<uint8_t> pck(new uint8_t[m_buffSize],
+                                 std::default_delete<uint8_t[]>());
     std::memcpy(pck.get(), m_buff.get(), m_buffSize);
-    m_recQueue.push(std::pair<uint32_t, std::shared_ptr<uint8_t>>(m_buffSize, pck));
+    m_recQueue.push(
+        std::pair<uint32_t, std::shared_ptr<uint8_t>>(m_buffSize, pck));
     m_write = true;
     return (ClientAction::SUCCESS);
   }
@@ -80,8 +86,10 @@ namespace arcade
   {
     if (m_lastActionDate == std::chrono::system_clock::from_time_t(0))
       return (false);
-    size_t elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>
-      (std::chrono::system_clock::now() - m_lastActionDate).count();
+    size_t elapsed_seconds =
+        std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::system_clock::now() - m_lastActionDate)
+            .count();
     return (elapsed_seconds >= GameClient::timeOut);
   }
 
@@ -115,32 +123,34 @@ namespace arcade
     return (m_authenticated);
   }
 
-  NetworkGames	GameClient::getGame() const
+  NetworkGames GameClient::getGame() const
   {
     return (m_game);
   }
 
-  void		GameClient::setGame(NetworkGames game)
+  void GameClient::setGame(NetworkGames game)
   {
     m_game = game;
   }
 
-  GameClient::State	GameClient::getState() const
+  GameClient::State GameClient::getState() const
   {
     return (m_state);
   }
 
-  void		GameClient::setState(State state)
+  void GameClient::setState(State state)
   {
     m_state = state;
   }
 
-  void		        GameClient::sendData(std::pair<uint32_t, std::shared_ptr<uint8_t>> const &pck)
+  void GameClient::sendData(
+      std::pair<uint32_t, std::shared_ptr<uint8_t>> const &pck)
   {
     m_sendQueue.push(pck);
   }
 
-  std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>>	&GameClient::getRecQueue()
+  std::queue<std::pair<uint32_t, std::shared_ptr<uint8_t>>> &
+      GameClient::getRecQueue()
   {
     return (m_recQueue);
   }
