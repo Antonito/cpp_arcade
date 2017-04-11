@@ -5,7 +5,7 @@ namespace arcade
 {
 namespace game
 {
-namespace centipede
+namespace solarfox
 {
 Player::Player()
 {
@@ -29,7 +29,7 @@ void Player::display(Map &map, double ratio) const
 
 void Player::move(Map &map)
 {
-  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::OBSTACLE || map.at(0, next().x, next().y).getType() == TileType::BLOCK)
+  if (m_pos.size() == 0 || !next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::BLOCK || map.at(0, next().x, next().y).getType() == TileType::MY_SHOOT)
   {
     return;
   }
@@ -41,7 +41,8 @@ std::unique_ptr<AEntity> Player::shoot() const
 {
   std::unique_ptr<Shoot> shoot = std::make_unique<Shoot>();
 
-  shoot->push(m_pos[0] + Direction::UP);
+  shoot->push(m_pos[0] + m_dir);
+  shoot->setDir(m_dir);
   return (shoot);
 }
 }

@@ -18,6 +18,8 @@ Enemy::~Enemy()
 void Enemy::display(Map &map, double ratio) const
 {
   //ratio = 1 / (1 + std::exp(-ratio + 1.0));
+  static_cast<void>(ratio);
+
   for (size_t i = 0; i < m_pos.size(); ++i)
   {
     Tile &tile = map.at(1, m_pos[i].x, m_pos[i].y);
@@ -37,7 +39,7 @@ void Enemy::move(Map &map)
   }
   if (!next().inMap(map) || map.at(0, next().x, next().y).getType() == TileType::OBSTACLE)
   {
-    if (m_pos[0].y == map.getHeight() - 1)
+    if (static_cast<size_t>(m_pos[0].y) == map.getHeight() - 1)
       m_fallDir = Direction::UP;
     else if (m_pos[0].y == 0)
       m_fallDir = Direction::DOWN;

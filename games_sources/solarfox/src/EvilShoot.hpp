@@ -1,5 +1,5 @@
-#ifndef SHOOT_HPP_
-#define SHOOT_HPP_
+#ifndef EVILSHOOT_HPP_
+#define EVILSHOOT_HPP_
 
 #include <cstdlib>
 #include "AGame.hpp"
@@ -10,15 +10,15 @@ namespace arcade
 {
 namespace game
 {
-namespace centipede
+namespace solarfox
 {
-class Shoot : public AMovable
+class EvilShoot : public AMovable
 {
 
 public:
-  Shoot();
-  Shoot(Shoot const &other) = default;
-  virtual ~Shoot();
+  EvilShoot();
+  EvilShoot(EvilShoot const &other) = default;
+  virtual ~EvilShoot();
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
 
@@ -31,4 +31,4 @@ private:
 }
 }
 }
-#endif // !SHOOT_HPP_
+#endif // !EVILSHOOT_HPP_

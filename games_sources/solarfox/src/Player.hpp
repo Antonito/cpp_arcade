@@ -4,15 +4,17 @@
 #include <cstdlib>
 #include "AGame.hpp"
 #include "AEntity.hpp"
+#include "IShooter.hpp"
+#include "Shoot.hpp"
 #include "AMovable.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace pacman
+namespace solarfox
 {
-class Player : public AMovable
+class Player : public AMovable, public IShooter
 {
 
 public:
@@ -21,12 +23,7 @@ public:
   virtual ~Player();
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
-
-  void setNextDir(Direction);
-  Direction getNextDir() const;
-
-private:
-  Direction m_nextDir;
+  virtual std::unique_ptr<AEntity> shoot() const;
 };
 }
 }
