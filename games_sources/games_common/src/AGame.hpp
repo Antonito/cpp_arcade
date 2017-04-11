@@ -21,7 +21,7 @@ namespace arcade
     class AGame : public IGame
     {
     public:
-      AGame();
+      AGame(std::string const &name);
       AGame(AGame const &other) = delete;
       virtual ~AGame(){};
 
@@ -73,6 +73,9 @@ namespace arcade
 
       size_t getCurrentTick() const;
 
+      size_t m_score;
+      bool m_finished;
+
     private:
 #if defined(__linux__)
       void getMap(std::ostream &os) const;
@@ -84,6 +87,11 @@ namespace arcade
 
       bool           m_mouliMode;
       mutable size_t m_fakeTick;
+
+      std::unique_ptr<GUI> m_over;
+      bool m_overUpdated;
+
+      std::string m_name;
     };
   }
 }
