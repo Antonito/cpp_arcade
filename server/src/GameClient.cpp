@@ -7,7 +7,7 @@
 
 namespace arcade
 {
-  GameClient::GameClient(sock_t socket, sockaddr_in_t const &)
+  GameClient::GameClient(sock_t socket, sockaddr_in_t const &in)
       : m_sock(socket), m_in(in), m_buffSize(0),
         m_buff(std::make_unique<uint8_t[]>(GameClient::buffSize)),
         m_write(false),
@@ -15,6 +15,7 @@ namespace arcade
         m_recQueue(), m_sendQueue(), m_authenticated(false),
         m_game(NetworkGames::NO_GAME), m_state(State::AUTHENTICATING)
   {
+    static_cast<void>(m_in);
   }
 
   GameClient::~GameClient()
