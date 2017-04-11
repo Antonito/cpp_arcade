@@ -22,6 +22,7 @@ public:
   virtual void display(Map &map, double ratio = 0.0) const;
   virtual void move(Map &map);
 
+  Enemy split(Position const &p);
 private:
   Direction m_fallDir = Direction::DOWN;
 };

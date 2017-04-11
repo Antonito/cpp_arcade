@@ -13,13 +13,13 @@ INSTALL_PATH=	$(ROOT_DIR)/$(INSTALL_DIR)
 UNAME_S:=	$(shell uname -s)
 
 # Compilation and link definitions
-CXX=		g++
+CXX=		clang++
 CPP_VER=	c++14
 
 # Debug Infos
 ifeq ($(DEBUG), yes)
 CXXFLAGS=	-g -DDEBUG $(LOCAL_DEBUG_FLAGS)
-LDFLAGS=	-g
+LDFLAGS=	-g	-fsanitize=address
 else
 CXXFLAGS=	-DNDEBUG
 LDFLAGS=
