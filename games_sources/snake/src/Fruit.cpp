@@ -13,13 +13,14 @@ Fruit::Fruit()
 
 void Fruit::display(Map &map, double ratio) const
 {
-    for (Position const &p : m_pos)
-    {
-      Tile &tile = map.at(1, p.x, p.y);
+  static_cast<void>(ratio);
+  for (Position const &p : m_pos)
+  {
+    Tile &tile = map.at(1, p.x, p.y);
 
-      tile.setColor(Color::Green);
-      tile.setSprite(m_sprite);
-    }
+    tile.setColor(Color::Green);
+    tile.setSprite(m_sprite);
+  }
 }
 
 void Fruit::updateSprite()

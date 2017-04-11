@@ -58,7 +58,6 @@ Snake::Snake()
     }
   }
 
-
   m_map->clearLayer(0, Color(50, 50, 50));
   m_map->clearLayer(1);
   m_player.push(Position(m_map->getWidth() / 2, m_map->getHeight() / 2), 5);
@@ -69,7 +68,7 @@ Snake::Snake()
   m_tmpDir = Direction::LEFT;
 }
 
-Snake::Snake(Snake const &other)
+  Snake::Snake(Snake const &other) : AGame()
 {
   *m_map = *other.m_map;
   m_player = other.m_player;
@@ -166,7 +165,7 @@ void Snake::process()
 
   if (m_curTick - m_lastTick > 100)
   {
-      m_player.setDir(m_tmpDir);
+    m_player.setDir(m_tmpDir);
     if (m_fruit[0] == m_player.next())
     {
       m_soundsToPlay.emplace_back(0, PLAY);
@@ -175,10 +174,9 @@ void Snake::process()
       m_player.push(m_player.last());
       m_player[m_player.size() - 2] = m_player[m_player.size() - 3];
     }
-    if (m_player.next().inMap(*m_map) && (!m_player.isTouch(m_player.next())
-      || m_player.next() == m_player.last()))
+    if (m_player.next().inMap(*m_map) && (!m_player.isTouch(m_player.next()) || m_player.next() == m_player.last()))
     {
-      m_player.move();
+      m_player.move(*m_map);
     }
     else
       m_state = MENU;
@@ -190,7 +188,7 @@ void Snake::process()
 void Snake::WhereAmI(std::ostream &os) const
 {
   uint16_t size = static_cast<uint16_t>(m_player.size() - 1);
-  arcade::WhereAmI header = { CommandType::WHERE_AM_I, size };
+  arcade::WhereAmI header = {CommandType::WHERE_AM_I, size};
   std::unique_ptr<::arcade::Position[]> pos(new ::arcade::Position[size]);
 
   for (size_t i = 0; i < size; ++i)
@@ -204,7 +202,7 @@ void Snake::WhereAmI(std::ostream &os) const
 }
 #endif
 
-Position Snake::placeFood(Map const & map) const
+Position Snake::placeFood(Map const &map) const
 {
   size_t width = map.getWidth();
   size_t height = map.getHeight();
@@ -215,7 +213,7 @@ Position Snake::placeFood(Map const & map) const
     Position p(rand() % width, rand() % height);
 
     if (map.at(0, p.x, p.y).getType() != TileType::BLOCK &&
-      m_player.isTouch(p) == false)
+        m_player.isTouch(p) == false)
     {
       return (p);
     }
@@ -229,7 +227,7 @@ Position Snake::placeFood(Map const & map) const
       Position p(x, y);
 
       if (map.at(0, x, y).getType() != TileType::BLOCK &&
-        m_player.isTouch(p) == false)
+          m_player.isTouch(p) == false)
       {
         return (p);
       }

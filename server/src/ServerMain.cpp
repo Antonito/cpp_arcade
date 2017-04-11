@@ -32,6 +32,7 @@ int	main(int ac, char **av)
 	  for (std::unique_ptr<arcade::GameClient> const &client : clients)
 	    {
 	      // TODO: Print client informations (ip ?)
+	      static_cast<void>(client);
 	    }
 	}
       else if (input == "help")

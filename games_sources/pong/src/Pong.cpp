@@ -14,8 +14,8 @@ namespace arcade
       Pong::Pong() :
 	m_lastTick(0),
         m_curTick(0),
-	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0),
-	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0)
+	m_lastUpTick(0), m_lastDownTick(0), m_lastSendTick(0), m_lastSendBallTick(0),
+	m_state(PongState::AUTHENTICATING), m_fact(), m_updatePos(0)
       {
         m_map = std::make_unique<Map>(80, 50);
 
@@ -40,7 +40,7 @@ namespace arcade
         m_ball.setBallPos(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
       }
 
-      Pong::Pong(Pong const &other) :
+      Pong::Pong(Pong const &other) : AGame(),
         m_lastTick(other.m_lastTick),
         m_curTick(other.m_curTick),
         m_id(other.m_id)
@@ -94,7 +94,8 @@ namespace arcade
               break;
             case KB_ARROW_DOWN:
               if (m_curTick - m_lastDownTick > 60 &&
-		  m_player[m_id].last().y < m_map->getHeight() - 1)
+		  static_cast<unsigned>(m_player[m_id].last().y) <
+		  m_map->getHeight() - 1)
               {
                 m_player[m_id].setDir(Direction::DOWN);
                 m_player[m_id].move();
@@ -196,7 +197,8 @@ namespace arcade
 		    for (uint32_t i = 0; i < ntohl(_pck->entity.data.update); ++i)
 		      {
 			if (ntohl(_pck->entity.data.pos.y) > m_player[otherId][0].y &&
-			    m_player[otherId].last().y < m_map->getHeight() - 1)
+			    static_cast<unsigned>(m_player[otherId].last().y)
+			    < m_map->getHeight() - 1)
 			  {
 			    m_player[otherId].setDir(Direction::DOWN);
 			    m_player[otherId].move();
@@ -297,13 +299,13 @@ namespace arcade
 		  ballCount = 0;
 		  updateBall = true;
 		}
-	      else if (m_ball[0].x > m_map->getWidth() - 1)
+	      else if (m_ball[0].x > static_cast<signed>(m_map->getWidth() - 1))
 		{
 		  m_ball.reset(Position(m_map->getWidth() / 2, m_map->getHeight() / 2));
 		  ballCount = 0;
 		  updateBall = true;
 		}
-	      if (ballCount < 30)
+	      if (ballCount < 40)
 		{
 		  updateBall = true;
 		  ++ballCount;

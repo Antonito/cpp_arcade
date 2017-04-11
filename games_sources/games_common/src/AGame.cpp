@@ -60,7 +60,7 @@ namespace arcade
       std::unique_ptr<TileType[]> map(new TileType[header.width * header.height]);
 
       // Prepare the struct
-      for (size_t i = 0; i < header.width * header.height; ++i)
+      for (size_t i = 0; i < static_cast<unsigned>(header.width * header.height); ++i)
       {
         map[i] = TileType::EMPTY;
       }

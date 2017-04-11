@@ -12,6 +12,7 @@ namespace arcade
     m_recQueue(), m_sendQueue(), m_authenticated(false), m_game(NetworkGames::NO_GAME),
     m_state(State::AUTHENTICATING)
   {
+    static_cast<void>(m_in);
   }
 
   GameClient::~GameClient()

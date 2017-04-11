@@ -3,6 +3,7 @@
 
 #include "AEntity.hpp"
 #include "Position.hpp"
+#include "Map.hpp"
 
 namespace arcade
 {
@@ -17,7 +18,7 @@ public:
 
   AMovable &operator=(AMovable const &other) = default;
 
-  virtual void move();
+  virtual void move(Map &);
   virtual Position next() const;
 };
 }

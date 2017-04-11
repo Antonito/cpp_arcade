@@ -44,7 +44,7 @@ namespace arcade
     void putPixel(size_t x, size_t y, Color color, XImage *img);
     static constexpr long eventMask =
       KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-      PointerMotionMask | ResizeRedirectMask;
+      PointerMotionMask | ResizeRedirectMask | ExposureMask;
 
     static KeyboardKey getKeyboardKey(int code);
     static MouseKey getMouseKey(int code);

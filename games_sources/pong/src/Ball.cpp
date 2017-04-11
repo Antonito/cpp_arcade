@@ -22,6 +22,7 @@ void Ball::display(Map &map, double ratio) const
 {
   Tile &tile = map.at(1, m_pos[0].x, m_pos[0].y);
 
+  static_cast<void>(ratio);
   tile.setColor(Color::White);
 
   double tmp;
@@ -89,8 +90,6 @@ void Ball::setBallPos(Position const & p)
 }
 void Ball::reset(Position const &p)
 {
-  //m_dirX = (rand() % 2 ? 1.0 : -1.0);
-  //m_dirY = static_cast<double>(rand() % 600 + 400) / 1000.0 * (rand() % 2 ? 1 : -1);
   m_dirX = (1 % 2 ? 1.0 : -1.0);
   m_dirY = static_cast<double>(1 % 600 + 400) / 1000.0 * (1 % 2 ? 1 : -1);
 

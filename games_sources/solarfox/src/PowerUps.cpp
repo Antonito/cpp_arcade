@@ -1,28 +1,28 @@
-#include "SuperPowers.hpp"
+#include "PowerUps.hpp"
 
 namespace arcade
 {
 namespace game
 {
-namespace pacman
+namespace solarfox
 {
-SuperPowers::SuperPowers()
+PowerUps::PowerUps()
 {
 }
 
-void SuperPowers::display(Map &map, double ratio) const
+void PowerUps::display(Map &map, double ratio) const
 {
   static_cast<void>(ratio);
   for (Position const &p : m_pos)
   {
     Tile &tile = map.at(1, p.x, p.y);
 
-    tile.setColor(Color::Yellow);
+    tile.setColor(Color::Green);
     // tile.setSprite(m_sprite);
   }
 }
 
-SuperPowers::~SuperPowers()
+PowerUps::~PowerUps()
 {
 }
 }
