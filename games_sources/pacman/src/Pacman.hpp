@@ -50,7 +50,10 @@ private:
 
   Direction m_nextDir;
   bool m_hasEat;
+  bool m_start;
+  size_t m_startTick;
   size_t m_lastTick;
+  size_t m_lastGhostTick;
   size_t m_curTick;
   size_t m_eatTime;
 };
