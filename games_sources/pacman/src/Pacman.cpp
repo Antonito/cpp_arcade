@@ -258,7 +258,8 @@ void Pacman::process()
     checkSuperPowers();
     if (m_hasEat && m_curTick - m_eatTime > 10000)
       unsetSuperPowers();
-    m_player.move(*m_map, m_nextDir);
+    m_player.setNextDir(m_nextDir);
+    m_player.move(*m_map);
     m_lastTick = m_curTick;
   }
 }

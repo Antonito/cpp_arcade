@@ -20,7 +20,13 @@ public:
   Player(Player const &other) = default;
   virtual ~Player();
   virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move(Map &map, Direction dir);
+  virtual void move(Map &map);
+
+  void setNextDir(Direction);
+  Direction getNextDir() const;
+
+private:
+  Direction m_nextDir;
 };
 }
 }
