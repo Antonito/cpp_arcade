@@ -73,7 +73,7 @@ Centipede::Centipede()
   new_enemy.push(Position(m_map->getWidth() / 2, 0), 10);
   new_enemy.setDir(Direction::RIGHT);
   m_enemy.push_back(new_enemy);
-  for (size_t i = 0; i < 30; i++)
+  for (size_t i = 0; i < 0; i++)
   {
     tmp = placeObstacle(*m_map);
     m_obstacles.push_back(Obstacle());
@@ -172,14 +172,33 @@ std::vector<std::unique_ptr<ISprite>> Centipede::getSpritesToLoad() const
 
 void Centipede::checkShoot()
 {
-  m_shoot.move(*m_map);
+  std::vector<Enemy> added;
+
   for (Enemy &e : m_enemy)
   {
     if (e.isTouch(m_shoot[0]))
     {
-      // split centipede
+      added.push_back(e.split(m_shoot[0]));
+      //e.erase(m_shoot[0]);
+      m_obstacles.emplace_back();
+      m_obstacles.back().push(m_shoot[0]);
+      m_obstacles.back().setPv(5);
+      m_map->at(0, m_shoot[0].x, m_shoot[0].y).setType(TileType::OBSTACLE);
       m_hasShot = false;
     }
+  }
+
+  if (added.size() > 0)
+  {
+    m_enemy.insert(m_enemy.end(), added.begin(), added.end());
+  }
+  added.clear();
+
+  if (m_enemy.size() == 0)
+  {
+    m_enemy.emplace_back();
+    m_enemy.back().push(Position(m_map->getWidth() / 2, 0), 10);
+    m_enemy.back().setDir(Direction::RIGHT);
   }
 
   for (std::vector<Obstacle>::iterator it = m_obstacles.begin(); it != m_obstacles.end();)
@@ -212,7 +231,10 @@ void Centipede::process()
   //Display player, obstacles and enemies
   m_player.display(*m_map);
   if (m_hasShot)
+  {
+    checkShoot();
     m_shoot.display(*m_map);
+  }
 
   for (Obstacle const &o : m_obstacles)
   {
@@ -224,14 +246,26 @@ void Centipede::process()
     e.display(*m_map);
   }
 
+  for (std::vector<Enemy>::iterator it = m_enemy.begin(); it != m_enemy.end();)
+  {
+    if (it->size() == 0)
+    {
+      it = m_enemy.erase(it);
+    }
+    else
+    {
+      it++;
+    }
+  }
+
   //Movement of the shoot ,enemy and check of collision
   if (m_hasShot && m_curTick - m_lastShootTick > 40)
   {
-    checkShoot();
+  m_shoot.move(*m_map);
     m_lastShootTick = m_curTick;
   }
 
-  if (m_curTick - m_lastTick > 5)
+  if (m_curTick - m_lastTick > 100)
   {
     for (Enemy &e : m_enemy)
     {
