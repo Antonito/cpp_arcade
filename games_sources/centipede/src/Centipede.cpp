@@ -5,15 +5,16 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace centipede
-{
-Centipede::Centipede() : AGame("centipede")
-{
-  Enemy new_enemy;
-  Position tmp;
+  namespace game
+  {
+    namespace centipede
+    {
+      Centipede::Centipede() : AGame("centipede")
+      {
+	Enemy    new_enemy;
+	Position tmp;
 
+	// clang-format off
   std::vector<std::string> m =
       {
           "1111111111111111111111111",
@@ -41,6 +42,7 @@ Centipede::Centipede() : AGame("centipede")
           "0000000000000000000000000",
           "0000000000000000000000000",
           "0000000000000000000000000"};
+// clang-format off
 
   m_map = std::make_unique<Map>(m[0].size(), m.size());
   m_map->addLayer();

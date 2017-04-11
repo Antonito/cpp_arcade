@@ -9,43 +9,43 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace blockade
-{
-class Blockade : public AGame
-{
+  namespace game
+  {
+    namespace blockade
+    {
+      class Blockade : public AGame
+      {
 
-public:
-  Blockade();
-  Blockade(Blockade const &other);
-  ~Blockade();
+      public:
+	Blockade();
+	Blockade(Blockade const &other);
+	~Blockade();
 
-  Blockade &operator=(Blockade const &other);
+	Blockade &operator=(Blockade const &other);
 
-  virtual void notifyEvent(std::vector<Event> &&events);
+	virtual void notifyEvent(std::vector<Event> &&events);
 
-  virtual std::vector<std::pair<std::string, SoundType>>
-  getSoundsToLoad() const;
+	virtual std::vector<std::pair<std::string, SoundType>>
+	    getSoundsToLoad() const;
 
-  virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
+	virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
-  virtual void process();
+	virtual void process();
 
 #if defined(__linux__)
-  virtual void WhereAmI(std::ostream &os) const;
+	virtual void WhereAmI(std::ostream &os) const;
 #endif
-private:
-  Position placeFood(Map const &map) const;
+      private:
+	Position placeFood(Map const &map) const;
 
-  Player m_player;
-  Fruit m_fruit;
-  Direction m_tmpDir;
-  size_t m_lastTick;
-  size_t m_curTick;
-};
-}
-}
+	Player    m_player;
+	Fruit     m_fruit;
+	Direction m_tmpDir;
+	size_t    m_lastTick;
+	size_t    m_curTick;
+      };
+    }
+  }
 }
 
 #if defined(__linux__)

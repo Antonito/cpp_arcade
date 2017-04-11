@@ -8,25 +8,26 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace centipede
-{
-class Enemy : public AMovable
-{
+  namespace game
+  {
+    namespace centipede
+    {
+      class Enemy : public AMovable
+      {
 
-public:
-  Enemy();
-  Enemy(Enemy const &other) = default;
-  virtual ~Enemy();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move(Map &map);
+      public:
+	Enemy();
+	Enemy(Enemy const &other) = default;
+	virtual ~Enemy();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	virtual void move(Map &map);
 
-  Enemy split(Position const &p);
-private:
-  Direction m_fallDir = Direction::DOWN;
-};
-}
-}
+	Enemy split(Position const &p);
+
+      private:
+	Direction m_fallDir = Direction::DOWN;
+      };
+    }
+  }
 }
 #endif // !ENEMY_HPP_

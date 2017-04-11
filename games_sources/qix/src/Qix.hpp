@@ -9,41 +9,42 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace qix
-{
-class Qix : public AGame
-{
+  namespace game
+  {
+    namespace qix
+    {
+      class Qix : public AGame
+      {
 
-public:
-  Qix();
-  Qix(Qix const &other);
-  ~Qix();
+      public:
+	Qix();
+	Qix(Qix const &other);
+	~Qix();
 
-  Qix &operator=(Qix const &other);
+	Qix &operator=(Qix const &other);
 
-  virtual void notifyEvent(std::vector<Event> &&events);
+	virtual void notifyEvent(std::vector<Event> &&events);
 
-  virtual std::vector<std::pair<std::string, SoundType>> getSoundsToLoad() const;
+	virtual std::vector<std::pair<std::string, SoundType>>
+	    getSoundsToLoad() const;
 
-  virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
+	virtual std::vector<std::unique_ptr<ISprite>> getSpritesToLoad() const;
 
-  virtual void process();
+	virtual void process();
 
 #if defined(__linux__)
-  virtual void WhereAmI(std::ostream &) const;
+	virtual void WhereAmI(std::ostream &) const;
 #endif
-private:
-  Player m_player;
-  Direction m_dir;
+      private:
+	Player    m_player;
+	Direction m_dir;
 
-  size_t m_lastTick;
-  size_t m_lastShootTick;
-  size_t m_curTick;
-};
-}
-}
+	size_t m_lastTick;
+	size_t m_lastShootTick;
+	size_t m_curTick;
+      };
+    }
+  }
 }
 
 #if defined(__linux__)

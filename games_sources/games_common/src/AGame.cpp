@@ -7,20 +7,15 @@ namespace arcade
 {
   namespace game
   {
-    AGame::AGame(std::string const &name) :
-      m_state(INGAME),
-      m_gui(std::make_unique<GUI>()),
-      m_score(0),
-      m_finished(false),
-      m_startTick(m_clock_t::now()),
-      m_mouliMode(false),
-      m_fakeTick(0),
-      m_overUpdated(false),
-      m_name(name)
+    AGame::AGame(std::string const &name)
+        : m_state(INGAME), m_gui(std::make_unique<GUI>()), m_score(0),
+          m_finished(false), m_startTick(m_clock_t::now()), m_mouliMode(false),
+          m_fakeTick(0), m_overUpdated(false), m_name(name)
     {
       m_over = std::make_unique<GUI>();
       m_over->push(Component(0, 0, 1, 1, Color(0, 0, 0, 150)));
-      m_over->push(Component(0.45, 0.2, 0.4, 0.2, Color::Transparent, "Game Over !"));
+      m_over->push(
+          Component(0.45, 0.2, 0.4, 0.2, Color::Transparent, "Game Over !"));
       m_over->push(Component(0.45, 0.5, 0.4, 0.2));
     }
 
@@ -57,27 +52,28 @@ namespace arcade
     IGUI &AGame::getGUI()
     {
       if (m_finished)
-      {
-        if (!m_overUpdated)
-        {
-          std::stringstream ss;
-          std::fstream os("scores/" + m_name + ".txt", std::ios::out | std::ios::trunc);
+	{
+	  if (!m_overUpdated)
+	    {
+	      std::stringstream ss;
+	      std::fstream      os("scores/" + m_name + ".txt",
+	                      std::ios::out | std::ios::trunc);
 
-          size_t last;
+	      size_t last;
 
-          ss << m_score;
-          m_over->at(2).setText("Score : " + ss.str());
-          if (os.is_open())
-          {
-            os >> last;
-            if (last < m_score)
-            {
-              os << m_score << std::endl;
-            }
-          }
-        }
-        return (*m_over);
-      }
+	      ss << m_score;
+	      m_over->at(2).setText("Score : " + ss.str());
+	      if (os.is_open())
+		{
+		  os >> last;
+		  if (last < m_score)
+		    {
+		      os << m_score << std::endl;
+		    }
+		}
+	    }
+	  return (*m_over);
+	}
       return (*m_gui);
     }
 
@@ -85,9 +81,9 @@ namespace arcade
     void AGame::getMap(std::ostream &os) const
     {
       // Allocate the struct
-      GetMap header = {
-          CommandType::GET_MAP, static_cast<uint16_t>(m_map->getWidth()),
-          static_cast<uint16_t>(m_map->getHeight())};
+      GetMap header = {CommandType::GET_MAP,
+                       static_cast<uint16_t>(m_map->getWidth()),
+                       static_cast<uint16_t>(m_map->getHeight())};
       std::unique_ptr<TileType[]> map(
           new TileType[header.width * header.height]);
 

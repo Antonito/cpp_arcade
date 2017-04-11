@@ -7,27 +7,27 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace centipede
-{
-class Obstacle : public AEntity
-{
+  namespace game
+  {
+    namespace centipede
+    {
+      class Obstacle : public AEntity
+      {
 
-public:
-  Obstacle();
-  Obstacle(Obstacle const &other) = default;
-  virtual ~Obstacle();
-  virtual void display(Map &map, double ratio = 0.0) const;
+      public:
+	Obstacle();
+	Obstacle(Obstacle const &other) = default;
+	virtual ~Obstacle();
+	virtual void display(Map &map, double ratio = 0.0) const;
 
-  void hit();
-  size_t getPv() const;
-  void setPv(size_t pv);
+	void   hit();
+	size_t getPv() const;
+	void setPv(size_t pv);
 
-private:
-  size_t m_pv;
-};
-}
-}
+      private:
+	size_t m_pv;
+      };
+    }
+  }
 }
 #endif // !OBSTACLE_HPP_

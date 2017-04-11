@@ -8,21 +8,21 @@
 
 namespace arcade
 {
-namespace game
-{
-namespace qix
-{
-class Player : public AMovable
-{
+  namespace game
+  {
+    namespace qix
+    {
+      class Player : public AMovable
+      {
 
-public:
-  Player();
-  Player(Player const &other) = default;
-  virtual ~Player();
-  virtual void display(Map &map, double ratio = 0.0) const;
-  virtual void move(Map &map);
-};
-}
-}
+      public:
+	Player();
+	Player(Player const &other) = default;
+	virtual ~Player();
+	virtual void display(Map &map, double ratio = 0.0) const;
+	virtual void move(Map &map);
+      };
+    }
+  }
 }
 #endif // !PLAYER_HPP_
