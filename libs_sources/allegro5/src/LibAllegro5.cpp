@@ -133,55 +133,56 @@ namespace arcade
   void LibAllegro5::updateMap(IMap const & map)
   {
     if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
-    {
-      m_mapWidth = map.getWidth();
-      m_mapHeight = map.getHeight();
-      int flags = al_get_new_bitmap_flags();
-      al_set_new_bitmap_flags(flags | ALLEGRO_MEMORY_BITMAP);
-      m_map = al_create_bitmap(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
-      if (!m_map)
       {
-        throw AllocationError("Cannot get Allegro5 bitmap");
+	m_mapWidth = map.getWidth();
+	m_mapHeight = map.getHeight();
+	int flags = al_get_new_bitmap_flags();
+	al_set_new_bitmap_flags(flags | ALLEGRO_MEMORY_BITMAP);
+	m_map = al_create_bitmap(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
+	if (!m_map)
+	  {
+	    throw AllocationError("Cannot get Allegro5 bitmap");
+	  }
+	al_set_new_bitmap_flags(flags);
       }
-      al_set_new_bitmap_flags(flags);
-    }
 
     ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_map, al_get_bitmap_format(m_map), ALLEGRO_LOCK_READWRITE);
     if (lr)
-    {
-      Color *pixels = reinterpret_cast<Color *>(lr->data);
-      for (size_t l = 0; l < map.getLayerNb(); ++l)
       {
-        for (size_t y = 0; y < map.getHeight(); ++y)
-        {
-          for (size_t x = 0; x < map.getWidth(); ++x)
-          {
-            ITile const &tile = map.at(l, x, y);
-            Color color = tile.getColor();
-            double a(color.a / 255.0);
-            if (color.a != 0)
-            {
-              for (size_t _y = 0; _y < m_tileSize; ++_y)
-              {
-                for (size_t _x = 0; _x < m_tileSize; ++_x)
-                {
-                  size_t X = x * m_tileSize + _x;
-                  size_t Y = y * m_tileSize + _y;
-		  size_t pix = Y * (m_mapWidth + m_tileSize) + X;
-                  Color old(pixels[pix]);
-                  Color merged(color.r * a + old.r * (1 - a),
-                    color.g * a + old.g * (1 - a),
-                    color.b * a + old.b * (1 - a),
-                    color.a + old.a * (1 - a));
-		  pixels[pix] = merged.full;
-                }
-              }
-            }
-          }
-        }
+	std::cout << "Drawing GAME" << std::endl;
+	Color *pixels = reinterpret_cast<Color *>(lr->data);
+	for (size_t l = 0; l < map.getLayerNb(); ++l)
+	  {
+	    for (size_t y = 0; y < map.getHeight(); ++y)
+	      {
+		for (size_t x = 0; x < map.getWidth(); ++x)
+		  {
+		    ITile const &tile = map.at(l, x, y);
+		    Color color = tile.getColor();
+		    double a(color.a / 255.0);
+		    if (color.a != 0)
+		      {
+			for (size_t _y = 0; _y < m_tileSize; ++_y)
+			  {
+			    for (size_t _x = 0; _x < m_tileSize; ++_x)
+			      {
+				size_t X = x * m_tileSize + _x;
+				size_t Y = y * m_tileSize + _y;
+				size_t pix = Y * (m_mapWidth + m_tileSize) + X;
+				Color old(pixels[pix]);
+				Color merged(color.r * a + old.r * (1 - a),
+					     color.g * a + old.g * (1 - a),
+					     color.b * a + old.b * (1 - a),
+					     color.a + old.a * (1 - a));
+				pixels[pix] = merged.full;
+			      }
+			  }
+		      }
+		  }
+	      }
+	  }
+	al_unlock_bitmap(m_map);
       }
-      al_unlock_bitmap(m_map);
-    }
   }
 
   void LibAllegro5::updateGUI(IGUI & gui)
@@ -215,8 +216,8 @@ namespace arcade
 		      }
 		  }
 	      }
+	    al_unlock_bitmap(m_gui);
 	  }
-	al_unlock_bitmap(m_gui);
       }
   }
 
