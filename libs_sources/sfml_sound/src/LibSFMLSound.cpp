@@ -1,10 +1,8 @@
-#include <exception>
+  #include <exception>
 #include <iostream>
 #include <cstring>
 #include "LibSFMLSound.hpp"
 #include "RessourceError.hpp"
-
-#define DEBUG
 
 namespace arcade
 {

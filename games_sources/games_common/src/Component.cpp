@@ -4,13 +4,14 @@ namespace arcade
 {
   namespace game
   {
-    Component::Component()
+    Component::Component() : m_hasSprite(false)
     {
     }
 
     Component::Component(double x, double y, double width, double height,
                          Color color, std::string const &text)
-        : m_pos({x, y}), m_size({width, height}), m_color(color), m_text(text)
+        : m_pos({x, y}), m_size({width, height}), m_hasSprite(false),
+      m_color(color), m_text(text)
     {
     }
 
@@ -76,6 +77,7 @@ namespace arcade
     void Component::setBackgroundId(std::size_t id)
     {
       m_sprite = id;
+      m_hasSprite = true;
     }
 
     void Component::setBackgroundColor(Color color)
@@ -110,7 +112,12 @@ namespace arcade
 
     bool Component::hasSprite() const
     {
-      return (false);
+      return (m_hasSprite);
+    }
+
+    void Component::removeSprite()
+    {
+      m_hasSprite = false;
     }
   }
 }

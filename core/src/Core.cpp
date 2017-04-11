@@ -30,7 +30,7 @@ namespace arcade
 {
   Core::Core()
       : AGame("Core"), m_currentGameId(0), m_currentLibId(0), m_gameState(LOADING),
-        m_selectedGameId(0), m_menuLib(true)
+        m_selectedGameId(0), m_menuLib(false)
   {
     m_state = INGAME;
 
@@ -38,15 +38,16 @@ namespace arcade
     m_gui = std::make_unique<game::GUI>();
 
     // Create the main menu GUI
-    Color dark(10, 10, 10);
+    Color dark(10, 10, 10, 150);
 
-    m_gui->push(game::Component(0, 0, 1, 1, Color(20, 20, 20)));
+    m_gui->push(game::Component(0, 0, 1, 1, Color(0, 0, 0, 150)));
+    m_gui->at(0).setBackgroundId(0);
     m_gui->push(game::Component(0.3, 0.1, 0.4, 0.1, dark));
     m_gui->push(
         game::Component(0.35, 0.13, 0.3, 0.04, Color::Transparent, "Arcade"));
-    m_gui->push(game::Component(0.1, 0.3, 0.3, 0.6));
-    m_gui->push(game::Component(0.5, 0.3, 0.3, 0.6));
-    m_gui->push(game::Component(0.8, 0.3, 0.12, 0.6));
+    m_gui->push(game::Component(0.1, 0.3, 0.3, 0.6, dark));
+    m_gui->push(game::Component(0.5, 0.3, 0.3, 0.6, dark));
+    m_gui->push(game::Component(0.81, 0.3, 0.12, 0.6, dark));
 
     m_firstLibIndex = m_gui->size();
 
@@ -684,7 +685,7 @@ namespace arcade
     for (size_t i = 0; i < m_libList.size(); ++i)
       {
 	if (i == m_selectedLibId)
-	  m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color(60, 60, 60));
+	  m_gui->at(m_firstLibIndex + i).setBackgroundColor(Color(150, 150, 150, 80));
 	else
 	  m_gui->at(m_firstLibIndex + i)
 	      .setBackgroundColor(Color::Transparent);
@@ -695,9 +696,9 @@ namespace arcade
       if (i == m_selectedGameId)
       {
         m_gui->at(m_firstGameIndex + 2 * i)
-          .setBackgroundColor(Color(60, 60, 60));
+          .setBackgroundColor(Color(150, 150, 150, 80));
         m_gui->at(m_firstGameIndex + 2 * i + 1)
-          .setBackgroundColor(Color(60, 60, 60));
+          .setBackgroundColor(Color(150, 150, 150, 80));
       }
       else
       {
@@ -708,18 +709,20 @@ namespace arcade
       }
       }
 
-    Color dark(10, 10, 10);
-    Color light(30, 30, 30);
+    Color light(10, 10, 10, 150);
+    Color dark(30, 30, 30, 150);
 
     if (m_menuLib)
       {
 	m_gui->at(3).setBackgroundColor(light);
-	m_gui->at(4).setBackgroundColor(dark);
+        m_gui->at(4).setBackgroundColor(dark);
+        m_gui->at(5).setBackgroundColor(dark);
       }
     else
       {
 	m_gui->at(3).setBackgroundColor(dark);
-	m_gui->at(4).setBackgroundColor(light);
+        m_gui->at(4).setBackgroundColor(light);
+        m_gui->at(5).setBackgroundColor(light);
       }
   }
 

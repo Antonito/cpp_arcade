@@ -48,6 +48,7 @@ namespace arcade
       virtual void setClicked();
       void setClicked(bool click);
       bool isClicked() const;
+      void removeSprite();
 
     private:
       typedef struct
@@ -58,6 +59,7 @@ namespace arcade
 
       m_vec m_pos;
       m_vec m_size;
+      bool m_hasSprite;
 
       std::size_t m_sprite;
       Color       m_color;
