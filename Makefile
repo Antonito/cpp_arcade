@@ -26,6 +26,7 @@ GAMES=			games_common	\
 			centipede	\
 			pacman		\
 			solarfox	\
+			space_invader	\
 			pong
 
 GAME_PROJECT=		$(addprefix $(GAMES_DIR), $(GAMES))
