@@ -132,21 +132,15 @@ namespace arcade
 
   void LibAllegro5::updateMap(IMap const & map)
   {
-    if (!m_map || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+    if (map.getWidth() == 0 || map.getHeight() == 0)
     {
-      m_mapWidth = map.getWidth();
-      m_mapHeight = map.getHeight();
-      int flags = al_get_new_bitmap_flags();
-      al_set_new_bitmap_flags(flags | ALLEGRO_MEMORY_BITMAP);
-      m_map = al_create_bitmap(m_mapWidth * m_tileSize, m_mapHeight * m_tileSize);
-      if (!m_map)
-      {
-        throw AllocationError("Cannot get Allegro5 bitmap");
-      }
-      al_set_new_bitmap_flags(flags);
+      return;
     }
 
-    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_map, al_get_bitmap_format(m_map), ALLEGRO_LOCK_READWRITE);
+    int tileSize = std::min(m_width / map.getWidth(), m_height / map.getHeight());
+    tileSize = std::min(tileSize, static_cast<int>(m_maxTileSize));
+    
+    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
     if (lr)
     {
       Color *pixels = reinterpret_cast<Color *>(lr->data);
@@ -159,15 +153,19 @@ namespace arcade
             ITile const &tile = map.at(l, x, y);
             Color color = tile.getColor();
             double a(color.a / 255.0);
+
+            int posX = m_width / 2 - (map.getWidth() * tileSize / 2) + (x + tile.getShiftX()) * tileSize;
+            int posY = m_height / 2 - (map.getHeight() * tileSize / 2) + (y + tile.getShiftY()) * tileSize;
+
             if (color.a != 0)
             {
-              for (size_t _y = 0; _y < m_tileSize; ++_y)
+              for (size_t _y = 0; _y < tileSize; ++_y)
               {
-                for (size_t _x = 0; _x < m_tileSize; ++_x)
+                for (size_t _x = 0; _x < tileSize; ++_x)
                 {
-                  size_t X = x * m_tileSize + _x;
-                  size_t Y = y * m_tileSize + _y;
-		  size_t pix = Y * (m_mapWidth + m_tileSize) + X;
+                  size_t X = posX + _x;
+                  size_t Y = posY + _y;
+		  size_t pix = Y * (m_width) + X;
                   Color old(pixels[pix]);
                   Color merged(color.r * a + old.r * (1 - a),
                     color.g * a + old.g * (1 - a),
@@ -180,7 +178,7 @@ namespace arcade
           }
         }
       }
-      al_unlock_bitmap(m_map);
+      al_unlock_bitmap(m_gui);
     }
   }
 
@@ -222,7 +220,6 @@ namespace arcade
 
   void LibAllegro5::display()
   {
-    al_draw_bitmap(m_map, 0, 0, 0);
     al_draw_bitmap(m_gui, 0, 0, 0);
     al_flip_display();
   }
