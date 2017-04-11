@@ -12,17 +12,16 @@
 #endif
 
 #include <iostream>
-extern "C"
+extern "C" {
+GFXLIB_API arcade::IGfxLib *getLib()
 {
-	GFXLIB_API arcade::IGfxLib* getLib()
-	{
-		return (new arcade::LibSFMLSound());
-	}
+  return (new arcade::LibSFMLSound());
+}
 
 #if defined(_WIN32)
-	BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
-	{
-		return (true);
-	}
+BOOLEAN WINAPI DllMain(HINSTANCE hDllHandle, DWORD nReason, LPVOID Reserved)
+{
+  return (true);
+}
 #endif
 }

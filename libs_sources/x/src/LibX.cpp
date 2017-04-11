@@ -11,10 +11,9 @@
 
 namespace arcade
 {
-  LibX::LibX(size_t width, size_t height) : m_mapData(nullptr), m_map(nullptr),
-					    m_guiData(nullptr), m_gui(nullptr),
-					    m_mapWidth(0), m_mapHeight(0),
-					    m_canDraw(true)
+  LibX::LibX(size_t width, size_t height)
+      : m_mapData(nullptr), m_map(nullptr), m_guiData(nullptr), m_gui(nullptr),
+        m_mapWidth(0), m_mapHeight(0), m_canDraw(true)
   {
     m_width = width;
     m_height = height;
@@ -37,19 +36,22 @@ namespace arcade
     m_root = RootWindow(m_disp, m_screen);
     m_whitePixel = WhitePixel(m_disp, m_screen);
     m_blackPixel = BlackPixel(m_disp, m_screen);
-    m_win = XCreateSimpleWindow(m_disp, m_root, 10, 10, width, height, 2, m_blackPixel, m_whitePixel);
+    m_win = XCreateSimpleWindow(m_disp, m_root, 10, 10, width, height, 2,
+                                m_blackPixel, m_whitePixel);
     m_del = XInternAtom(m_disp, "WM_DELETE_WINDOW", 0);
-    XSetWMProtocols(m_disp , m_win, &m_del, 1);
+    XSetWMProtocols(m_disp, m_win, &m_del, 1);
     XSelectInput(m_disp, m_win, LibX::eventMask);
     XMapWindow(m_disp, m_win);
     XRaiseWindow(m_disp, m_win);
     m_fd = ConnectionNumber(m_disp);
 
     // Create an image
-    m_guiData = static_cast<uint32_t *>(Xmalloc(m_width * m_height * sizeof(uint32_t)));
+    m_guiData = static_cast<uint32_t *>(
+        Xmalloc(m_width * m_height * sizeof(uint32_t)));
     std::memset(m_guiData, 0, m_width * m_height * sizeof(Color));
-    m_gui = XCreateImage(m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
-			 reinterpret_cast<char *>(m_guiData), m_width, m_height, 32, 0);
+    m_gui = XCreateImage(
+        m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
+        reinterpret_cast<char *>(m_guiData), m_width, m_height, 32, 0);
     if (!m_gui)
       {
 	throw AllocationError("Cannot create XImage");
@@ -69,9 +71,9 @@ namespace arcade
 
   bool LibX::pollEvent(Event &e)
   {
-    struct timeval	tv;
-    fd_set		readfds;
-    int			ret;
+    struct timeval tv;
+    fd_set         readfds;
+    int            ret;
 
     FD_ZERO(&readfds);
     FD_SET(m_fd, &readfds);
@@ -107,7 +109,7 @@ namespace arcade
 		e.action = ActionType::AT_NONE;
 		break;
 
-		// Mouse
+	      // Mouse
 	      case ButtonPress:
 		m_canDraw = false;
 		e.type = EventType::ET_MOUSE;
@@ -127,7 +129,7 @@ namespace arcade
 		// TODO
 		break;
 
-		// Keyboard
+	      // Keyboard
 	      case KeyPress:
 		e.type = EventType::ET_KEYBOARD;
 		e.action = ActionType::AT_PRESSED;
@@ -152,7 +154,8 @@ namespace arcade
     return (false);
   }
 
-  void LibX::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
+  void LibX::loadSounds(
+      std::vector<std::pair<std::string, SoundType>> const &sounds)
   {
     static_cast<void>(sounds);
   }
@@ -162,15 +165,16 @@ namespace arcade
     static_cast<void>(sound);
   }
 
-  void LibX::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  void LibX::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
     static_cast<void>(s);
   }
 
-  void LibX::updateMap(IMap const & map)
+  void LibX::updateMap(IMap const &map)
   {
-    if (!m_mapData || m_mapWidth != map.getWidth() || m_mapHeight != map.getHeight())
+    if (!m_mapData || m_mapWidth != map.getWidth() ||
+        m_mapHeight != map.getHeight())
       {
 	if (m_map)
 	  XDestroyImage(m_map);
@@ -179,11 +183,14 @@ namespace arcade
 	m_mapWidth = map.getWidth();
 	m_mapHeight = map.getHeight();
 	if (!m_mapWidth || !m_mapHeight)
-	  return ;
-	m_mapData = static_cast<uint32_t *>(Xmalloc(m_mapWidth * m_tileSize * m_mapHeight * m_tileSize * sizeof(uint32_t)));
-	m_map = XCreateImage(m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)), ZPixmap, 0,
-			     reinterpret_cast<char *>(m_mapData),
-			     m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32, 0);
+	  return;
+	m_mapData = static_cast<uint32_t *>(Xmalloc(m_mapWidth * m_tileSize *
+	                                            m_mapHeight * m_tileSize *
+	                                            sizeof(uint32_t)));
+	m_map = XCreateImage(
+	    m_disp, m_vis, DefaultDepth(m_disp, DefaultScreen(m_disp)),
+	    ZPixmap, 0, reinterpret_cast<char *>(m_mapData),
+	    m_mapWidth * m_tileSize, m_mapHeight * m_tileSize, 32, 0);
 	if (!m_map)
 	  {
 	    throw AllocationError("Cannot create XImage map");
@@ -214,11 +221,11 @@ namespace arcade
 				size_t X = x * m_tileSize + _x;
 				size_t Y = y * m_tileSize + _y;
 				double a(color.a / 255.0);
-				Color old(pixels[Y * mapWidth + X]);
-				Color merged(color.r * a + old.r * (1 - a),
-					     color.g * a + old.g * (1 - a),
-					     color.b * a + old.b * (1 - a),
-					     color.a + old.a * (1 - a));
+				Color  old(pixels[Y * mapWidth + X]);
+				Color  merged(color.r * a + old.r * (1 - a),
+				             color.g * a + old.g * (1 - a),
+				             color.b * a + old.b * (1 - a),
+				             color.a + old.a * (1 - a));
 				putPixel(X, Y, merged, m_map);
 			      }
 			  }
@@ -229,19 +236,19 @@ namespace arcade
       }
   }
 
-  void LibX::updateGUI(IGUI & gui)
+  void LibX::updateGUI(IGUI &gui)
   {
     Color *pixels = reinterpret_cast<Color *>(m_guiData);
     std::memset(pixels, 0, m_width * m_height * sizeof(Color));
     for (size_t i = 0; i < gui.size(); ++i)
       {
 	IComponent const &comp = gui.at(i);
-	size_t x = comp.getX() * m_width;
-	size_t y = comp.getY() * m_height;
-	size_t width = comp.getWidth() * m_width;
-	size_t height = comp.getHeight() * m_height;
-	Color color = comp.getBackgroundColor();
-	double a(color.a / 255.0);
+	size_t            x = comp.getX() * m_width;
+	size_t            y = comp.getY() * m_height;
+	size_t            width = comp.getWidth() * m_width;
+	size_t            height = comp.getHeight() * m_height;
+	Color             color = comp.getBackgroundColor();
+	double            a(color.a / 255.0);
 
 	if (color.a != 0)
 	  {
@@ -251,9 +258,9 @@ namespace arcade
 		  {
 		    Color old(pixels[(y + _y) * m_width + x + _x]);
 		    Color merged(color.r * a + old.r * (1 - a),
-				 color.g * a + old.g * (1 - a),
-				 color.b * a + old.b * (1 - a),
-				 color.a + old.a * (1 - a));
+		                 color.g * a + old.g * (1 - a),
+		                 color.b * a + old.b * (1 - a),
+		                 color.a + old.a * (1 - a));
 		    putPixel(x + _x, y + _y, merged, m_gui);
 		  }
 	      }
@@ -283,7 +290,8 @@ namespace arcade
   {
     XColor col;
 
-    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) | ((color.r & 0xff) << 16));
+    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) |
+                 ((color.r & 0xff) << 16));
     XSetForeground(m_disp, m_gc, col.pixel);
     XDrawPoint(m_disp, m_win, m_gc, x, y);
   }
@@ -292,7 +300,8 @@ namespace arcade
   {
     XColor col;
 
-    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) | ((color.r & 0xff) << 16));
+    col.pixel = ((color.b & 0xff) | ((color.g & 0xff) << 8) |
+                 ((color.r & 0xff) << 16));
     XPutPixel(img, x, y, col.pixel);
   }
 

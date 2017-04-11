@@ -12,44 +12,48 @@
 
 namespace arcade
 {
-  LibAllegro5::LibAllegro5(size_t width, size_t height) : m_width(width), m_height(height), m_gui(nullptr), m_map(nullptr), m_font(nullptr), m_mapWidth(0), m_mapHeight(0)
+  LibAllegro5::LibAllegro5(size_t width, size_t height)
+      : m_width(width), m_height(height), m_gui(nullptr), m_map(nullptr),
+        m_font(nullptr), m_mapWidth(0), m_mapHeight(0)
   {
     if (!al_init())
-    {
-      throw InitializationError("Cannot initialize Lib Allegro5");
-    }
+      {
+	throw InitializationError("Cannot initialize Lib Allegro5");
+      }
     if (!al_init_image_addon())
       {
 	throw InitializationError("Cannot initialize Lib Allegro5 image");
       }
-    if (!al_init_font_addon() || ! al_init_ttf_addon())
+    if (!al_init_font_addon() || !al_init_ttf_addon())
       {
-	throw InitializationError("Cannot initialize Lib Allegro5 fonts / ttf");
+	throw InitializationError(
+	    "Cannot initialize Lib Allegro5 fonts / ttf");
       }
     m_win = al_create_display(width, height);
     if (!m_win)
-    {
-      throw WindowError("Cannot create Allegro5 window");
-    }
+      {
+	throw WindowError("Cannot create Allegro5 window");
+      }
     al_set_window_title(m_win, "Arcade allegro");
     if (!al_install_keyboard())
-    {
-      throw CapabilityError("Cannot install keyboard handler Allegro5"); // TODO
-    }
+      {
+	throw CapabilityError(
+	    "Cannot install keyboard handler Allegro5"); // TODO
+      }
     if (!al_install_mouse())
-    {
-      throw CapabilityError("Cannot install mouse handler Allegro5");
-    }
+      {
+	throw CapabilityError("Cannot install mouse handler Allegro5");
+      }
     m_timer = al_create_timer(1.0 / 60);
     if (!m_timer)
-    {
-      throw AllocationError("Cannot create timer Allegro5");
-    }
+      {
+	throw AllocationError("Cannot create timer Allegro5");
+      }
     m_event = al_create_event_queue();
     if (!m_event)
-    {
-      throw AllocationError("Cannot get event queue Allegro5");
-    }
+      {
+	throw AllocationError("Cannot get event queue Allegro5");
+      }
     m_font = al_load_ttf_font("assets/fonts/arial.ttf", 30, 0);
     al_register_event_source(m_event, al_get_timer_event_source(m_timer));
     al_register_event_source(m_event, al_get_keyboard_event_source());
@@ -58,9 +62,9 @@ namespace arcade
     al_set_new_bitmap_flags(flags | ALLEGRO_MEMORY_BITMAP);
     m_gui = al_create_bitmap(m_width, m_height);
     if (!m_gui)
-    {
-      throw AllocationError("Cannot get Allegro5 bitmap");
-    }
+      {
+	throw AllocationError("Cannot get Allegro5 bitmap");
+      }
     al_set_new_bitmap_flags(flags);
   }
 
@@ -72,50 +76,50 @@ namespace arcade
     al_destroy_event_queue(m_event);
   }
 
-  bool LibAllegro5::pollEvent(Event & e)
+  bool LibAllegro5::pollEvent(Event &e)
   {
     ALLEGRO_EVENT events;
 
     if (al_get_next_event(m_event, &events))
-    {
-      switch (events.type)
       {
-      case ALLEGRO_EVENT_TIMER:
-        break;
-      case ALLEGRO_EVENT_DISPLAY_RESIZE:
-        break;
-      case ALLEGRO_EVENT_DISPLAY_CLOSE:
-        e.type = EventType::ET_QUIT;
-        break;
+	switch (events.type)
+	  {
+	  case ALLEGRO_EVENT_TIMER:
+	    break;
+	  case ALLEGRO_EVENT_DISPLAY_RESIZE:
+	    break;
+	  case ALLEGRO_EVENT_DISPLAY_CLOSE:
+	    e.type = EventType::ET_QUIT;
+	    break;
 
-        // Mouse
-      case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-        e.type = EventType::ET_MOUSE;
-        e.action = ActionType::AT_PRESSED;
-        e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
-        break;
-      case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-        e.type = EventType::ET_MOUSE;
-        e.action = ActionType::AT_RELEASED;
-        e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
-        break;
+	  // Mouse
+	  case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_PRESSED;
+	    e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
+	    break;
+	  case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+	    e.type = EventType::ET_MOUSE;
+	    e.action = ActionType::AT_RELEASED;
+	    e.m_key = LibAllegro5::getMouseKey(events.mouse.button);
+	    break;
 
-        // Keyboard
-      case ALLEGRO_EVENT_KEY_DOWN:
-        e.type = EventType::ET_KEYBOARD;
-        e.action = ActionType::AT_PRESSED;
-        e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
-        break;
-      case ALLEGRO_EVENT_KEY_UP:
-        e.type = EventType::ET_KEYBOARD;
-        e.action = ActionType::AT_RELEASED;
-        e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
-        break;
-      default:
-        break;
+	  // Keyboard
+	  case ALLEGRO_EVENT_KEY_DOWN:
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_PRESSED;
+	    e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
+	    break;
+	  case ALLEGRO_EVENT_KEY_UP:
+	    e.type = EventType::ET_KEYBOARD;
+	    e.action = ActionType::AT_RELEASED;
+	    e.kb_key = LibAllegro5::getKeyboardKey(events.keyboard.keycode);
+	    break;
+	  default:
+	    break;
+	  }
+	return (true);
       }
-      return (true);
-    }
     return (false);
   }
 
@@ -124,7 +128,8 @@ namespace arcade
     return (false);
   }
 
-  void LibAllegro5::loadSounds(std::vector<std::pair<std::string, SoundType> > const &sounds)
+  void LibAllegro5::loadSounds(
+      std::vector<std::pair<std::string, SoundType>> const &sounds)
   {
     static_cast<void>(sounds);
   }
@@ -134,7 +139,8 @@ namespace arcade
     static_cast<void>(sound);
   }
 
-  void LibAllegro5::loadSprites(std::vector<std::unique_ptr<ISprite>>&& sprites)
+  void
+      LibAllegro5::loadSprites(std::vector<std::unique_ptr<ISprite>> &&sprites)
   {
     std::vector<std::unique_ptr<ISprite>> s(std::move(sprites));
 
@@ -155,18 +161,22 @@ namespace arcade
 	std::vector<ALLEGRO_BITMAP *> images;
 
 #if defined(DEBUG)
-	std::cout << "Loading sprite " << m_sprites.size() << ", " << sprite->spritesCount() << std::endl;
+	std::cout << "Loading sprite " << m_sprites.size() << ", "
+	          << sprite->spritesCount() << std::endl;
 #endif
 	for (size_t i = 0; i < sprite->spritesCount(); ++i)
 	  {
 #if defined(DEBUG)
-	    std::cout << "File: '" << sprite->getGraphicPath(i) << "'" << std::endl;
+	    std::cout << "File: '" << sprite->getGraphicPath(i) << "'"
+	              << std::endl;
 #endif
-	    ALLEGRO_BITMAP *surface = al_load_bitmap(sprite->getGraphicPath(i).c_str());
+	    ALLEGRO_BITMAP *surface =
+	        al_load_bitmap(sprite->getGraphicPath(i).c_str());
 
 	    if (!surface)
 	      {
-		throw RessourceError("File not found: " + sprite->getGraphicPath(i));
+		throw RessourceError("File not found: " +
+		                     sprite->getGraphicPath(i));
 	      }
 	    images.push_back(surface);
 	  }
@@ -174,17 +184,19 @@ namespace arcade
       }
   }
 
-  void LibAllegro5::updateMap(IMap const & map)
+  void LibAllegro5::updateMap(IMap const &map)
   {
     if (map.getWidth() == 0 || map.getHeight() == 0)
-    {
-      return;
-    }
+      {
+	return;
+      }
 
-    int tileSize = std::min(m_width / map.getWidth(), m_height / map.getHeight());
+    int tileSize =
+        std::min(m_width / map.getWidth(), m_height / map.getHeight());
     tileSize = std::min(tileSize, static_cast<int>(m_maxTileSize));
 
-    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
+    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(
+        m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
     if (lr)
       {
 	Color *pixels = reinterpret_cast<Color *>(lr->data);
@@ -195,36 +207,45 @@ namespace arcade
 		for (size_t x = 0; x < map.getWidth(); ++x)
 		  {
 		    ITile const &tile = map.at(l, x, y);
-		    Color color = tile.getColor();
-		    double a(color.a / 255.0);
+		    Color        color = tile.getColor();
+		    double       a(color.a / 255.0);
 
-		    size_t posX = m_width / 2 - (map.getWidth() * tileSize / 2) + (x + tile.getShiftX()) * tileSize;
-		    size_t posY = m_height / 2 - (map.getHeight() * tileSize / 2) + (y + tile.getShiftY()) * tileSize;
+		    size_t posX = m_width / 2 -
+		                  (map.getWidth() * tileSize / 2) +
+		                  (x + tile.getShiftX()) * tileSize;
+		    size_t posY = m_height / 2 -
+		                  (map.getHeight() * tileSize / 2) +
+		                  (y + tile.getShiftY()) * tileSize;
 
-		    if (tile.hasSprite() && m_sprites[tile.getSpriteId()][tile.getSpritePos()])
+		    if (tile.hasSprite() &&
+		        m_sprites[tile.getSpriteId()][tile.getSpritePos()])
 		      {
-                      al_set_target_bitmap(m_gui);
-                      ALLEGRO_BITMAP *bm = m_sprites[tile.getSpriteId()][tile.getSpritePos()];
-		  int width = al_get_bitmap_width(bm);
-			    int height = al_get_bitmap_height(bm);
+			al_set_target_bitmap(m_gui);
+			ALLEGRO_BITMAP *bm =
+			    m_sprites[tile.getSpriteId()][tile.getSpritePos()];
+			int width = al_get_bitmap_width(bm);
+			int height = al_get_bitmap_height(bm);
 
-		        al_draw_scaled_bitmap(bm, 0, 0, width, height, posX, posY, tileSize, tileSize, 0);
-                        al_set_target_bitmap(al_get_backbuffer(m_win));
-                }
+			al_draw_scaled_bitmap(bm, 0, 0, width, height, posX,
+			                      posY, tileSize, tileSize, 0);
+			al_set_target_bitmap(al_get_backbuffer(m_win));
+		      }
 		    else if (color.a != 0)
 		      {
-			for (size_t _y = 0; _y < static_cast<unsigned>(tileSize); ++_y)
+			for (size_t _y = 0;
+			     _y < static_cast<unsigned>(tileSize); ++_y)
 			  {
-			    for (size_t _x = 0; _x < static_cast<unsigned>(tileSize); ++_x)
+			    for (size_t _x = 0;
+			         _x < static_cast<unsigned>(tileSize); ++_x)
 			      {
 				size_t X = posX + _x;
 				size_t Y = posY + _y;
 				size_t pix = Y * (m_width) + X;
-				Color old(pixels[pix]);
-				Color merged(color.r * a + old.r * (1 - a),
-					     color.g * a + old.g * (1 - a),
-					     color.b * a + old.b * (1 - a),
-					     color.a + old.a * (1 - a));
+				Color  old(pixels[pix]);
+				Color  merged(color.r * a + old.r * (1 - a),
+				             color.g * a + old.g * (1 - a),
+				             color.b * a + old.b * (1 - a),
+				             color.a + old.a * (1 - a));
 				pixels[pix] = merged.full;
 			      }
 			  }
@@ -236,23 +257,24 @@ namespace arcade
       }
   }
 
-  void LibAllegro5::updateGUI(IGUI & gui)
+  void LibAllegro5::updateGUI(IGUI &gui)
   {
-    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
+    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(
+        m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
     if (lr)
       {
-	bool font = false;
+	bool   font = false;
 	Color *pixels = reinterpret_cast<Color *>(lr->data);
 	for (size_t i = 0; i < gui.size(); ++i)
 	  {
 	    IComponent const &comp = gui.at(i);
-	    size_t x = comp.getX() * m_width;
-	    size_t y = comp.getY() * m_height;
-	    size_t width = comp.getWidth() * m_width;
-	    size_t height = comp.getHeight() * m_height;
-	    Color color = comp.getBackgroundColor();
-	    std::string str = comp.getText();
-	    double a(color.a / 255.0);
+	    size_t            x = comp.getX() * m_width;
+	    size_t            y = comp.getY() * m_height;
+	    size_t            width = comp.getWidth() * m_width;
+	    size_t            height = comp.getHeight() * m_height;
+	    Color             color = comp.getBackgroundColor();
+	    std::string       str = comp.getText();
+	    double            a(color.a / 255.0);
 	    if (color.a != 0)
 	      {
 		for (size_t _y = 0; _y < height; ++_y)
@@ -260,11 +282,11 @@ namespace arcade
 		    for (size_t _x = 0; _x < width; ++_x)
 		      {
 			size_t pix = (y + _y) * m_width + (x + _x);
-			Color old(pixels[pix]);
-			Color merged(color.r * a + old.r * (1 - a),
-				     color.g * a + old.g * (1 - a),
-				     color.b * a + old.b * (1 - a),
-				     color.a + old.a * (1 - a));
+			Color  old(pixels[pix]);
+			Color  merged(color.r * a + old.r * (1 - a),
+			             color.g * a + old.g * (1 - a),
+			             color.b * a + old.b * (1 - a),
+			             color.a + old.a * (1 - a));
 			pixels[pix] = merged.full;
 		      }
 		  }
@@ -276,7 +298,8 @@ namespace arcade
 		font = true;
 		if (!m_font)
 		  continue;
-		al_draw_text(m_font, al_map_rgb(255, 255, 255), x, y, 0, str.c_str());
+		al_draw_text(m_font, al_map_rgb(255, 255, 255), x, y, 0,
+		             str.c_str());
 	      }
 	  }
 	if (font == true)
@@ -291,9 +314,10 @@ namespace arcade
     al_flip_display();
   }
 
-void LibAllegro5::clear()
+  void LibAllegro5::clear()
   {
-    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
+    ALLEGRO_LOCKED_REGION *lr = al_lock_bitmap(
+        m_gui, al_get_bitmap_format(m_gui), ALLEGRO_LOCK_READWRITE);
     if (lr)
       std::memset(lr->data, 0, m_width * m_height * sizeof(Color));
     al_unlock_bitmap(m_gui);
@@ -321,7 +345,7 @@ void LibAllegro5::clear()
 
   MousePos LibAllegro5::getMousePos()
   {
-    MousePos	pos;
+    MousePos pos;
 
     pos.x = 0;
     pos.y = 0;

@@ -8,26 +8,26 @@
 
 namespace Nope
 {
-	namespace Log
-	{
-		enum class LogLevel : int;
+  namespace Log
+  {
+    enum class LogLevel : int;
 
-		class LogSink
-		{
-		public:
-			~LogSink() = default;
-			void operator()(LogMessage const &msg, LogLevel) const;
+    class LogSink
+    {
+    public:
+      ~LogSink() = default;
+      void operator()(LogMessage const &msg, LogLevel) const;
 
-			static LogSink makeOstream(std::ostream &os);
-			static LogSink makeFile(std::string const &filename);
+      static LogSink makeOstream(std::ostream &os);
+      static LogSink makeFile(std::string const &filename);
 
-		private:
-			LogSink(std::function<void(LogMessage const &, LogLevel)> func);
-			// operator LogSink(std::function<void(LogMessage const &)>);
+    private:
+      LogSink(std::function<void(LogMessage const &, LogLevel)> func);
+      // operator LogSink(std::function<void(LogMessage const &)>);
 
-			std::function<void(LogMessage const &, LogLevel)> m_func;
-		};
-	}
+      std::function<void(LogMessage const &, LogLevel)> m_func;
+    };
+  }
 }
 
 #endif // !LOGSINK_HPP_
